@@ -1,0 +1,14 @@
+{
+    "root": "apps/gateway",
+    "sourceRoot": "apps/gateway/src",
+    "projectType": "application",
+    "targets": {
+      "serve": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "go run src/main.go",
+          "cwd": "apps/gateway"
+        }
+      }
+    }
+  }
