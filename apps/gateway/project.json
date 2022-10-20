@@ -13,7 +13,7 @@
       "serve": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "go run src/main.go",
+          "command": "go run src/*.go",
           "cwd": "apps/gateway"
         }
       }

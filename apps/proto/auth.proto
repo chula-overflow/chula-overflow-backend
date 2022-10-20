@@ -6,12 +6,19 @@ option go_package = "../gateway/src/proto";
 
 service Auth {
   rpc Login (AuthRequest) returns (AuthResponse) {}
+  rpc Revoke (RevokeRequest) returns (RevokeResponse) {}
 }
 
 message AuthRequest {
-  string name = 1;
+  string email = 1;
 }
-  
+
 message AuthResponse {
   string token = 1;
 }
+
+message RevokeRequest {
+  string token = 1;
+}
+
+message RevokeResponse {}
