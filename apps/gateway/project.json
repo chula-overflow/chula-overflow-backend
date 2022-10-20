@@ -3,6 +3,13 @@
     "sourceRoot": "apps/gateway/src",
     "projectType": "application",
     "targets": {
+      "install": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "go mod download",
+          "cwd": "apps/gateway"
+        }
+      },
       "serve": {
         "executor": "nx:run-commands",
         "options": {

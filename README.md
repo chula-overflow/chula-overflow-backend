@@ -1,3 +1,8 @@
+## Install Dependency
+```sh
+nx run-many --target=install
+```
+
 ## Run
 Please check [Prerequisite](#prerequisite) before runing
 ```sh
