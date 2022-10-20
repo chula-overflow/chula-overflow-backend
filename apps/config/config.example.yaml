@@ -1,0 +1,5 @@
+gateway:
+  addr: localhost:3000
+
+auth:
+  addr: localhost:3001
