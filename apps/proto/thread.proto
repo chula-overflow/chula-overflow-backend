@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package micr;
+
+service MicrService {
+  rpc FindOne (Micr1ById) returns (Micr1) {}
+}
+
+message MicrById {
+  int32 id = 1;
+}
+
+message Micr {
+  int32 id = 1;
+  string name = 2;
+}
