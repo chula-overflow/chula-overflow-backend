@@ -15,7 +15,7 @@ type Config struct {
 	Auth struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"auth"`
-	Mode string `yaml:"mode"`
+	Deployment string `yaml:"deployment"`
 }
 
 func LoadConfig() (*Config, error) {

@@ -27,7 +27,7 @@ func main() {
 
 	app := getServer(conf)
 
-	if app.config.Mode == "development" {
+	if app.config.Deployment == "development" {
 		app.RegisterDoc()
 	}
 
