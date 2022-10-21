@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/app/middleware"
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/config"
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/context"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/middleware"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/gofiber/fiber/v2"
 )
 

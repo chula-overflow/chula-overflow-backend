@@ -3,8 +3,8 @@ package auth
 import (
 	"log"
 
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/context"
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/dto"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/gofiber/fiber/v2"
 )
 

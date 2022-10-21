@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/app/handler/auth"
-	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/app/service/auth"
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/config"
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/proto"
+	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/auth"
+	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/auth"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

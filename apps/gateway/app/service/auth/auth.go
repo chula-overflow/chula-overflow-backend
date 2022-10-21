@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/src/proto"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 )
 
 type Service struct {
