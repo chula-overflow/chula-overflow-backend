@@ -19,15 +19,12 @@ nx run-many --target=serve
 - Automated test
 
 ## prerequisite
-- Golang
+- [Golang](https://go.dev/doc/install)
 - Protoc
   - protoc-gen-go-grpc
-- ~~cargo (rust)~~
+- [cargo (rust)](https://rustup.rs/)
 - npm / pnpm
 - Nx cli
-
-### Golang
-[Golang official website](https://go.dev/doc/install)
 
 ### Protoc-gen-go-grpc
 ```sh
@@ -39,3 +36,6 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 ```sh
 npm i -g nx
 ```
+
+## Note
+Please don't mind that auth take like 5 minutes compile time.

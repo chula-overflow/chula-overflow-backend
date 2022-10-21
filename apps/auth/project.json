@@ -1,0 +1,21 @@
+{
+  "root": "apps/auth",
+  "sourceRoot": "apps/auth/src",
+  "projectType": "application",
+  "targets": {
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cargo build --release",
+        "cwd": "apps/auth"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cargo run --release",
+        "cwd": "apps/auth"
+      }
+    }
+  }
+}
