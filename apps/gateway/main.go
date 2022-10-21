@@ -7,6 +7,7 @@ import (
 
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 // @title Chula Overflow Backend Doc
@@ -38,6 +39,10 @@ func getServer(conf *config.Config) *App {
 
 	app := NewServer(fiberApp, conf)
 	app.RegisterRoute()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
 
 	return app
 }
