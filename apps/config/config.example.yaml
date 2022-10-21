@@ -3,3 +3,5 @@ gateway:
 
 auth:
   addr: localhost:3001
+
+mode: production

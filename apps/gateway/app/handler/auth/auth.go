@@ -17,6 +17,12 @@ type Handler struct {
 	Service IService
 }
 
+// @Summary Login
+// @Description Login with given email
+// @Tags Auth
+// @Param login body dto.Login false "email use for login"  Format(email)
+// @Success 200
+// @Router /auth/login [post]
 func (h *Handler) Login(ctx *context.Ctx) {
 	login := new(dto.Login)
 	if err := ctx.BodyParser(login); err != nil {
@@ -38,6 +44,11 @@ func (h *Handler) Login(ctx *context.Ctx) {
 	})
 }
 
+// @Summary Revoke
+// @Description Revoke session
+// @Tags Auth
+// @Success 200
+// @Router /auth/revoke [get]
 func (h *Handler) Revoke(ctx *context.Ctx) {
 	err := h.Service.Revoke(ctx.SessionId())
 	if err != nil {

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package micr;
 
-option go_package = "../gateway/src/proto";
+option go_package = "./proto";
 
 service MicrService {
   rpc FindOne (MicrById) returns (Micr) {}

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package exam;
 
-option go_package = "../gateway/src/proto";
+option go_package = "./proto";
 
 service Exam {
   rpc GetExam (GetExamRequest) returns (GetExamResponse) {}

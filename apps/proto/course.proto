@@ -4,7 +4,7 @@ package course;
 
 import "exam.proto";
 
-option go_package = "../gateway/src/proto";
+option go_package = "./proto";
 
 service Course {
     rpc GetAllCourseSummary (GetAllCourseSummaryRequest) returns (GetAllCourseSummaryResponse) {}

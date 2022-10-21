@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "../gateway/src/proto";
+option go_package = "./proto";
 
 service Auth {
   rpc Login (AuthRequest) returns (AuthResponse) {}
