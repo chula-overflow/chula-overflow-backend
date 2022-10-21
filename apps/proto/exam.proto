@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package exam;
+
+option go_package = "../gateway/src/proto";
+
+service Exam {
+  rpc GetExam (GetExamRequest) returns (GetExamResponse) {}
+}
+
+message GetExamRequest {
+  string exam_id = 1;
+}
+
+message GetExamResponse {
+  // todo
+  // repeated thread.Thread threads = 1;
+}
+
+message ExamSummary {
+  string exam_id = 1;
+  string exam_name = 2;
+  int32 thread_count = 3;
+}
