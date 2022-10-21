@@ -16,7 +16,7 @@ nx run-many --target=serve
 - code linter / format
   - prettier / editorconfig
 - Github workflows
-- Autmated test
+- Automated test
 
 ## prerequisite
 - Golang
