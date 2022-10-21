@@ -3,17 +3,17 @@
     "sourceRoot": "apps/gateway/src",
     "projectType": "application",
     "targets": {
-      "install": {
+      "build": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "make install",
+          "command": "make build",
           "cwd": "apps/gateway"
         }
       },
       "serve": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "go run src/*.go",
+          "command": "go run .",
           "cwd": "apps/gateway"
         }
       }

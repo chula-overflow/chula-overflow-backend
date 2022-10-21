@@ -1,11 +1,10 @@
-all: install build
+build: docs protoc dependency
+	go build .
 
-install: docs dependency
-
-dependency: protoc
+dependency:
 	go mod download
 
-docs: protoc
+docs:
 	swag init -o docs
 
 protoc:
@@ -13,5 +12,3 @@ protoc:
 	protoc --proto_path=../proto/ --go_out=. --go-grpc_out=require_unimplemented_servers=false:. ../proto/course.proto
 	protoc --proto_path=../proto/ --go_out=. --go-grpc_out=require_unimplemented_servers=false:. ../proto/exam.proto
 	protoc --proto_path=../proto/ --go_out=. --go-grpc_out=require_unimplemented_servers=false:. ../proto/thread.proto
-
-build:

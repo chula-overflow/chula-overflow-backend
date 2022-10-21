@@ -45,3 +45,6 @@ config.yaml
 
 # Rust binary
 target
+
+# Golang binary
+*.exe
