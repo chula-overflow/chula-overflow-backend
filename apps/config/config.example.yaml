@@ -1,7 +1,11 @@
 gateway:
-  addr: localhost:3000
+  addr: 127.0.0.1:3000
 
 auth:
-  addr: localhost:3001
+  addr: 127.0.0.1:3001
 
-mode: production
+database:
+  addr: 127.0.0.1:27017
+  db_name: test
+
+deployment: production
