@@ -1,0 +1,21 @@
+{
+  "root": "apps/thread",
+  "sourceRoot": "apps/thread/src",
+  "projectType": "application",
+  "targets": {
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm i",
+        "cwd": "apps/thread"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run start:dev",
+        "cwd": "apps/thread"
+      }
+    }
+  }
+}
