@@ -20,14 +20,21 @@ func (app *App) RegisterRoute() {
 		requiredAuth: false,
 		method:       POST,
 	}
-	app.RegisterHdr(auth.Login, metadata)
+	app.AddHdr(auth.Login, metadata)
 
 	metadata = MetaData{
 		url:          "/auth/revoke",
 		requiredAuth: true,
 		method:       GET,
 	}
-	app.RegisterHdr(auth.Revoke, metadata)
+	app.AddHdr(auth.Revoke, metadata)
+
+	metadata = MetaData{
+		url:          "/auth/me",
+		requiredAuth: true,
+		method:       GET,
+	}
+	app.AddHdr(auth.Me, metadata)
 }
 
 func GetHandler(conf *config.Config) authHdr.Handler {

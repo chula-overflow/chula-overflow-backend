@@ -1,1 +1,1 @@
-// use super::super::repository::Repository;
+// use service_core::{Repository, Result};

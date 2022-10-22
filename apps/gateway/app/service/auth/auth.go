@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 )
 
@@ -35,6 +36,23 @@ func (s *Service) Revoke(sessionId string) error {
 	})
 
 	return err
+}
+
+func (s *Service) Me(sessionId string) (*dto.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	user, err := s.client.Me(ctx, &proto.MeRequest{
+		Token: sessionId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.User{
+		Email: user.Email,
+	}, nil
 }
 
 func NewService(client proto.AuthClient) Service {
