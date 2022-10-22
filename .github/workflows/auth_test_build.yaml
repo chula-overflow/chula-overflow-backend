@@ -1,0 +1,26 @@
+name: Auth service build test
+
+on:
+  push:
+    paths:
+      - 'apps/auth/**'
+      - 'apps/proto/**'
+
+jobs:
+  build:
+    name: Building auth service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
+
+      - run: cargo build
+        working-directory: apps/auth

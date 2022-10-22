@@ -1,0 +1,24 @@
+name: Auth service build test
+
+on:
+  push:
+    paths:
+      - 'apps/gateway/**'
+      - 'apps/proto/**'
+
+jobs:
+  build:
+    name: Building auth service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Build
+        run: go build -v .
+        working-directory: apps/gateway

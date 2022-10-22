@@ -1,4 +1,4 @@
-build: create-docs protoc dependency
+build: protoc dependency
 	go build .
 
 dependency:

@@ -40,9 +40,6 @@ Thumbs.db
 
 config.yaml
 
-# Gateway docs
-/apps/gateway/docs
-
 # Rust binary
 target
 

@@ -1,0 +1,61 @@
+basePath: /
+definitions:
+  dto.Login:
+    properties:
+      email:
+        example: 6530000021@student.chula.ac.th
+        type: string
+    type: object
+  dto.User:
+    properties:
+      email:
+        example: 6530000021@student.chula.ac.th
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: This is a sample swagger for Fiber
+  termsOfService: http://swagger.io/terms/
+  title: Chula Overflow Backend Doc
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with given email
+      parameters:
+      - description: email use for login
+        format: email
+        in: body
+        name: login
+        schema:
+          $ref: '#/definitions/dto.Login'
+      responses:
+        "200":
+          description: OK
+      summary: Login
+      tags:
+      - Auth
+  /auth/me:
+    get:
+      description: Get current session detail
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.User'
+      summary: Me
+      tags:
+      - Auth
+  /auth/revoke:
+    get:
+      description: Revoke session
+      responses:
+        "200":
+          description: OK
+      summary: Revoke
+      tags:
+      - Auth
+swagger: "2.0"
