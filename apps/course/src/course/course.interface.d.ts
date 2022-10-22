@@ -1,29 +1,33 @@
 export interface CourseInterface {
+  courseId: string;
   courseName: string;
   courseCodename: string;
-  courseId: string;
-  exams: {
-    term: string; // mid | final
-    year: number; // 2022, 2021, 2020, ...
-    threads:
-      | {
-          title: string; // if thread's length is more than 1 then generated from nlp
-          description: string; // from the most upvoted thread
-          problems:
-            | {
-                description: string;
-                answer: string;
-                upvoted: number;
-                downvoted: number;
-              }[]
-            | {};
-        }[]
-      | {};
-  }[];
+  exams_id?: string[];
 }
 
-export interface CoursePropertiesInterface {
-  courseName: string;
-  courseCodename: string;
-  courseId: string;
+interface course {
+  _id;
+  course_name;
+  course_codename;
+  course_id;
+  exams_id;
+}
+
+interface exam {
+  _id;
+  course_id;
+  term;
+  semester;
+  year;
+  threads: [thread_id];
+}
+
+interface thread {
+  _id;
+  exam_id;
+  updated_at;
+  created_at;
+  title;
+  description;
+  problems;
 }

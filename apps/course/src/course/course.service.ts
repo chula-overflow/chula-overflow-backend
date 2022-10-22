@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Course, CourseDocument } from 'src/models/course.schema';
-import { CourseInterface, CoursePropertiesInterface } from './course.interface';
+import { Course, CourseDocument } from 'src/course/course.schema';
+import { CourseInterface } from './course.interface';
 
 @Injectable()
 export class CourseService {
@@ -17,21 +17,30 @@ export class CourseService {
   }
 
   async find(): Promise<CourseInterface[]> {
-    const courses = this.CourseModel.find({}).exec();
+    const courses = await this.CourseModel.find({}).exec();
     return courses; // return all courses with all properties
   }
 
-  async findProperties(): Promise<CoursePropertiesInterface[]> {
-    const courses = this.CourseModel.find(
-      {},
-      'courseName courseCodename courseId',
-    ).exec();
-    return courses; // return all courses with course's property
+  async findOneByCourseId(courseId: string) {
+    const course = await this.CourseModel.findOne({
+      courseId: courseId,
+    }).exec();
+    return course; // return each course with all properties
   }
 
-  async findOneByCourseId(courseId: string) {
-    const course = this.CourseModel.findOne({ courseId: courseId }).exec();
-    return course; // return each course with all properties
+  async addExamId(examId: string, courseId: string) {
+    const course = await this.CourseModel.findOne({
+      courseId: courseId,
+    }).exec();
+    const courseDocumentId = course._id;
+    const examsId = [...course.exams_id, examId];
+    const updatedCourse = await this.CourseModel.findByIdAndUpdate(
+      courseDocumentId,
+      { exams_id: examsId },
+      { new: true },
+    );
+
+    return updatedCourse;
   }
 
   async update(courseId: string) {}

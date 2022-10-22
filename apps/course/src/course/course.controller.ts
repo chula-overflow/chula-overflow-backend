@@ -20,14 +20,15 @@ export class CourseController {
   }
 
   @GrpcMethod()
-  async findAllCoursesProperties(metadata: any) {
-    const courses = await this.CourseService.findProperties();
-    return courses;
-  }
-
-  @GrpcMethod()
   async findCourseByCourseId(courseId: string, metadata: any) {
     const course = await this.CourseService.findOneByCourseId(courseId);
     return course;
+  }
+
+  @GrpcMethod()
+  async addExam(examId: string, courseId: string, metadata: any) {
+    const updatedCourse = await this.CourseService.addExamId(examId, courseId);
+
+    return updatedCourse;
   }
 }

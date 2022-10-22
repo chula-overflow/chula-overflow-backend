@@ -1,5 +1,7 @@
 export interface ExamInterface {
+  course_id: string;
   term: string; // mid | final
+  semester: number; // 1, 2
   year: number; // 2022, 2021, 2020, ...
   threads:
     | {

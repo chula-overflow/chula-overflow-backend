@@ -1,16 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Course, CourseDocument } from 'src/models/course.schema';
+import { CourseDocument } from 'src/course/course.schema';
+import { CourseService } from 'src/course/course.service';
+import { Exam, ExamDocument } from 'src/exam/exam.schema';
 
 @Injectable()
 export class ExamService {
   constructor(
-    @InjectModel(Course.name)
+    @InjectModel(Exam.name)
+    private ExamModel: Model<ExamDocument>,
+
+    @InjectModel(Exam.name)
     private CourseModel: Model<CourseDocument>,
+
+    private readonly CourseService: CourseService,
   ) {}
 
-  async create() {}
+  async create(examData) {
+    const newExam = new this.ExamModel(examData);
+    const examId = newExam._id;
+    const courseId = newExam.course_id;
+
+    await this.CourseService.addExamId(examId, courseId);
+    return newExam;
+  }
 
   async find() {}
+
+  async update() {}
+
+  async delete() {}
 }
