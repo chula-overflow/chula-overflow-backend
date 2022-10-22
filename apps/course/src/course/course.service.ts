@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Course, CourseDocument } from 'src/course/course.schema';
 import {
   CourseBody,
@@ -32,13 +32,13 @@ export class CourseService {
     return course; // return each course with all properties
   }
 
-  async addExamId(examId: string, courseId: string): Promise<CourseBody> {
+  async addExamId(examId: ObjectId, courseId: string): Promise<CourseBody> {
     const course = await this.findOneByCourseId(courseId);
     const courseDocumentId = course._id;
-    const examsId = [...course.exam_ids, examId];
+    const examIds = [...course.exam_ids, examId];
     const updatedCourse = await this.CourseModel.findByIdAndUpdate(
       courseDocumentId,
-      { exam_ids: examsId },
+      { exam_ids: examIds },
       { new: true },
     );
 
