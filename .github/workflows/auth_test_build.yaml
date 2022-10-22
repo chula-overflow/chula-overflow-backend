@@ -15,10 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
+      - name: Update rust
+        run: rustup update
 
       - name: Install Protoc
         uses: arduino/setup-protoc@v1
