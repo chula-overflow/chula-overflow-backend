@@ -18,4 +18,16 @@ export class CourseController {
     const courses = await this.CourseService.find();
     return courses;
   }
+
+  @GrpcMethod()
+  async findAllCoursesProperties(metadata: any) {
+    const courses = await this.CourseService.findProperties();
+    return courses;
+  }
+
+  @GrpcMethod()
+  async findCourseByCourseId(courseId: string, metadata: any) {
+    const course = await this.CourseService.findOneByCourseId(courseId);
+    return course;
+  }
 }

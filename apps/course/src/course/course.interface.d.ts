@@ -16,3 +16,9 @@ export interface CourseInterface {
     }[];
   }[];
 }
+
+export interface CoursePropertiesInterface {
+  courseName: string;
+  courseCodename: string;
+  courseId: string;
+}
