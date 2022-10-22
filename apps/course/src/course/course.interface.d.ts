@@ -20,7 +20,3 @@ export interface CourseUpdateBody {
   course_codename?: string;
   exam_ids?: string[];
 }
-
-export interface GetCourseByCourseIdBody {
-  course_id: string;
-}
