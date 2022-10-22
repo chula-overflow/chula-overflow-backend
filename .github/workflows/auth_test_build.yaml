@@ -2,6 +2,16 @@ name: Auth service build test
 
 on:
   push:
+    branches:
+      - main
+    paths:
+      - 'apps/auth/**'
+      - 'apps/proto/auth.proto'
+      - 'apps/proto/user.proto'
+
+  pull_request:
+    branches:
+      - main
     paths:
       - 'apps/auth/**'
       - 'apps/proto/auth.proto'

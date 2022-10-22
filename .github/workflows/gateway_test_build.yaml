@@ -2,6 +2,14 @@ name: Gateway service build test
 
 on:
   push:
+    branches:
+      - main
+    paths:
+      - 'apps/gateway/**'
+      - 'apps/proto/**'
+  pull_request:
+    branches:
+      - main
     paths:
       - 'apps/gateway/**'
       - 'apps/proto/**'
