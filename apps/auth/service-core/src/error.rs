@@ -1,9 +1,7 @@
 use std::net::AddrParseError;
 
-use thiserror::Error;
-
-#[derive(Error, Debug)]
-pub enum AuthError {
+#[derive(thiserror::Error, Debug)]
+pub enum Error {
     #[error("Database error: {0}")]
     DbError(#[from] mongodb::error::Error),
     #[error("IO error")]

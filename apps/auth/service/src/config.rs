@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::error::AuthError;
+use service_core::Result;
 use std::fs::File;
 
 #[derive(Deserialize)]
@@ -22,7 +22,7 @@ pub struct DbConfig {
     pub db_name: String,
 }
 
-pub fn load_config() -> Result<Config, AuthError> {
+pub fn load_config() -> Result<Config> {
     let file: File = File::open("../config/config.yaml")?;
 
     let config: Config = serde_yaml::from_reader(file)?;

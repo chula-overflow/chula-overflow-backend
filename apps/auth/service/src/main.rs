@@ -5,18 +5,16 @@ mod proto {
 mod app;
 mod config;
 mod database;
-mod error;
 
 use std::net::SocketAddr;
 
-use app::auth::model::Session;
-use app::{repository::Repository, service::Service};
-use error::AuthError;
+use app::auth::{model::Session, service::AuthService};
 use proto::auth_server::AuthServer;
+use service_core::{Repository, Result};
 use tonic::transport::Server;
-#[allow(dead_code, unused_variables)]
+
 #[tokio::main]
-async fn main() -> Result<(), AuthError> {
+async fn main() -> Result<()> {
     let conf = config::load_config()?;
 
     // setup db
@@ -28,7 +26,7 @@ async fn main() -> Result<(), AuthError> {
     let addr: SocketAddr = conf.auth.addr.parse()?;
 
     let auth_repo = Repository::new(collection);
-    let auth_service = Service::new(auth_repo);
+    let auth_service = AuthService::new(auth_repo);
 
     println!("Listening on {}", addr);
 

@@ -1,7 +1,8 @@
-use crate::{config::Config, error::AuthError};
+use crate::config::Config;
 use mongodb::{options::ClientOptions, Client, Database};
+use service_core::Result;
 
-pub async fn get_db_conn(config: &Config) -> Result<Database, AuthError> {
+pub async fn get_db_conn(config: &Config) -> Result<Database> {
     let client_options: ClientOptions =
         ClientOptions::parse(format!("mongodb://{}", config.database.addr)).await?;
 

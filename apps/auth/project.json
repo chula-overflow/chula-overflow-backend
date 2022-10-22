@@ -6,14 +6,14 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "cargo build --release",
+        "command": "cargo build -p service --release",
         "cwd": "apps/auth"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "cargo run --release",
+        "command": "cargo run -p service --release",
         "cwd": "apps/auth"
       }
     }

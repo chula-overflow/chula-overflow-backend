@@ -1,14 +1,17 @@
 use crate::proto::{auth_server::Auth, AuthRequest, AuthResponse, RevokeRequest, RevokeResponse};
 
+use super::repository::SessionRepository;
 use mongodb::bson::DateTime;
 use tonic::{async_trait, Request, Response, Status};
 
 use super::model::{Revoke, Session};
 
-use super::super::service::Service;
+use service_macros::service;
+
+service!(pub AuthService use Session);
 
 #[async_trait]
-impl Auth for Service<Session> {
+impl Auth for AuthService {
     async fn login(&self, request: Request<AuthRequest>) -> Result<Response<AuthResponse>, Status> {
         let email = request.get_ref().email.to_owned();
         let token = uuid::Uuid::new_v4().to_string();
@@ -20,7 +23,7 @@ impl Auth for Service<Session> {
             create_at,
         };
 
-        let result = self.repository.login(&session).await;
+        let result = self.session_repository.login(&session).await;
 
         let token = session.token;
 
@@ -39,7 +42,7 @@ impl Auth for Service<Session> {
     ) -> Result<Response<RevokeResponse>, Status> {
         let token = request.get_ref().token.to_owned();
 
-        let result = self.repository.revoke(&Revoke { token }).await;
+        let result = self.session_repository.revoke(&Revoke { token }).await;
 
         match result {
             Ok(Some(_)) => Ok(Response::new(RevokeResponse {})),
