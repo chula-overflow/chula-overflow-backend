@@ -18,3 +18,11 @@ export interface ExamInterface {
       }[]
     | {};
 }
+
+export interface ExamBody {
+  course_id: string;
+  year: number; // 2022, 2021, 2020, ...
+  semester: string; // S1, S2
+  term: string; // mid | final
+  thread_ids?: string[];
+}

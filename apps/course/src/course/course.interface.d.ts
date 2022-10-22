@@ -28,6 +28,6 @@ interface thread {
   updated_at;
   created_at;
   title;
-  description;
   problems;
+  answers;
 }

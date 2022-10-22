@@ -18,7 +18,7 @@ export class Exam {
   term: string;
 
   @Prop()
-  thread_ids: string;
+  thread_ids: string[];
 }
 
 export const ExamSchema = SchemaFactory.createForClass(Exam);

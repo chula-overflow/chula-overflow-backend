@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CourseDocument } from 'src/course/course.schema';
 import { CourseService } from 'src/course/course.service';
 import { Exam, ExamDocument } from 'src/exam/exam.schema';
+import { ExamBody } from './exam.interface';
 
 @Injectable()
 export class ExamService {
@@ -18,13 +19,15 @@ export class ExamService {
   ) {}
 
   // create new exam and update that course to has exam id
-  async create(examData) {
+  async create(examData: ExamBody): Promise<ExamBody> {
     const newExam = new this.ExamModel(examData);
     const examId = newExam._id;
     const courseId = newExam.course_id;
 
+    // add exam id to course
     await this.CourseService.addExamId(examId, courseId);
-    return newExam;
+
+    return newExam.save();
   }
 
   // find all exams
@@ -40,8 +43,8 @@ export class ExamService {
     return exam;
   }
 
-  async findByProperty(year: number, semester: string, term: string) {
-    const exam = await this.ExamModel.find({
+  async findOneByProperty(year: number, semester: string, term: string) {
+    const exam = await this.ExamModel.findOne({
       year: year,
       semester: semester,
       term: term,
@@ -49,6 +52,8 @@ export class ExamService {
 
     return exam;
   }
+
+  async addThreadId(threadId: string) {}
 
   async update() {}
 
