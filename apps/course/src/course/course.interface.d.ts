@@ -1,33 +1,26 @@
-export interface CourseInterface {
+import { ObjectId } from 'mongoose';
+
+export interface CourseBody {
+  _id: ObjectId;
   course_id: string;
   course_name: string;
   course_codename: string;
   exam_ids?: string[];
 }
 
-interface course {
-  _id;
-  course_name;
-  course_codename;
-  course_id;
-  exams_id;
+export interface CourseCreateBody {
+  course_id: string;
+  course_name: string;
+  course_codename: string;
 }
 
-interface exam {
-  _id;
-  course_id;
-  year;
-  semester;
-  term;
-  threads: [thread_id];
+export interface CourseUpdateBody {
+  couse_id?: string;
+  course_name?: string;
+  course_codename?: string;
+  exam_ids?: string[];
 }
 
-interface thread {
-  _id;
-  exam_id;
-  updated_at;
-  created_at;
-  title;
-  problems;
-  answers;
+export interface GetCourseByCourseIdBody {
+  course_id: string;
 }

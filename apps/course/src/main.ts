@@ -8,7 +8,7 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: 'micr',
+        package: 'thread',
         protoPath: __dirname + '/../../proto/thread.proto',
       },
     },

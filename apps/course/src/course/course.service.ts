@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Course, CourseDocument } from 'src/course/course.schema';
-import { CourseInterface } from './course.interface';
+import {
+  CourseBody,
+  CourseCreateBody,
+  CourseUpdateBody,
+} from './course.interface';
 
 @Injectable()
 export class CourseService {
@@ -11,24 +15,24 @@ export class CourseService {
     private CourseModel: Model<CourseDocument>,
   ) {}
 
-  async create(courseData: CourseInterface): Promise<CourseInterface> {
+  async create(courseData: CourseCreateBody): Promise<CourseBody> {
     const newCourse = new this.CourseModel(courseData);
     return newCourse.save(); // return created course
   }
 
-  async find(): Promise<CourseInterface[]> {
+  async find(): Promise<CourseBody[]> {
     const courses = await this.CourseModel.find({}).exec();
     return courses; // return all courses with all properties
   }
 
-  async findOneByCourseId(courseId: string) {
+  async findOneByCourseId(courseId: string): Promise<CourseBody> {
     const course = await this.CourseModel.findOne({
       course_id: courseId,
     }).exec();
     return course; // return each course with all properties
   }
 
-  async addExamId(examId: string, courseId: string) {
+  async addExamId(examId: string, courseId: string): Promise<CourseBody> {
     const course = await this.findOneByCourseId(courseId);
     const courseDocumentId = course._id;
     const examsId = [...course.exam_ids, examId];
@@ -41,7 +45,23 @@ export class CourseService {
     return updatedCourse;
   }
 
-  async update(courseId: string) {}
+  async update(
+    courseId: string,
+    updateBody: CourseUpdateBody,
+  ): Promise<CourseBody> {
+    const updatedCourse = await this.CourseModel.findOneAndUpdate(
+      { course_id: courseId },
+      { ...updateBody },
+      { new: true },
+    );
 
-  async delete(courseId: string) {}
+    return updatedCourse;
+  }
+
+  async delete(courseId: string): Promise<CourseBody> {
+    const deletedCourse = await this.CourseModel.findOneAndRemove({
+      course_id: courseId,
+    });
+    return deletedCourse;
+  }
 }
