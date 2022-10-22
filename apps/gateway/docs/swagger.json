@@ -191,6 +191,128 @@
                     }
                 }
             }
+        },
+        "/thread": {
+            "post": {
+                "description": "Create thread (require session)",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "CreateThread",
+                "parameters": [
+                    {
+                        "description": "Thread information",
+                        "name": "thread",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateThread"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateThreadResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/thread/:thread_id": {
+            "get": {
+                "description": "get specific thread",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "GetThread",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Thread id",
+                        "name": "thread_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Thread"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/thread/:thread_id/reply": {
+            "post": {
+                "description": "Create reply in thread (require session)",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "CreateReply",
+                "parameters": [
+                    {
+                        "description": "Reply information",
+                        "name": "reply",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateReply"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Thread id",
+                        "name": "thread_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -223,6 +345,57 @@
                 "thread_count": {
                     "type": "integer",
                     "example": 12
+                }
+            }
+        },
+        "dto.CreateReply": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "example": "1+1=3"
+                }
+            }
+        },
+        "dto.CreateThread": {
+            "type": "object",
+            "properties": {
+                "course_name": {
+                    "type": "string",
+                    "example": "2110101 Calculus I"
+                },
+                "exam_name": {
+                    "type": "string",
+                    "example": "2011 - S1 - Final"
+                },
+                "problem_description": {
+                    "type": "string",
+                    "example": "What is 'Monad'?"
+                },
+                "problem_name": {
+                    "type": "string",
+                    "example": "1+1=???"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "calculus",
+                        "2110101",
+                        "limit",
+                        "hard"
+                    ]
+                }
+            }
+        },
+        "dto.CreateThreadResponse": {
+            "type": "object",
+            "properties": {
+                "thread_id": {
+                    "type": "string",
+                    "example": "TODO!(OBJECTID)"
                 }
             }
         },
@@ -264,6 +437,70 @@
                 "email": {
                     "type": "string",
                     "example": "6530000021@student.chula.ac.th"
+                }
+            }
+        },
+        "dto.Reply": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "example": "1+1=3"
+                },
+                "downvote": {
+                    "type": "integer",
+                    "example": 420
+                },
+                "thread_id": {
+                    "type": "string",
+                    "example": "TODO!(OBJECTID)"
+                },
+                "upvote": {
+                    "type": "integer",
+                    "example": 42
+                }
+            }
+        },
+        "dto.Thread": {
+            "type": "object",
+            "properties": {
+                "downvote": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "problem_description": {
+                    "type": "string",
+                    "example": "What is 'Monad'?"
+                },
+                "problem_name": {
+                    "type": "string",
+                    "example": "1+1=???"
+                },
+                "replies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Reply"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "calculus",
+                        "2110101",
+                        "limit",
+                        "hard"
+                    ]
+                },
+                "thread_id": {
+                    "type": "string",
+                    "example": "TODO!(OBJECTID)"
+                },
+                "upvote": {
+                    "type": "integer",
+                    "example": 12
                 }
             }
         },

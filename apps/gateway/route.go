@@ -7,9 +7,11 @@ import (
 	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/auth"
 	courseHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/course"
 	examHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/exam"
+	threadHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/thread"
 	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/auth"
 	courseSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/course"
 	examSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/exam"
+	threadSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/thread"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 	"google.golang.org/grpc"
@@ -17,7 +19,7 @@ import (
 )
 
 func (app *App) RegisterRoute() {
-	auth, course, exam := GetHandler(app.config)
+	auth, course, exam, thread := GetHandler(app.config)
 
 	metadata := MetaData{
 		url:          "/auth/login",
@@ -60,9 +62,30 @@ func (app *App) RegisterRoute() {
 		method:       GET,
 	}
 	app.AddHdr(exam.GetExam, metadata)
+
+	metadata = MetaData{
+		url:          "/thread/:thread_id",
+		requiredAuth: false,
+		method:       GET,
+	}
+	app.AddHdr(thread.GetThread, metadata)
+
+	metadata = MetaData{
+		url:          "/thread/post",
+		requiredAuth: true,
+		method:       GET,
+	}
+	app.AddHdr(thread.CreateThread, metadata)
+
+	metadata = MetaData{
+		url:          "/thread/:thread_id/reply",
+		requiredAuth: true,
+		method:       POST,
+	}
+	app.AddHdr(thread.CreateReply, metadata)
 }
 
-func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHdr.Handler) {
+func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHdr.Handler, threadHdr.Handler) {
 	conn, err := grpc.Dial(conf.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -93,5 +116,15 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 	examService := examSrv.NewService(examClient)
 	exam := examHdr.NewHandler(&examService)
 
-	return auth, course, exam
+	conn, err = grpc.Dial(conf.Exam.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+		os.Exit(2)
+	}
+
+	threadClient := proto.NewThreadClient(conn)
+	threadService := threadSrv.NewService(threadClient)
+	thread := threadHdr.NewHandler(&threadService)
+
+	return auth, course, exam, thread
 }

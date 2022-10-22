@@ -7,7 +7,10 @@
 package proto
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ThreadClient interface {
+	GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error)
+	CreateThread(ctx context.Context, in *CreateThreadRequest, opts ...grpc.CallOption) (*CreateThreadResponse, error)
+	CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*CreateReplyResponse, error)
 }
 
 type threadClient struct {
@@ -29,14 +35,54 @@ func NewThreadClient(cc grpc.ClientConnInterface) ThreadClient {
 	return &threadClient{cc}
 }
 
+func (c *threadClient) GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error) {
+	out := new(GetThreadResponse)
+	err := c.cc.Invoke(ctx, "/thread.Thread/GetThread", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *threadClient) CreateThread(ctx context.Context, in *CreateThreadRequest, opts ...grpc.CallOption) (*CreateThreadResponse, error) {
+	out := new(CreateThreadResponse)
+	err := c.cc.Invoke(ctx, "/thread.Thread/CreateThread", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *threadClient) CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*CreateReplyResponse, error) {
+	out := new(CreateReplyResponse)
+	err := c.cc.Invoke(ctx, "/thread.Thread/CreateReply", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ThreadServer is the server API for Thread service.
 // All implementations should embed UnimplementedThreadServer
 // for forward compatibility
 type ThreadServer interface {
+	GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error)
+	CreateThread(context.Context, *CreateThreadRequest) (*CreateThreadResponse, error)
+	CreateReply(context.Context, *CreateReplyRequest) (*CreateReplyResponse, error)
 }
 
 // UnimplementedThreadServer should be embedded to have forward compatible implementations.
 type UnimplementedThreadServer struct {
+}
+
+func (UnimplementedThreadServer) GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetThread not implemented")
+}
+func (UnimplementedThreadServer) CreateThread(context.Context, *CreateThreadRequest) (*CreateThreadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateThread not implemented")
+}
+func (UnimplementedThreadServer) CreateReply(context.Context, *CreateReplyRequest) (*CreateReplyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateReply not implemented")
 }
 
 // UnsafeThreadServer may be embedded to opt out of forward compatibility for this service.
@@ -50,13 +96,80 @@ func RegisterThreadServer(s grpc.ServiceRegistrar, srv ThreadServer) {
 	s.RegisterService(&Thread_ServiceDesc, srv)
 }
 
+func _Thread_GetThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetThreadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).GetThread(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/GetThread",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).GetThread(ctx, req.(*GetThreadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Thread_CreateThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateThreadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).CreateThread(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/CreateThread",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).CreateThread(ctx, req.(*CreateThreadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Thread_CreateReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReplyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).CreateReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/CreateReply",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).CreateReply(ctx, req.(*CreateReplyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Thread_ServiceDesc is the grpc.ServiceDesc for Thread service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Thread_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "thread.Thread",
 	HandlerType: (*ThreadServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "thread.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetThread",
+			Handler:    _Thread_GetThread_Handler,
+		},
+		{
+			MethodName: "CreateThread",
+			Handler:    _Thread_CreateThread_Handler,
+		},
+		{
+			MethodName: "CreateReply",
+			Handler:    _Thread_CreateReply_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "thread.proto",
 }

@@ -11,8 +11,7 @@ service Course {
     rpc GetCourse (GetCourseRequest) returns (GetCourseResponse) {}
 }
 
-message GetAllCourseSummaryRequest {
-}
+message GetAllCourseSummaryRequest {}
 
 message GetAllCourseSummaryResponse {
     repeated CourseSummary courses = 1;

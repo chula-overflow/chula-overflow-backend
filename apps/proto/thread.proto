@@ -5,7 +5,23 @@ package thread;
 option go_package = "./proto";
 
 service Thread {
-  // rpc FindOne (MicrById) returns (Micr) {}
+  rpc GetThread (GetThreadRequest) returns (GetThreadResponse) {}
+  rpc CreateThread (CreateThreadRequest) returns (CreateThreadResponse) {}
+  rpc CreateReply (CreateReplyRequest) returns (CreateReplyResponse) {}
+}
+
+message GetThreadRequest {
+  string thread_id = 1;
+}
+
+message GetThreadResponse {
+  string thread_id = 1;
+  string problem_name = 2;
+  string problem_description = 3;
+  repeated Reply replies = 4;
+  repeated string tags = 5;
+  int32 upvote = 6;
+  int32 downvote = 7;
 }
 
 message ThreadSummary {
@@ -15,4 +31,30 @@ message ThreadSummary {
   int32 upvote = 4;
   int32 downvote = 5;
   repeated string tags = 6;
+}
+
+message CreateThreadRequest {
+  string course_name = 1;
+  string exam_name = 2;
+  string problem_description = 3;
+  string problem_name = 4;
+  repeated string tags = 5;
+}
+
+message CreateThreadResponse {
+  string thread_id = 1;
+}
+
+message CreateReplyRequest {
+  string body = 1;
+  string thread_id = 2;
+}
+
+message CreateReplyResponse {}
+
+message Reply {
+  string thread_id = 1;
+  string body = 2;
+  int32 upvote = 3;
+  int32 downvote = 4;
 }

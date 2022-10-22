@@ -37,6 +37,7 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 		return err
 	}
 
+	// todo: change service to dto
 	res, err := h.Service.Login(login.Email)
 	if err != nil {
 		if _, ok := status.FromError(err); ok {
