@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - 'apps/auth/**'
-      - 'apps/proto/**'
+      - 'apps/proto/auth.proto'
+      - 'apps/proto/user.proto'
 
 jobs:
   build:
