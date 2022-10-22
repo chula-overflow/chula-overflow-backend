@@ -1,7 +1,8 @@
 use serde::Deserialize;
 
 use service_core::Result;
-use std::fs::File;
+
+use std::env::var;
 
 #[derive(Deserialize)]
 pub struct Config {
@@ -23,9 +24,19 @@ pub struct DbConfig {
 }
 
 pub fn load_config() -> Result<Config> {
-    let file: File = File::open("../config/config.yaml")?;
-
-    let config: Config = serde_yaml::from_reader(file)?;
+    let config = Config {
+        gateway: Endpoint {
+            addr: var("GATEWAY_URL")?,
+        },
+        auth: Endpoint {
+            addr: var("AUTH_URL")?,
+        },
+        database: DbConfig {
+            addr: var("MONGODB_URL")?,
+            db_name: var("MONGODB_DB_NAME")?,
+        },
+        deployment: var("DEPLOYMENT")?,
+    };
 
     Ok(config)
 }

@@ -35,3 +35,6 @@ npm i -g nx
 
 ## Note
 Please don't mind that auth take like 5 minutes compile time.
+
+## Env
+.env is supposed to use for containerization purpose. It will **not** automatically load into any service. please load it yourself.

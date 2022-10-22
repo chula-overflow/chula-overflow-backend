@@ -1,46 +1,46 @@
 package config
 
 import (
-	"io/ioutil"
-	"log"
-
-	"gopkg.in/yaml.v3"
+	"errors"
+	"os"
 )
 
-// this code is generated in https://zhwt.github.io/yaml-to-go/
 type Config struct {
-	Gateway struct {
-		Addr string `yaml:"addr"`
-	} `yaml:"gateway"`
-	Auth struct {
-		Addr string `yaml:"addr"`
-	} `yaml:"auth"`
-	Course struct {
-		Addr string `yaml:"addr"`
-	} `yaml:"course"`
-	Exam struct {
-		Addr string `yaml:"addr"`
-	} `yaml:"exam"`
-	Database struct {
-		Addr   string `yaml:"addr"`
-		DbName string `yaml:"db_name"`
-	} `yaml:"database"`
-	Deployment string `yaml:"deployment"`
+	GatewayURL string
+	AuthURL    string
+	CourseURL  string
+	ExamURL    string
+	ThreadURL  string
+	Deployment string
 }
 
 func LoadConfig() (*Config, error) {
-	var conf Config
-
-	yamlFile, err := ioutil.ReadFile("../config/config.yaml")
-	if err != nil {
-		log.Printf("yamlFile.Get err #%v ", err)
-		return nil, err
+	GatewayURL := os.Getenv("GATEWAY_URL")
+	if GatewayURL == "" {
+		return nil, errors.New("environment variable not set")
 	}
-	err = yaml.Unmarshal(yamlFile, &conf)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-		return nil, err
+	AuthURL := os.Getenv("AUTH_URL")
+	if AuthURL == "" {
+		return nil, errors.New("environment variable not set")
+	}
+	CourseURL := os.Getenv("COURSE_URL")
+	if CourseURL == "" {
+		return nil, errors.New("environment variable not set")
+	}
+	ExamURL := os.Getenv("EXAM_URL")
+	if ExamURL == "" {
+		return nil, errors.New("environment variable not set")
+	}
+	ThreadURL := os.Getenv("EXAM_URL")
+	if ThreadURL == "" {
+		return nil, errors.New("environment variable not set")
+	}
+	Deployment := os.Getenv("DEPLOYMENT")
+	if Deployment == "" {
+		return nil, errors.New("environment variable not set")
 	}
 
-	return &conf, nil
+	return &Config{
+		GatewayURL, AuthURL, CourseURL, ExamURL, ThreadURL, Deployment,
+	}, nil
 }

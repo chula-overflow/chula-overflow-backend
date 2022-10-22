@@ -2,18 +2,18 @@ use std::net::AddrParseError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("Database error: {0}")]
+    #[error("database error: {0}")]
     DbError(#[from] mongodb::error::Error),
-    #[error("IO error")]
+    #[error("io error")]
     IOError(#[from] std::io::Error),
-    #[error("Address parsing error")]
+    #[error("address parsing error")]
     AddrParseError(#[from] AddrParseError),
-    #[error("YAML parsing error")]
-    YAMLParseError(#[from] serde_yaml::Error),
-    #[error("UUID parsing error")]
+    #[error("var error")]
+    EnvError(#[from] std::env::VarError),
+    #[error("uuid parsing error")]
     UUIDParseError(#[from] mongodb::bson::uuid::Error),
-    #[error("GRpc server error")]
+    #[error("grpc server error")]
     GRpcServerError(#[from] tonic::transport::Error),
-    #[error("Unknown error")]
+    #[error("unknown error")]
     Unknown(#[from] Box<dyn std::error::Error>),
 }

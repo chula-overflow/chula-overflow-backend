@@ -21,7 +21,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	port := strings.Split(conf.Gateway.Addr, ":")[1]
+	port := strings.Split(conf.GatewayURL, ":")[1]
 
 	app := NewServer(conf)
 

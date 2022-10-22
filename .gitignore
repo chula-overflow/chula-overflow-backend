@@ -45,3 +45,5 @@ target
 
 # Golang binary
 *.exe
+
+.env

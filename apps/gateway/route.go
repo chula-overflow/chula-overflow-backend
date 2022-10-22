@@ -86,7 +86,7 @@ func (app *App) RegisterRoute() {
 }
 
 func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHdr.Handler, threadHdr.Handler) {
-	conn, err := grpc.Dial(conf.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(conf.AuthURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		os.Exit(2)
@@ -96,7 +96,7 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 	authService := authSrv.NewService(authClient)
 	auth := authHdr.NewHandler(&authService)
 
-	conn, err = grpc.Dial(conf.Course.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial(conf.CourseURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		os.Exit(2)
@@ -106,7 +106,7 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 	courseService := courseSrv.NewService(courseClient)
 	course := courseHdr.NewHandler(&courseService)
 
-	conn, err = grpc.Dial(conf.Exam.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial(conf.ExamURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		os.Exit(2)
@@ -116,7 +116,7 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 	examService := examSrv.NewService(examClient)
 	exam := examHdr.NewHandler(&examService)
 
-	conn, err = grpc.Dial(conf.Exam.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial(conf.ThreadURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		os.Exit(2)
