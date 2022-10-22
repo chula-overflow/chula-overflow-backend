@@ -10,12 +10,8 @@ nx run-many --target=serve
 ```
 
 ## TODO
-- Buildscript
-- DB setup
-- Talk about grpc and api
 - code linter / format
   - prettier / editorconfig
-- Github workflows
 - Automated test
 
 ## prerequisite

@@ -1,7 +1,7 @@
 package dto
 
 type ThreadSummary struct {
-	ThreadId           string   `json:"thread_id" example:"TODO!(OBJECTID)"`
+	ThreadId           string   `json:"thread_id" example:"507f1f77bcf86cd799439011!(OBJECTID)"`
 	ProblemName        string   `json:"problem_name" example:"1+1=???"`
 	ProblemDescription string   `json:"problem_description" example:"What is 'Monad'?"`
 	Upvote             int32    `json:"upvote" example:"12"`
@@ -10,7 +10,7 @@ type ThreadSummary struct {
 }
 
 type Thread struct {
-	ThreadId           string   `json:"thread_id" example:"TODO!(OBJECTID)"`
+	ThreadId           string   `json:"thread_id" example:"507f1f77bcf86cd799439011!(OBJECTID)"`
 	ProblemName        string   `json:"problem_name" example:"1+1=???"`
 	ProblemDescription string   `json:"problem_description" example:"What is 'Monad'?"`
 	Upvote             int32    `json:"upvote" example:"12"`
@@ -20,7 +20,7 @@ type Thread struct {
 }
 
 type Reply struct {
-	ThreadId string `json:"thread_id" example:"TODO!(OBJECTID)"`
+	ThreadId string `json:"thread_id" example:"507f1f77bcf86cd799439011!(OBJECTID)"`
 	Body     string `json:"body" example:"1+1=3"`
 	Upvote   int32  `json:"upvote" example:"42"`
 	Downvote int32  `json:"downvote" example:"420"`
@@ -39,5 +39,5 @@ type CreateReply struct {
 }
 
 type CreateThreadResponse struct {
-	ThreadId string `json:"thread_id" example:"TODO!(OBJECTID)"`
+	ThreadId string `json:"thread_id" example:"507f1f77bcf86cd799439011!(OBJECTID)"`
 }

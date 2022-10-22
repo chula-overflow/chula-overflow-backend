@@ -343,7 +343,7 @@ const docTemplate = `{
             "properties": {
                 "course_id": {
                     "type": "string",
-                    "example": "TODO!(MONGOOBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 },
                 "course_name": {
                     "type": "string",
@@ -402,7 +402,7 @@ const docTemplate = `{
             "properties": {
                 "thread_id": {
                     "type": "string",
-                    "example": "TODO!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
                 }
             }
         },
@@ -426,7 +426,7 @@ const docTemplate = `{
             "properties": {
                 "exam_id": {
                     "type": "string",
-                    "example": "TODO!(MONGOOBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 },
                 "exam_name": {
                     "type": "string",
@@ -460,7 +460,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "TODO!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
                 },
                 "upvote": {
                     "type": "integer",
@@ -503,7 +503,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "TODO!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
                 },
                 "upvote": {
                     "type": "integer",
@@ -540,7 +540,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "TODO!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
                 },
                 "upvote": {
                     "type": "integer",

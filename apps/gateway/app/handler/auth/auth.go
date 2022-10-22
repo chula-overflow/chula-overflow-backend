@@ -12,7 +12,7 @@ import (
 )
 
 type IService interface {
-	Login(string) (*string, error)
+	Login(*dto.Login) (*string, error)
 	Revoke(string) error
 	Me(string) (*dto.User, error)
 }
@@ -37,8 +37,7 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 		return err
 	}
 
-	// todo: change service to dto
-	res, err := h.Service.Login(login.Email)
+	res, err := h.Service.Login(login)
 	if err != nil {
 		if _, ok := status.FromError(err); ok {
 			log.Println("Service down")
