@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Course, CourseDocument } from 'src/models/course.schema';
+import { Course, CourseDocument } from 'src/course/course.schema';
 import { CourseInterface } from './course.interface';
 
 @Injectable()
@@ -13,11 +13,35 @@ export class CourseService {
 
   async create(courseData: CourseInterface): Promise<CourseInterface> {
     const newCourse = new this.CourseModel(courseData);
-    return newCourse.save();
+    return newCourse.save(); // return created course
   }
 
   async find(): Promise<CourseInterface[]> {
-    const courses = this.CourseModel.find().exec();
-    return courses;
+    const courses = await this.CourseModel.find({}).exec();
+    return courses; // return all courses with all properties
   }
+
+  async findOneByCourseId(courseId: string) {
+    const course = await this.CourseModel.findOne({
+      course_id: courseId,
+    }).exec();
+    return course; // return each course with all properties
+  }
+
+  async addExamId(examId: string, courseId: string) {
+    const course = await this.findOneByCourseId(courseId);
+    const courseDocumentId = course._id;
+    const examsId = [...course.exam_ids, examId];
+    const updatedCourse = await this.CourseModel.findByIdAndUpdate(
+      courseDocumentId,
+      { exam_ids: examsId },
+      { new: true },
+    );
+
+    return updatedCourse;
+  }
+
+  async update(courseId: string) {}
+
+  async delete(courseId: string) {}
 }
