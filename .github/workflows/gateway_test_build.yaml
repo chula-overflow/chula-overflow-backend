@@ -1,4 +1,4 @@
-name: Auth service build test
+name: Gateway service build test
 
 on:
   push:
