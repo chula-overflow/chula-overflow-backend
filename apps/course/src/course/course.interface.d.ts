@@ -3,17 +3,22 @@ export interface CourseInterface {
   courseCodename: string;
   courseId: string;
   exams: {
-    term: string;
-    year: number;
-    threads: {
-      title: string; // generated from nlp
-      problems: {
-        description: string;
-        answer: string;
-        upvoted: number;
-        downvoted: number;
-      }[];
-    }[];
+    term: string; // mid | final
+    year: number; // 2022, 2021, 2020, ...
+    threads:
+      | {
+          title: string; // if thread's length is more than 1 then generated from nlp
+          description: string; // from the most upvoted thread
+          problems:
+            | {
+                description: string;
+                answer: string;
+                upvoted: number;
+                downvoted: number;
+              }[]
+            | {};
+        }[]
+      | {};
   }[];
 }
 

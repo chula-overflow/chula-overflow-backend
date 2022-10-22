@@ -20,6 +20,7 @@ export class Course {
     year: number;
     threads: {
       title: string;
+      description: string;
       problems: {
         description: string;
         answer: string;
