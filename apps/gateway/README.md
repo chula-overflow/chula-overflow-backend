@@ -1,7 +1,14 @@
+## Run
+```sh
+go run .
+```
+
+api doc at `/swagger/index.html` don't forget to change deployment config to development
+
 ## TODO
 - Proper logging
 - Proper Error handling
 - Validator
 
 ## Note
-Don't trust response code if you it doesn't behave as you expect. Error handling haven't been implement yet.
+- I hate golang project layout

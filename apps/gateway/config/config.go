@@ -15,6 +15,13 @@ type Config struct {
 	Auth struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"auth"`
+	Course struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"course"`
+	Database struct {
+		Addr   string `yaml:"addr"`
+		DbName string `yaml:"db_name"`
+	} `yaml:"database"`
 	Deployment string `yaml:"deployment"`
 }
 

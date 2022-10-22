@@ -27,6 +27,8 @@ type Handler struct {
 // @Accept json
 // @Param login body dto.Login false "email use for login"  Format(email)
 // @Success 200
+// @Failure 401
+// @Failure 422
 // @Router /auth/login [post]
 func (h *Handler) Login(ctx *context.Ctx) error {
 	login := new(dto.Login)
@@ -59,6 +61,9 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 // @Description Revoke session
 // @Tags Auth
 // @Success 200
+// @Failure 401
+// @Failure 404
+// @Failure 500
 // @Router /auth/revoke [get]
 func (h *Handler) Revoke(ctx *context.Ctx) error {
 	err := h.Service.Revoke(ctx.SessionId())
@@ -90,6 +95,9 @@ func (h *Handler) Revoke(ctx *context.Ctx) error {
 // @Description Get current session detail
 // @Tags Auth
 // @Success 200 {object} dto.User
+// @Failure 401
+// @Failure 503
+// @Failure 500
 // @Router /auth/me [get]
 func (h *Handler) Me(ctx *context.Ctx) error {
 	ret, err := h.Service.Me(ctx.SessionId())

@@ -34,6 +34,12 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
                     }
                 }
             }
@@ -51,6 +57,15 @@
                         "schema": {
                             "$ref": "#/definitions/dto.User"
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
                     }
                 }
             }
@@ -65,12 +80,134 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/course": {
+            "get": {
+                "description": "get detail summary for all course",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Course"
+                ],
+                "summary": "GetAllCourseSummary",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.CourseSummary"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/course/:course_id": {
+            "get": {
+                "description": "Get specific course",
+                "tags": [
+                    "Course"
+                ],
+                "summary": "GetCourse",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "course ID",
+                        "name": "course_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Course"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
                     }
                 }
             }
         }
     },
     "definitions": {
+        "dto.Course": {
+            "type": "object",
+            "properties": {
+                "course_name": {
+                    "type": "string",
+                    "example": "2110101 Calculus I"
+                },
+                "exams": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ExamSummary"
+                    }
+                }
+            }
+        },
+        "dto.CourseSummary": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "type": "string",
+                    "example": "TODO!(MONGOOBJECTID)"
+                },
+                "course_name": {
+                    "type": "string",
+                    "example": "2011 - S1 - Final"
+                },
+                "thread_count": {
+                    "type": "integer",
+                    "example": 12
+                }
+            }
+        },
+        "dto.ExamSummary": {
+            "type": "object",
+            "properties": {
+                "exam_id": {
+                    "type": "string",
+                    "example": "TODO!(MONGOOBJECTID)"
+                },
+                "exam_name": {
+                    "type": "string",
+                    "example": "2011 - S1 - Final"
+                },
+                "thread_count": {
+                    "type": "integer",
+                    "example": 12
+                }
+            }
+        },
         "dto.Login": {
             "type": "object",
             "properties": {

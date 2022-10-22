@@ -5,7 +5,9 @@ import (
 	"os"
 
 	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/auth"
+	courseHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/course"
 	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/auth"
+	courseSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/course"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 	"google.golang.org/grpc"
@@ -13,7 +15,7 @@ import (
 )
 
 func (app *App) RegisterRoute() {
-	auth := GetHandler(app.config)
+	auth, course := GetHandler(app.config)
 
 	metadata := MetaData{
 		url:          "/auth/login",
@@ -35,17 +37,42 @@ func (app *App) RegisterRoute() {
 		method:       GET,
 	}
 	app.AddHdr(auth.Me, metadata)
+
+	metadata = MetaData{
+		url:          "/course",
+		requiredAuth: false,
+		method:       GET,
+	}
+	app.AddHdr(course.GetAllCourseSummary, metadata)
+
+	metadata = MetaData{
+		url:          "/course/:course_id",
+		requiredAuth: false,
+		method:       GET,
+	}
+	app.AddHdr(course.GetCourse, metadata)
 }
 
-func GetHandler(conf *config.Config) authHdr.Handler {
+func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler) {
 	conn, err := grpc.Dial(conf.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		os.Exit(2)
 	}
+
 	authClient := proto.NewAuthClient(conn)
 	authService := authSrv.NewService(authClient)
 	auth := authHdr.NewHandler(&authService)
 
-	return auth
+	conn, err = grpc.Dial(conf.Course.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+		os.Exit(2)
+	}
+
+	courseClient := proto.NewCourseClient(conn)
+	courseService := courseSrv.NewService(courseClient)
+	course := courseHdr.NewHandler(&courseService)
+
+	return auth, course
 }
