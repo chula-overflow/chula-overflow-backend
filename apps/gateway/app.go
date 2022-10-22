@@ -5,6 +5,8 @@ import (
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 type App struct {
@@ -12,7 +14,7 @@ type App struct {
 	config *config.Config
 }
 
-type Handler = func(*context.Ctx)
+type Handler = func(*context.Ctx) error
 
 type Method int
 
@@ -27,14 +29,26 @@ type MetaData struct {
 	method       Method
 }
 
-func NewServer(fiberApp *fiber.App, conf *config.Config) *App {
-	return &App{
+func NewServer(conf *config.Config) *App {
+	fiberApp := fiber.New()
+
+	app := &App{
 		fiberApp,
 		conf,
 	}
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
+	app.Use(recover.New())
+
+	app.RegisterRoute()
+
+	return app
 }
 
-func (app *App) RegisterHdr(handler Handler, metadata MetaData) {
+func (app *App) AddHdr(handler Handler, metadata MetaData) {
 	if metadata.requiredAuth {
 		app.Use(metadata.url, middleware.AuthMiddleWare)
 	}
@@ -43,14 +57,12 @@ func (app *App) RegisterHdr(handler Handler, metadata MetaData) {
 
 	case GET:
 		app.Get(metadata.url, func(ctx *fiber.Ctx) error {
-			handler(context.NewCtx(ctx))
-			return nil
+			return handler(context.NewCtx(ctx))
 		})
 
 	case POST:
 		app.Post(metadata.url, func(ctx *fiber.Ctx) error {
-			handler(context.NewCtx(ctx))
-			return nil
+			return handler(context.NewCtx(ctx))
 		})
 	}
 

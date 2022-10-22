@@ -1,4 +1,7 @@
-use crate::proto::{auth_server::Auth, AuthRequest, AuthResponse, RevokeRequest, RevokeResponse};
+use crate::proto::{
+    auth_server::Auth, AuthRequest, AuthResponse, MeRequest, MeResponse, RevokeRequest,
+    RevokeResponse,
+};
 
 use super::repository::SessionRepository;
 use mongodb::bson::DateTime;
@@ -52,5 +55,21 @@ impl Auth for AuthService {
                 Err(Status::internal(e.to_string()))
             }
         }
+    }
+
+    async fn me(&self, _request: Request<MeRequest>) -> Result<Response<MeResponse>, Status> {
+        todo!()
+        // let token = request.get_ref().token.to_owned();
+
+        // let result = self.session_repository.revoke(&Revoke { token }).await;
+
+        // match result {
+        //     Ok(Some(_)) => Ok(Response::new(RevokeResponse {})),
+        //     Ok(None) => Err(Status::not_found("Token not found")),
+        //     Err(e) => {
+        //         eprintln!("Err: {}", e);
+        //         Err(Status::internal(e.to_string()))
+        //     }
+        // }
     }
 }

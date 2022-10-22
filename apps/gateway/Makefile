@@ -1,10 +1,10 @@
-build: docs protoc dependency
+build: create-docs protoc dependency
 	go build .
 
 dependency:
 	go mod download
 
-docs:
+create-docs:
 	swag init -o docs
 
 protoc:
