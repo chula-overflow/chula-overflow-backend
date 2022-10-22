@@ -21,7 +21,7 @@ message GetAllCourseSummaryResponse {
 message CourseSummary {
     string course_id = 1;
     string course_name = 2;
-    int32 exam_count = 3;
+    int32 thread_count = 3;
 }
 
 message GetCourseRequest {
