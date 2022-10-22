@@ -30,13 +30,13 @@ export class CourseService {
 
   async addExamId(examId: string, courseId: string) {
     const course = await this.CourseModel.findOne({
-      courseId: courseId,
+      course_id: courseId,
     }).exec();
     const courseDocumentId = course._id;
-    const examsId = [...course.exams_id, examId];
+    const examsId = [...course.exam_ids, examId];
     const updatedCourse = await this.CourseModel.findByIdAndUpdate(
       courseDocumentId,
-      { exams_id: examsId },
+      { exam_ids: examsId },
       { new: true },
     );
 

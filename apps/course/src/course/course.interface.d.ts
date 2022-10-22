@@ -1,8 +1,8 @@
 export interface CourseInterface {
-  courseId: string;
-  courseName: string;
-  courseCodename: string;
-  exams_id?: string[];
+  course_id: string;
+  course_name: string;
+  course_codename: string;
+  exam_ids?: string[];
 }
 
 interface course {
@@ -16,9 +16,9 @@ interface course {
 interface exam {
   _id;
   course_id;
-  term;
-  semester;
   year;
+  semester;
+  term;
   threads: [thread_id];
 }
 

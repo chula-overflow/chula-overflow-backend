@@ -9,13 +9,16 @@ export class Exam {
   course_id: string;
 
   @Prop({ required: true })
-  term: string;
+  year: number;
 
   @Prop({ required: true })
   semester: string;
 
   @Prop({ required: true })
-  year: string;
+  term: string;
+
+  @Prop()
+  thread_ids: string;
 }
 
 export const ExamSchema = SchemaFactory.createForClass(Exam);

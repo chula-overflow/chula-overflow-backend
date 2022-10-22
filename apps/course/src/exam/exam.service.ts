@@ -17,6 +17,7 @@ export class ExamService {
     private readonly CourseService: CourseService,
   ) {}
 
+  // create new exam and update that course to has exam id
   async create(examData) {
     const newExam = new this.ExamModel(examData);
     const examId = newExam._id;
@@ -26,7 +27,28 @@ export class ExamService {
     return newExam;
   }
 
-  async find() {}
+  // find all exams
+  async find() {
+    const exams = await this.ExamModel.find({}).exec();
+    return exams;
+  }
+
+  async findOneByCourseId(courseId: string) {
+    const exam = await this.ExamModel.findOne({
+      course_id: courseId,
+    }).exec();
+    return exam;
+  }
+
+  async findByProperty(year: number, semester: string, term: string) {
+    const exam = await this.ExamModel.find({
+      year: year,
+      semester: semester,
+      term: term,
+    }).exec();
+
+    return exam;
+  }
 
   async update() {}
 

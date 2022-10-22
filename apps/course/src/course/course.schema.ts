@@ -6,16 +6,16 @@ export type CourseDocument = Course & Document;
 @Schema()
 export class Course {
   @Prop({ required: true })
-  courseId: string;
+  course_id: string;
 
   @Prop({ required: true })
-  courseName: string;
+  course_name: string;
 
   @Prop({ required: true })
-  courseCodename: string;
+  course_codename: string;
 
   @Prop()
-  exams_id: string[];
+  exam_ids: string[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

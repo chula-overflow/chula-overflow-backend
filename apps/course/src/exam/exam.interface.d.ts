@@ -1,8 +1,8 @@
 export interface ExamInterface {
   course_id: string;
-  term: string; // mid | final
-  semester: number; // 1, 2
   year: number; // 2022, 2021, 2020, ...
+  semester: string; // S1, S2
+  term: string; // mid | final
   threads:
     | {
         title: string; // if thread's length is more than 1 then generated from nlp
