@@ -4,6 +4,12 @@ gateway:
 auth:
   addr: 127.0.0.1:3001
 
+course:
+  addr: 127.0.0.1:3002
+
+exam:
+  addr: 127.0.0.1:3003
+
 database:
   addr: 127.0.0.1:27017
   db_name: test

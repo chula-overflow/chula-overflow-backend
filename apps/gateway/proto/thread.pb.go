@@ -20,16 +20,21 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type MicrById struct {
+type ThreadSummary struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ThreadId           string   `protobuf:"bytes,1,opt,name=thread_id,json=threadId,proto3" json:"thread_id,omitempty"`
+	ProblemName        string   `protobuf:"bytes,2,opt,name=problem_name,json=problemName,proto3" json:"problem_name,omitempty"`
+	ProblemDescription string   `protobuf:"bytes,3,opt,name=problem_description,json=problemDescription,proto3" json:"problem_description,omitempty"`
+	Upvote             int32    `protobuf:"varint,4,opt,name=upvote,proto3" json:"upvote,omitempty"`
+	Downvote           int32    `protobuf:"varint,5,opt,name=downvote,proto3" json:"downvote,omitempty"`
+	Tags               []string `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
 }
 
-func (x *MicrById) Reset() {
-	*x = MicrById{}
+func (x *ThreadSummary) Reset() {
+	*x = ThreadSummary{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_thread_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +42,13 @@ func (x *MicrById) Reset() {
 	}
 }
 
-func (x *MicrById) String() string {
+func (x *ThreadSummary) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MicrById) ProtoMessage() {}
+func (*ThreadSummary) ProtoMessage() {}
 
-func (x *MicrById) ProtoReflect() protoreflect.Message {
+func (x *ThreadSummary) ProtoReflect() protoreflect.Message {
 	mi := &file_thread_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,87 +60,72 @@ func (x *MicrById) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MicrById.ProtoReflect.Descriptor instead.
-func (*MicrById) Descriptor() ([]byte, []int) {
+// Deprecated: Use ThreadSummary.ProtoReflect.Descriptor instead.
+func (*ThreadSummary) Descriptor() ([]byte, []int) {
 	return file_thread_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MicrById) GetId() int32 {
+func (x *ThreadSummary) GetThreadId() string {
 	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type Micr struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id   int32  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-}
-
-func (x *Micr) Reset() {
-	*x = Micr{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_thread_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Micr) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Micr) ProtoMessage() {}
-
-func (x *Micr) ProtoReflect() protoreflect.Message {
-	mi := &file_thread_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Micr.ProtoReflect.Descriptor instead.
-func (*Micr) Descriptor() ([]byte, []int) {
-	return file_thread_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Micr) GetId() int32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *Micr) GetName() string {
-	if x != nil {
-		return x.Name
+		return x.ThreadId
 	}
 	return ""
+}
+
+func (x *ThreadSummary) GetProblemName() string {
+	if x != nil {
+		return x.ProblemName
+	}
+	return ""
+}
+
+func (x *ThreadSummary) GetProblemDescription() string {
+	if x != nil {
+		return x.ProblemDescription
+	}
+	return ""
+}
+
+func (x *ThreadSummary) GetUpvote() int32 {
+	if x != nil {
+		return x.Upvote
+	}
+	return 0
+}
+
+func (x *ThreadSummary) GetDownvote() int32 {
+	if x != nil {
+		return x.Downvote
+	}
+	return 0
+}
+
+func (x *ThreadSummary) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
 }
 
 var File_thread_proto protoreflect.FileDescriptor
 
 var file_thread_proto_rawDesc = []byte{
-	0x0a, 0x0c, 0x74, 0x68, 0x72, 0x65, 0x61, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04,
-	0x6d, 0x69, 0x63, 0x72, 0x22, 0x1a, 0x0a, 0x08, 0x4d, 0x69, 0x63, 0x72, 0x42, 0x79, 0x49, 0x64,
-	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64,
-	0x22, 0x2a, 0x0a, 0x04, 0x4d, 0x69, 0x63, 0x72, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x36, 0x0a, 0x0b,
-	0x4d, 0x69, 0x63, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x27, 0x0a, 0x07, 0x46,
-	0x69, 0x6e, 0x64, 0x4f, 0x6e, 0x65, 0x12, 0x0e, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x2e, 0x4d, 0x69,
-	0x63, 0x72, 0x42, 0x79, 0x49, 0x64, 0x1a, 0x0a, 0x2e, 0x6d, 0x69, 0x63, 0x72, 0x2e, 0x4d, 0x69,
-	0x63, 0x72, 0x22, 0x00, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x0c, 0x74, 0x68, 0x72, 0x65, 0x61, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06,
+	0x74, 0x68, 0x72, 0x65, 0x61, 0x64, 0x22, 0xc8, 0x01, 0x0a, 0x0d, 0x54, 0x68, 0x72, 0x65, 0x61,
+	0x64, 0x53, 0x75, 0x6d, 0x6d, 0x61, 0x72, 0x79, 0x12, 0x1b, 0x0a, 0x09, 0x74, 0x68, 0x72, 0x65,
+	0x61, 0x64, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x74, 0x68, 0x72,
+	0x65, 0x61, 0x64, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x70, 0x72, 0x6f, 0x62, 0x6c, 0x65, 0x6d,
+	0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x70, 0x72, 0x6f,
+	0x62, 0x6c, 0x65, 0x6d, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x2f, 0x0a, 0x13, 0x70, 0x72, 0x6f, 0x62,
+	0x6c, 0x65, 0x6d, 0x5f, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x12, 0x70, 0x72, 0x6f, 0x62, 0x6c, 0x65, 0x6d, 0x44, 0x65,
+	0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x70, 0x76,
+	0x6f, 0x74, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x75, 0x70, 0x76, 0x6f, 0x74,
+	0x65, 0x12, 0x1a, 0x0a, 0x08, 0x64, 0x6f, 0x77, 0x6e, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x05, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x08, 0x64, 0x6f, 0x77, 0x6e, 0x76, 0x6f, 0x74, 0x65, 0x12, 0x12, 0x0a,
+	0x04, 0x74, 0x61, 0x67, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x74, 0x61, 0x67,
+	0x73, 0x32, 0x08, 0x0a, 0x06, 0x54, 0x68, 0x72, 0x65, 0x61, 0x64, 0x42, 0x09, 0x5a, 0x07, 0x2e,
+	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -150,16 +140,13 @@ func file_thread_proto_rawDescGZIP() []byte {
 	return file_thread_proto_rawDescData
 }
 
-var file_thread_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_thread_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_thread_proto_goTypes = []interface{}{
-	(*MicrById)(nil), // 0: micr.MicrById
-	(*Micr)(nil),     // 1: micr.Micr
+	(*ThreadSummary)(nil), // 0: thread.ThreadSummary
 }
 var file_thread_proto_depIdxs = []int32{
-	0, // 0: micr.MicrService.FindOne:input_type -> micr.MicrById
-	1, // 1: micr.MicrService.FindOne:output_type -> micr.Micr
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -172,19 +159,7 @@ func file_thread_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_thread_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MicrById); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_thread_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Micr); i {
+			switch v := v.(*ThreadSummary); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -202,7 +177,7 @@ func file_thread_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_thread_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

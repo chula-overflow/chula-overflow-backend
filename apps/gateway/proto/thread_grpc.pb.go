@@ -7,10 +7,7 @@
 package proto
 
 import (
-	context "context"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,86 +15,48 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// MicrServiceClient is the client API for MicrService service.
+// ThreadClient is the client API for Thread service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MicrServiceClient interface {
-	FindOne(ctx context.Context, in *MicrById, opts ...grpc.CallOption) (*Micr, error)
+type ThreadClient interface {
 }
 
-type micrServiceClient struct {
+type threadClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMicrServiceClient(cc grpc.ClientConnInterface) MicrServiceClient {
-	return &micrServiceClient{cc}
+func NewThreadClient(cc grpc.ClientConnInterface) ThreadClient {
+	return &threadClient{cc}
 }
 
-func (c *micrServiceClient) FindOne(ctx context.Context, in *MicrById, opts ...grpc.CallOption) (*Micr, error) {
-	out := new(Micr)
-	err := c.cc.Invoke(ctx, "/micr.MicrService/FindOne", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// MicrServiceServer is the server API for MicrService service.
-// All implementations should embed UnimplementedMicrServiceServer
+// ThreadServer is the server API for Thread service.
+// All implementations should embed UnimplementedThreadServer
 // for forward compatibility
-type MicrServiceServer interface {
-	FindOne(context.Context, *MicrById) (*Micr, error)
+type ThreadServer interface {
 }
 
-// UnimplementedMicrServiceServer should be embedded to have forward compatible implementations.
-type UnimplementedMicrServiceServer struct {
+// UnimplementedThreadServer should be embedded to have forward compatible implementations.
+type UnimplementedThreadServer struct {
 }
 
-func (UnimplementedMicrServiceServer) FindOne(context.Context, *MicrById) (*Micr, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FindOne not implemented")
-}
-
-// UnsafeMicrServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MicrServiceServer will
+// UnsafeThreadServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ThreadServer will
 // result in compilation errors.
-type UnsafeMicrServiceServer interface {
-	mustEmbedUnimplementedMicrServiceServer()
+type UnsafeThreadServer interface {
+	mustEmbedUnimplementedThreadServer()
 }
 
-func RegisterMicrServiceServer(s grpc.ServiceRegistrar, srv MicrServiceServer) {
-	s.RegisterService(&MicrService_ServiceDesc, srv)
+func RegisterThreadServer(s grpc.ServiceRegistrar, srv ThreadServer) {
+	s.RegisterService(&Thread_ServiceDesc, srv)
 }
 
-func _MicrService_FindOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MicrById)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MicrServiceServer).FindOne(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/micr.MicrService/FindOne",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MicrServiceServer).FindOne(ctx, req.(*MicrById))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// MicrService_ServiceDesc is the grpc.ServiceDesc for MicrService service.
+// Thread_ServiceDesc is the grpc.ServiceDesc for Thread service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MicrService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "micr.MicrService",
-	HandlerType: (*MicrServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "FindOne",
-			Handler:    _MicrService_FindOne_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "thread.proto",
+var Thread_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "thread.Thread",
+	HandlerType: (*ThreadServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams:     []grpc.StreamDesc{},
+	Metadata:    "thread.proto",
 }

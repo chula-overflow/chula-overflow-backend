@@ -1,18 +1,18 @@
 syntax = "proto3";
 
-package micr;
+package thread;
 
 option go_package = "./proto";
 
-service MicrService {
-  rpc FindOne (MicrById) returns (Micr) {}
+service Thread {
+  // rpc FindOne (MicrById) returns (Micr) {}
 }
 
-message MicrById {
-  int32 id = 1;
-}
-
-message Micr {
-  int32 id = 1;
-  string name = 2;
+message ThreadSummary {
+  string thread_id = 1;
+  string problem_name = 2;
+  string problem_description = 3;
+  int32 upvote = 4;
+  int32 downvote = 5;
+  repeated string tags = 6;
 }

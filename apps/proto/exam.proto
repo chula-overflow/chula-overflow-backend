@@ -2,23 +2,25 @@ syntax = "proto3";
 
 package exam;
 
+import "thread.proto";
+
 option go_package = "./proto";
 
 service Exam {
-  rpc GetExam (GetExamRequest) returns (GetExamResponse) {}
-}
-
-message GetExamRequest {
-  string exam_id = 1;
-}
-
-message GetExamResponse {
-  // todo
-  // repeated thread.Thread threads = 1;
+    rpc GetExam (GetExamRequest) returns (GetExamResponse) {}
 }
 
 message ExamSummary {
-  string exam_id = 1;
-  string exam_name = 2;
-  int32 thread_count = 3;
+    string exam_id = 1;
+    string exam_name = 2;
+    int32 thread_count = 3;
+}
+
+message GetExamRequest {
+    string exam_id = 1;
+}
+
+message GetExamResponse {
+    string exam_name = 1;
+    repeated thread.ThreadSummary threads = 2;
 }

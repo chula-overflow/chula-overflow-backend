@@ -5,3 +5,8 @@ type ExamSummary struct {
 	ExamName    string `json:"exam_name" example:"2011 - S1 - Final"`
 	ThreadCount int32  `json:"thread_count" example:"12"`
 }
+
+type Exam struct {
+	ExamName string          `json:"exam_name" example:"2011 - S1 - Final"`
+	Threads  []ThreadSummary `json:"threads"`
+}

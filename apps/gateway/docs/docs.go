@@ -163,6 +163,41 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/exam/:exam_id": {
+            "get": {
+                "description": "Get specific exam",
+                "tags": [
+                    "Exam"
+                ],
+                "summary": "GetExam",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "exam ID",
+                        "name": "exam_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Exam"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -198,6 +233,21 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.Exam": {
+            "type": "object",
+            "properties": {
+                "exam_name": {
+                    "type": "string",
+                    "example": "2011 - S1 - Final"
+                },
+                "threads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ThreadSummary"
+                    }
+                }
+            }
+        },
         "dto.ExamSummary": {
             "type": "object",
             "properties": {
@@ -224,6 +274,43 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ThreadSummary": {
+            "type": "object",
+            "properties": {
+                "downvote": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "problem_description": {
+                    "type": "string",
+                    "example": "What is 'Monad'?"
+                },
+                "problem_name": {
+                    "type": "string",
+                    "example": "1+1=???"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "calculus",
+                        "2110101",
+                        "limit",
+                        "hard"
+                    ]
+                },
+                "thread_id": {
+                    "type": "string",
+                    "example": "TODO!(OBJECTID)"
+                },
+                "upvote": {
+                    "type": "integer",
+                    "example": 12
+                }
+            }
+        },
         "dto.User": {
             "type": "object",
             "properties": {
@@ -243,7 +330,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Chula Overflow Backend Doc",
-	Description:      "This is a sample swagger for Fiber",
+	Description:      "Not over engineering at all",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

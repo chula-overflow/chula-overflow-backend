@@ -22,6 +22,16 @@ definitions:
         example: 12
         type: integer
     type: object
+  dto.Exam:
+    properties:
+      exam_name:
+        example: 2011 - S1 - Final
+        type: string
+      threads:
+        items:
+          $ref: '#/definitions/dto.ThreadSummary'
+        type: array
+    type: object
   dto.ExamSummary:
     properties:
       exam_id:
@@ -40,6 +50,33 @@ definitions:
         example: 6530000021@student.chula.ac.th
         type: string
     type: object
+  dto.ThreadSummary:
+    properties:
+      downvote:
+        example: 12
+        type: integer
+      problem_description:
+        example: What is 'Monad'?
+        type: string
+      problem_name:
+        example: 1+1=???
+        type: string
+      tags:
+        example:
+        - calculus
+        - "2110101"
+        - limit
+        - hard
+        items:
+          type: string
+        type: array
+      thread_id:
+        example: TODO!(OBJECTID)
+        type: string
+      upvote:
+        example: 12
+        type: integer
+    type: object
   dto.User:
     properties:
       email:
@@ -49,7 +86,7 @@ definitions:
 host: localhost:3000
 info:
   contact: {}
-  description: This is a sample swagger for Fiber
+  description: Not over engineering at all
   termsOfService: http://swagger.io/terms/
   title: Chula Overflow Backend Doc
   version: "1.0"
@@ -150,4 +187,27 @@ paths:
       summary: GetCourse
       tags:
       - Course
+  /exam/:exam_id:
+    get:
+      description: Get specific exam
+      parameters:
+      - description: exam ID
+        in: path
+        name: exam_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Exam'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: GetExam
+      tags:
+      - Exam
 swagger: "2.0"

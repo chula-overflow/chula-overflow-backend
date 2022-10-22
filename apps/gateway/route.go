@@ -6,8 +6,10 @@ import (
 
 	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/auth"
 	courseHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/course"
+	examHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/exam"
 	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/auth"
 	courseSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/course"
+	examSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/exam"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 	"google.golang.org/grpc"
@@ -15,7 +17,7 @@ import (
 )
 
 func (app *App) RegisterRoute() {
-	auth, course := GetHandler(app.config)
+	auth, course, exam := GetHandler(app.config)
 
 	metadata := MetaData{
 		url:          "/auth/login",
@@ -51,9 +53,16 @@ func (app *App) RegisterRoute() {
 		method:       GET,
 	}
 	app.AddHdr(course.GetCourse, metadata)
+
+	metadata = MetaData{
+		url:          "/exam/:exam_id",
+		requiredAuth: false,
+		method:       GET,
+	}
+	app.AddHdr(exam.GetExam, metadata)
 }
 
-func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler) {
+func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHdr.Handler) {
 	conn, err := grpc.Dial(conf.Auth.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -74,5 +83,15 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler) {
 	courseService := courseSrv.NewService(courseClient)
 	course := courseHdr.NewHandler(&courseService)
 
-	return auth, course
+	conn, err = grpc.Dial(conf.Exam.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+		os.Exit(2)
+	}
+
+	examClient := proto.NewExamClient(conn)
+	examService := examSrv.NewService(examClient)
+	exam := examHdr.NewHandler(&examService)
+
+	return auth, course, exam
 }

@@ -18,6 +18,9 @@ type Config struct {
 	Course struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"course"`
+	Exam struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"exam"`
 	Database struct {
 		Addr   string `yaml:"addr"`
 		DbName string `yaml:"db_name"`
