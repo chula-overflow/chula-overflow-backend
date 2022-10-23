@@ -33,6 +33,17 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 npm i -g nx
 ```
 
+## Docker
+### Docker compose
+```sh
+docker compose --env-file .env up
+```
+### Building image
+Since each service depends on `apps/proto` directory, images need to be build from project root
+```sh
+docker build <service>:<tag> -f apps/<service>/Dockerfile .
+```
+
 ## Note
 Please don't mind that auth take like 5 minutes compile time.
 

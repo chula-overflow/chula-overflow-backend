@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  gateway:
+    image: imsozrious/gateway
+    env_file:
+      - .env
+    container_name: gateway
+    networks:
+      - backend
+    ports:
+      - "3000:${GATEWAY_PORT}"
+
+  auth:
+    image: imsozrious/auth
+    env_file:
+      - .env
+    container_name: auth
+    networks:
+      - backend
+  
+  db:
+    image: mongo
+    container_name: db
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend

@@ -19,20 +19,20 @@ pub struct Endpoint {
 
 #[derive(Deserialize)]
 pub struct DbConfig {
-    pub addr: String,
+    pub uri: String,
     pub db_name: String,
 }
 
 pub fn load_config() -> Result<Config> {
     let config = Config {
         gateway: Endpoint {
-            addr: var("GATEWAY_URL")?,
+            addr: format!("{}:{}", var("GATEWAY_HOST")?, var("GATEWAY_PORT")?),
         },
         auth: Endpoint {
-            addr: var("AUTH_URL")?,
+            addr: format!("{}:{}", var("AUTH_HOST")?, var("AUTH_PORT")?),
         },
         database: DbConfig {
-            addr: var("MONGODB_URL")?,
+            uri: var("MONGODB_URI")?,
             db_name: var("MONGODB_DB_NAME")?,
         },
         deployment: var("DEPLOYMENT")?,

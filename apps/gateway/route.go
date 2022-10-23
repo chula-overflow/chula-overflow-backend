@@ -106,21 +106,9 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 	courseService := courseSrv.NewService(courseClient)
 	course := courseHdr.NewHandler(&courseService)
 
-	conn, err = grpc.Dial(conf.ExamURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-		os.Exit(2)
-	}
-
 	examClient := proto.NewExamClient(conn)
 	examService := examSrv.NewService(examClient)
 	exam := examHdr.NewHandler(&examService)
-
-	conn, err = grpc.Dial(conf.ThreadURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-		os.Exit(2)
-	}
 
 	threadClient := proto.NewThreadClient(conn)
 	threadService := threadSrv.NewService(threadClient)
