@@ -6,10 +6,10 @@ export type ThreadDocument = Thread & Document;
 @Schema({ timestamps: true })
 export class Thread {
   @Prop({ required: true })
-  course_id: string;
+  exam_id: string;
 
   @Prop({ required: true })
-  exam_id: string;
+  course_id: string;
 
   @Prop({ required: true })
   title: string;
