@@ -1,4 +1,5 @@
 mod error;
+mod macros;
 mod repository;
 
 pub use error::Error;

@@ -19,7 +19,7 @@ const docTemplate = `{
     "paths": {
         "/auth/login": {
             "post": {
-                "description": "Login with given email",
+                "description": "Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.\nCookies are automatically store in swag",
                 "consumes": [
                     "application/json"
                 ],
@@ -62,7 +62,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.User"
+                            "$ref": "#/definitions/dto.MeResponse"
                         }
                     },
                     "401": {
@@ -79,7 +79,7 @@ const docTemplate = `{
         },
         "/auth/revoke": {
             "get": {
-                "description": "Revoke session",
+                "description": "Revoke session (expire session cookie from client)",
                 "tags": [
                     "Auth"
                 ],
@@ -444,6 +444,14 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "example": "6530000021@student.chula.ac.th"
+                }
+            }
+        },
+        "dto.MeResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/dto.User"
                 }
             }
         },

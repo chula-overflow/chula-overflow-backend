@@ -38,7 +38,7 @@ func (s *Service) Revoke(sessionId string) error {
 	return err
 }
 
-func (s *Service) Me(sessionId string) (*dto.User, error) {
+func (s *Service) Me(sessionId string) (*dto.MeResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -50,8 +50,10 @@ func (s *Service) Me(sessionId string) (*dto.User, error) {
 		return nil, err
 	}
 
-	return &dto.User{
-		Email: user.Email,
+	return &dto.MeResponse{
+		User: dto.User{
+			Email: user.User.Email,
+		},
 	}, nil
 }
 

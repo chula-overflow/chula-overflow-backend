@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package auth;
 
+import "user.proto";
+
 option go_package = "./proto";
 
 service Auth {
@@ -27,7 +29,9 @@ message MeRequest {
 }
 
 message MeResponse {
-  string email = 1;
+  user.User user = 1;
 }
 
-message RevokeResponse {}
+message RevokeResponse {
+  
+}

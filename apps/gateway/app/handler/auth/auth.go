@@ -14,7 +14,7 @@ import (
 type IService interface {
 	Login(*dto.Login) (*string, error)
 	Revoke(string) error
-	Me(string) (*dto.User, error)
+	Me(string) (*dto.MeResponse, error)
 }
 
 type Handler struct {
@@ -22,7 +22,9 @@ type Handler struct {
 }
 
 // @Summary Login
-// @Description Login with given email
+// @Description Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.
+// @Description Cookies are automatically store in swag
+// @Description return 200 if client already has sid on.
 // @Tags Auth
 // @Accept json
 // @Param login body dto.Login false "email use for login"  Format(email)
@@ -31,6 +33,11 @@ type Handler struct {
 // @Failure 422
 // @Router /auth/login [post]
 func (h *Handler) Login(ctx *context.Ctx) error {
+	if ctx.IsLogon() {
+		ctx.SendStatus(fiber.StatusAccepted)
+		return nil
+	}
+
 	login := new(dto.Login)
 	if err := ctx.BodyParser(login); err != nil {
 		// unprocessable entity
@@ -58,7 +65,7 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 }
 
 // @Summary Revoke
-// @Description Revoke session
+// @Description Revoke session (expire session cookie from client)
 // @Tags Auth
 // @Success 200
 // @Failure 401
@@ -94,7 +101,7 @@ func (h *Handler) Revoke(ctx *context.Ctx) error {
 // @Summary Me
 // @Description Get current session detail
 // @Tags Auth
-// @Success 200 {object} dto.User
+// @Success 200 {object} dto.MeResponse
 // @Failure 401
 // @Failure 503
 // @Failure 500
