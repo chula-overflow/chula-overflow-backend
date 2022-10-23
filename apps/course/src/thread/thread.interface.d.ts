@@ -50,3 +50,26 @@ export interface ThreadCreateBody {
     downvoted: number;
   }[];
 }
+
+export interface ThreadUpdateBody {
+  exam_id?: string;
+  course_id?: string;
+  upvoted?: number;
+  downvoted?: number;
+  problems?: {
+    title?: string;
+    body?: string;
+    uploaded_user?: string;
+    upvoted?: number;
+    downvoted?: number;
+  }[];
+  answers?: {
+    body?: string;
+    upvoted?: number;
+    downvoted?: number;
+  }[];
+}
+
+export interface ThreadIdRequestBody {
+  thread_id: ObjectId;
+}

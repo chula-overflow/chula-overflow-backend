@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { ThreadBody, ThreadCreateBody } from './thread.interface';
+import { Model, ObjectId } from 'mongoose';
+import {
+  ThreadBody,
+  ThreadCreateBody,
+  ThreadUpdateBody,
+} from './thread.interface';
 import { Thread, ThreadDocument } from './thread.schema';
 
 @Injectable()
@@ -16,10 +20,24 @@ export class ThreadService {
     return newThread.save();
   }
 
-  async findByExamId(examId: string) {
+  async findByExamId(examId: ObjectId) {
     const threads = await this.ThreadModel.find({
       exam_id: examId,
     }).exec();
     return threads;
+  }
+
+  async findOneById(threadId: ObjectId) {
+    const thread = await this.ThreadModel.findById(threadId);
+    return thread;
+  }
+
+  async updateById(threadId: ObjectId, threadBody: ThreadUpdateBody) {
+    const updatedThread = this.ThreadModel.findByIdAndUpdate(
+      threadId,
+      { ...threadBody },
+      { new: true },
+    );
+    return updatedThread;
   }
 }
