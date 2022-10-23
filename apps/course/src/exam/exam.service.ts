@@ -55,11 +55,11 @@ export class ExamService {
     return exam;
   }
 
-  async addThreadId(threadId: string, examId: ObjectId): Promise<ExamBody> {
+  async addThreadId(threadId: ObjectId, examId: ObjectId): Promise<ExamBody> {
     const exam = await this.findOneById(examId);
 
     const examDocumentId = exam._id;
-    const threadIds = [...exam.thread_ids, threadId];
+    const threadIds = [...exam.thread_ids, String(threadId)];
 
     const updatedExam = await this.ExamModel.findByIdAndUpdate(
       examDocumentId,

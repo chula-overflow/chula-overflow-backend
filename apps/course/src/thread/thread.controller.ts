@@ -20,7 +20,7 @@ export class ThreadController {
     );
 
     const createThreadBody = {
-      exam_id: examId,
+      exam_id: String(examId),
       course_id: data.course_id,
       upvoted: 0,
       downvoted: 0,

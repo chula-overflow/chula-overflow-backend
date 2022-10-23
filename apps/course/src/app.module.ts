@@ -12,6 +12,7 @@ import { ExamService } from './exam/exam.service';
 import { ThreadController } from './thread/thread.controller';
 import { ThreadService } from './thread/thread.service';
 import { Exam, ExamSchema } from './exam/exam.schema';
+import { Thread, ThreadSchema } from './thread/thread.schema';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Exam, ExamSchema } from './exam/exam.schema';
     MongooseModule.forFeature([
       { name: Course.name, schema: CourseSchema },
       { name: Exam.name, schema: ExamSchema },
+      { name: Thread.name, schema: ThreadSchema },
     ]),
   ],
   controllers: [

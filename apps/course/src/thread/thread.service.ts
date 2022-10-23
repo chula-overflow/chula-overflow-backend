@@ -1,30 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Exam, ExamDocument } from 'src/exam/exam.schema';
-import { ThreadCreateBody } from './thread.interface';
+import { ThreadBody, ThreadCreateBody } from './thread.interface';
+import { Thread, ThreadDocument } from './thread.schema';
 
 @Injectable()
 export class ThreadService {
   constructor(
-    @InjectModel(Exam.name)
-    private ThreadModel: Model<ExamDocument>,
+    @InjectModel(Thread.name)
+    private ThreadModel: Model<ThreadDocument>,
   ) {}
 
-  async createThread(threadBody: ThreadCreateBody) {
+  async createThread(threadBody: ThreadCreateBody): Promise<ThreadBody> {
     const newThread = new this.ThreadModel(threadBody);
-
     return newThread.save();
   }
 
-  async findOneByExamId(examId: string) {
-    const thread = await this.ThreadModel.findOne({
+  async findByExamId(examId: string) {
+    const threads = await this.ThreadModel.find({
       exam_id: examId,
     }).exec();
-    return thread;
-  }
-
-  async addProblem(problemData) {
-    const thread = this.findOneByExamId(problemData.exam_id);
+    return threads;
   }
 }
