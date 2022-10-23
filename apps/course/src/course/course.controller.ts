@@ -1,6 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { CourseCreateBody, CourseUpdateBody } from './course.interface';
+import {
+  CourseCreateBody,
+  CourseRequestBody,
+  CourseRequestUpdateBody,
+  CourseUpdateBody,
+} from './course.interface';
 import { CourseService } from './course.service';
 
 @Controller('course')
@@ -20,13 +25,13 @@ export class CourseController {
   }
 
   @GrpcMethod()
-  async getCourseByCourseId(data: { course_id: string }, metadata: any) {
+  async getCourseByCourseId(data: CourseRequestBody, metadata: any) {
     const course = await this.CourseService.findOneByCourseId(data.course_id);
     return course;
   }
 
   @GrpcMethod()
-  async updateCourse(data: { course_id: string; body: CourseUpdateBody }) {
+  async updateCourse(data: CourseRequestUpdateBody, metadata: any) {
     const updatedCourse = await this.CourseService.updateByCourseId(
       data.course_id,
       data.body,
@@ -35,7 +40,7 @@ export class CourseController {
   }
 
   @GrpcMethod()
-  async deleteCourse(data: { course_id: string }, metadata: any) {
+  async deleteCourse(data: CourseRequestBody, metadata: any) {
     const deletedCourse = await this.CourseService.deleteByCourseId(
       data.course_id,
     );
