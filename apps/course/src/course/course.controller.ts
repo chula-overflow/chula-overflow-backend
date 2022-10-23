@@ -4,7 +4,6 @@ import {
   CourseCreateBody,
   CourseRequestBody,
   CourseRequestUpdateBody,
-  CourseUpdateBody,
 } from './course.interface';
 import { CourseService } from './course.service';
 
