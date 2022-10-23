@@ -10,10 +10,16 @@ pub enum Error {
     AddrParseError(#[from] AddrParseError),
     #[error("var error")]
     EnvError(#[from] std::env::VarError),
+    #[error("bson raw error")]
+    BSONRawError(#[from] mongodb::bson::raw::Error),
     #[error("uuid parsing error")]
     UUIDParseError(#[from] mongodb::bson::uuid::Error),
+    #[error("object id parsing error")]
+    OIDParseError(#[from] mongodb::bson::oid::Error),
     #[error("grpc server error")]
     GRpcServerError(#[from] tonic::transport::Error),
-    #[error("unknown error")]
+    #[error("not found error: {0}")]
+    NotFound(&'static str),
+    #[error("unknown error: {0}")]
     Unknown(#[from] Box<dyn std::error::Error>),
 }

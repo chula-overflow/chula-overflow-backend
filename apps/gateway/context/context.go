@@ -15,3 +15,7 @@ func NewCtx(ctx *fiber.Ctx) *Ctx {
 func (ctx *Ctx) SessionId() string {
 	return ctx.Locals("SessionId").(string)
 }
+
+func (ctx *Ctx) IsLogon() bool {
+	return ctx.Cookies("sid") != ""
+}
