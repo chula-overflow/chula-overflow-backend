@@ -18,7 +18,7 @@ export class ThreadService {
 
   async createThread(threadBody: CreateThreadBody) {
     const examId = (
-      await this.ExamService.findOneByProperty(
+      await this.ExamService.findOneByCourseProperty(
         threadBody.year,
         threadBody.semester,
         threadBody.term,

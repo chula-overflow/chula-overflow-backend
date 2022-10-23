@@ -27,7 +27,7 @@ export class CourseController {
 
   @GrpcMethod()
   async updateCourse(data: { course_id: string; body: CourseUpdateBody }) {
-    const updatedCourse = await this.CourseService.update(
+    const updatedCourse = await this.CourseService.updateByCourseId(
       data.course_id,
       data.body,
     );
@@ -36,7 +36,9 @@ export class CourseController {
 
   @GrpcMethod()
   async deleteCourse(data: { course_id: string }, metadata: any) {
-    const deletedCourse = await this.CourseService.delete(data.course_id);
+    const deletedCourse = await this.CourseService.deleteByCourseId(
+      data.course_id,
+    );
     return deletedCourse;
   }
 }

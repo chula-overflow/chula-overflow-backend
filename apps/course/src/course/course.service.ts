@@ -34,8 +34,10 @@ export class CourseService {
 
   async addExamId(examId: ObjectId, courseId: string): Promise<CourseBody> {
     const course = await this.findOneByCourseId(courseId);
+
     const courseDocumentId = course._id;
     const examIds = [...course.exam_ids, examId];
+
     const updatedCourse = await this.CourseModel.findByIdAndUpdate(
       courseDocumentId,
       { exam_ids: examIds },
@@ -45,7 +47,7 @@ export class CourseService {
     return updatedCourse;
   }
 
-  async update(
+  async updateByCourseId(
     courseId: string,
     updateBody: CourseUpdateBody,
   ): Promise<CourseBody> {
@@ -58,7 +60,7 @@ export class CourseService {
     return updatedCourse;
   }
 
-  async delete(courseId: string): Promise<CourseBody> {
+  async deleteByCourseId(courseId: string): Promise<CourseBody> {
     const deletedCourse = await this.CourseModel.findOneAndRemove({
       course_id: courseId,
     });
