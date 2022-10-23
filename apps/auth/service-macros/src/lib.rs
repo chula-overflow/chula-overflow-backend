@@ -2,7 +2,6 @@ extern crate proc_macro;
 use convert_case::{Case, Casing};
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
-// use service_core::Repository;
 use syn::{parse::Parse, parse_macro_input, Ident, Token, Visibility};
 
 struct Input {

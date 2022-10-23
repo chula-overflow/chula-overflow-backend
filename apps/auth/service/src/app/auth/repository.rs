@@ -49,7 +49,6 @@ impl SessionRepository for Repository<Session> {
             },
         ];
 
-        // driver bug
         let mut cursor = self.collection.aggregate(query, None).await?;
         let aggregated: &RawDocument;
 
