@@ -11,8 +11,6 @@ mod app;
 mod config;
 mod database;
 
-use std::net::SocketAddr;
-
 use app::auth::{model::Session, service::AuthService};
 use app::user::model::User;
 use proto::auth::auth_server::AuthServer;
@@ -25,7 +23,7 @@ use app::auth::handler::AuthHandler;
 async fn main() -> Result<()> {
     let conf = config::load_config()?;
 
-    let addr: SocketAddr = conf.auth.addr.parse()?;
+    let addr = format!("0.0.0.0:{}", conf.auth.port).parse().unwrap();
 
     // setup db
     let db = database::get_db_conn(&conf).await?;
