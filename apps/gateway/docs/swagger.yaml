@@ -27,6 +27,8 @@ definitions:
       body:
         example: 1+1=3
         type: string
+    required:
+    - body
     type: object
   dto.CreateThread:
     properties:
@@ -44,18 +46,24 @@ definitions:
         type: string
       tags:
         example:
-          - calculus
-          - '2110101'
-          - limit
-          - hard
+        - calculus
+        - "2110101"
+        - limit
+        - hard
         items:
           type: string
         type: array
+    required:
+    - course_name
+    - exam_name
+    - problem_description
+    - problem_name
+    - tags
     type: object
   dto.CreateThreadResponse:
     properties:
       thread_id:
-        example: 507f1f77bcf86cd799439011!(OBJECTID)
+        example: 507f1f77bcf86cd799439011
         type: string
     type: object
   dto.Exam:
@@ -85,6 +93,8 @@ definitions:
       email:
         example: 6530000021@student.chula.ac.th
         type: string
+    required:
+    - email
     type: object
   dto.MeResponse:
     properties:
@@ -100,7 +110,7 @@ definitions:
         example: 420
         type: integer
       thread_id:
-        example: 507f1f77bcf86cd799439011!(OBJECTID)
+        example: 507f1f77bcf86cd799439011
         type: string
       upvote:
         example: 42
@@ -123,15 +133,15 @@ definitions:
         type: array
       tags:
         example:
-          - calculus
-          - '2110101'
-          - limit
-          - hard
+        - calculus
+        - "2110101"
+        - limit
+        - hard
         items:
           type: string
         type: array
       thread_id:
-        example: 507f1f77bcf86cd799439011!(OBJECTID)
+        example: 507f1f77bcf86cd799439011
         type: string
       upvote:
         example: 12
@@ -150,15 +160,15 @@ definitions:
         type: string
       tags:
         example:
-          - calculus
-          - '2110101'
-          - limit
-          - hard
+        - calculus
+        - "2110101"
+        - limit
+        - hard
         items:
           type: string
         type: array
       thread_id:
-        example: 507f1f77bcf86cd799439011!(OBJECTID)
+        example: 507f1f77bcf86cd799439011
         type: string
       upvote:
         example: 12
@@ -176,207 +186,208 @@ info:
   description: Not over engineering at all
   termsOfService: http://swagger.io/terms/
   title: Chula Overflow Backend Doc
-  version: '1.0'
+  version: "1.0"
 paths:
   /auth/login:
     post:
       consumes:
-        - application/json
+      - application/json
       description: |-
         Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.
         Cookies are automatically store in swag
+        return 200 if client already has sid on.
       parameters:
-        - description: email use for login
-          format: email
-          in: body
-          name: login
-          schema:
-            $ref: '#/definitions/dto.Login'
+      - description: email use for login
+        format: email
+        in: body
+        name: login
+        schema:
+          $ref: '#/definitions/dto.Login'
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-        '422':
+        "422":
           description: Unprocessable Entity
       summary: Login
       tags:
-        - Auth
+      - Auth
   /auth/me:
     get:
       description: Get current session detail
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/dto.MeResponse'
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: Me
       tags:
-        - Auth
+      - Auth
   /auth/revoke:
     get:
       description: Revoke session (expire session cookie from client)
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
       summary: Revoke
       tags:
-        - Auth
+      - Auth
   /course:
     get:
       description: get detail summary for all course
       produces:
-        - application/json
+      - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             items:
               $ref: '#/definitions/dto.CourseSummary'
             type: array
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: GetAllCourseSummary
       tags:
-        - Course
+      - Course
   /course/:course_id:
     get:
       description: Get specific course
       parameters:
-        - description: course ID
-          in: path
-          name: course_id
-          required: true
-          type: string
+      - description: course ID
+        in: path
+        name: course_id
+        required: true
+        type: string
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/dto.Course'
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: GetCourse
       tags:
-        - Course
+      - Course
   /exam/:exam_id:
     get:
       description: Get specific exam
       parameters:
-        - description: exam ID
-          in: path
-          name: exam_id
-          required: true
-          type: string
+      - description: exam ID
+        in: path
+        name: exam_id
+        required: true
+        type: string
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/dto.Exam'
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: GetExam
       tags:
-        - Exam
+      - Exam
   /thread:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Create thread (require session)
       parameters:
-        - description: Thread information
-          in: body
-          name: thread
-          required: true
-          schema:
-            $ref: '#/definitions/dto.CreateThread'
+      - description: Thread information
+        in: body
+        name: thread
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateThread'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/dto.CreateThreadResponse'
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: CreateThread
       tags:
-        - Thread
+      - Thread
   /thread/:thread_id:
     get:
       consumes:
-        - application/json
+      - application/json
       description: get specific thread
       parameters:
-        - description: Thread id
-          in: path
-          name: thread_id
-          required: true
-          type: string
+      - description: Thread id
+        in: path
+        name: thread_id
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/dto.Thread'
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: GetThread
       tags:
-        - Thread
+      - Thread
   /thread/:thread_id/reply:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Create reply in thread (require session)
       parameters:
-        - description: Reply information
-          in: body
-          name: reply
-          required: true
-          schema:
-            $ref: '#/definitions/dto.CreateReply'
-        - description: Thread id
-          in: path
-          name: thread_id
-          required: true
-          type: string
+      - description: Reply information
+        in: body
+        name: reply
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateReply'
+      - description: Thread id
+        in: path
+        name: thread_id
+        required: true
+        type: string
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
       summary: CreateReply
       tags:
-        - Thread
-swagger: '2.0'
+      - Thread
+swagger: "2.0"

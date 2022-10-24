@@ -3,6 +3,7 @@ package auth
 import (
 	"log"
 
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,7 @@ type IService interface {
 
 type Handler struct {
 	Service IService
+	v       *validator.MyValidator
 }
 
 // @Summary GetThread
@@ -67,6 +69,11 @@ func (h *Handler) CreateThread(ctx *context.Ctx) error {
 		return err
 	}
 
+	err := h.v.Struct(createThread)
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
 	// todo add user id
 	response, err := h.Service.CreateThread(createThread)
 
@@ -108,11 +115,17 @@ func (h *Handler) CreateReply(ctx *context.Ctx) error {
 		return err
 	}
 
+	err := h.v.Struct(createReply)
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
+	// todo: validate threadid
 	threadId := ctx.Params("thread_id")
 
-	// todo add user id
-	err := h.Service.CreateReply(createReply, threadId)
+	err = h.Service.CreateReply(createReply, threadId)
 
+	// todo add user id
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
@@ -131,8 +144,9 @@ func (h *Handler) CreateReply(ctx *context.Ctx) error {
 	return nil
 }
 
-func NewHandler(service IService) Handler {
+func NewHandler(service IService, v *validator.MyValidator) Handler {
 	return Handler{
 		Service: service,
+		v:       v,
 	}
 }

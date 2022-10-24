@@ -12,6 +12,7 @@ import (
 	courseSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/course"
 	examSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/exam"
 	threadSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/thread"
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/proto"
 	"google.golang.org/grpc"
@@ -71,9 +72,9 @@ func (app *App) RegisterRoute() {
 	app.AddHdr(thread.GetThread, metadata)
 
 	metadata = MetaData{
-		url:          "/thread/post",
+		url:          "/thread",
 		requiredAuth: true,
-		method:       GET,
+		method:       POST,
 	}
 	app.AddHdr(thread.CreateThread, metadata)
 
@@ -86,6 +87,8 @@ func (app *App) RegisterRoute() {
 }
 
 func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHdr.Handler, threadHdr.Handler) {
+	validator := validator.GetValidator()
+
 	conn, err := grpc.Dial(conf.AuthURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -94,7 +97,7 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 
 	authClient := proto.NewAuthClient(conn)
 	authService := authSrv.NewService(authClient)
-	auth := authHdr.NewHandler(&authService)
+	auth := authHdr.NewHandler(&authService, validator)
 
 	conn, err = grpc.Dial(conf.CourseURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -104,15 +107,15 @@ func GetHandler(conf *config.Config) (authHdr.Handler, courseHdr.Handler, examHd
 
 	courseClient := proto.NewCourseClient(conn)
 	courseService := courseSrv.NewService(courseClient)
-	course := courseHdr.NewHandler(&courseService)
+	course := courseHdr.NewHandler(&courseService, validator)
 
 	examClient := proto.NewExamClient(conn)
 	examService := examSrv.NewService(examClient)
-	exam := examHdr.NewHandler(&examService)
+	exam := examHdr.NewHandler(&examService, validator)
 
 	threadClient := proto.NewThreadClient(conn)
 	threadService := threadSrv.NewService(threadClient)
-	thread := threadHdr.NewHandler(&threadService)
+	thread := threadHdr.NewHandler(&threadService, validator)
 
 	return auth, course, exam, thread
 }
