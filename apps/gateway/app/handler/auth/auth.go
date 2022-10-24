@@ -34,7 +34,6 @@ type Handler struct {
 // @Router /auth/login [post]
 func (h *Handler) Login(ctx *context.Ctx) error {
 	if ctx.IsLogon() {
-		ctx.SendStatus(fiber.StatusAccepted)
 		return nil
 	}
 

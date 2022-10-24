@@ -6,7 +6,6 @@ use std::env::var;
 
 #[derive(Deserialize)]
 pub struct Config {
-    pub gateway: Endpoint,
     pub auth: Endpoint,
     pub database: DbConfig,
     pub deployment: String,
@@ -14,25 +13,24 @@ pub struct Config {
 
 #[derive(Deserialize)]
 pub struct Endpoint {
-    pub addr: String,
+    pub host: String,
+    pub port: String,
 }
 
 #[derive(Deserialize)]
 pub struct DbConfig {
-    pub addr: String,
+    pub uri: String,
     pub db_name: String,
 }
 
 pub fn load_config() -> Result<Config> {
     let config = Config {
-        gateway: Endpoint {
-            addr: var("GATEWAY_URL")?,
-        },
         auth: Endpoint {
-            addr: var("AUTH_URL")?,
+            host: var("AUTH_HOST")?,
+            port: var("AUTH_PORT")?,
         },
         database: DbConfig {
-            addr: var("MONGODB_URL")?,
+            uri: var("MONGODB_URI")?,
             db_name: var("MONGODB_DB_NAME")?,
         },
         deployment: var("DEPLOYMENT")?,

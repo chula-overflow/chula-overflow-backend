@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  gateway:
+    image: imsozrious/gateway
+    env_file:
+      - .env
+    container_name: gateway
+    networks:
+      - backend
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+
+  auth:
+    image: imsozrious/auth
+    env_file:
+      - .env
+    container_name: auth
+    networks:
+      - backend
+  
+  db:
+    image: mongo
+    container_name: db
+    networks:
+      - backend
+    volumes:
+      - "./volumes/mongo:/data/db"
+
+      - "./tools/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro"
+
+networks:
+  backend:
+    name: backend
