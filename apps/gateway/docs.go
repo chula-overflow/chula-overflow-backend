@@ -6,7 +6,7 @@ import (
 )
 
 func (app *App) RegisterDoc() {
-	docs.SwaggerInfo.Host = app.config.GatewayURL
+	docs.SwaggerInfo.Host = app.config.APIBaseURL
 
 	app.Get("/swagger/*", swagger.HandlerDefault) // default
 }

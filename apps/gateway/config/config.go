@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	APIBaseURL string
 	GatewayURL string
 	AuthURL    string
 	CourseURL  string
@@ -13,6 +14,10 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
+	APIBaseURL := os.Getenv("API_BASE_URL")
+	if APIBaseURL == "" {
+		return nil, errors.New("enrionment variable not set")
+	}
 	GatewayHost := os.Getenv("GATEWAY_HOST")
 	if GatewayHost == "" {
 		return nil, errors.New("enrionment variable not set")
@@ -47,6 +52,6 @@ func LoadConfig() (*Config, error) {
 	CourseURL := CourseHost + ":" + CoursePort
 
 	return &Config{
-		GatewayURL, AuthURL, CourseURL, Deployment,
+		APIBaseURL, GatewayURL, AuthURL, CourseURL, Deployment,
 	}, nil
 }
