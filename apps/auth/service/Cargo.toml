@@ -1,6 +1,6 @@
 [package]
 name = "service"
-version = "0.1.0"
+version = "1.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -17,6 +17,7 @@ tonic = "0.8.2"
 uuid = { version = "1.2.1", features = ["v4", "fast-rng"] }
 service-core = { path = "../service-core" }
 service-macros = { path = "../service-macros" }
+env_logger = "0.9.1"
 
 [build-dependencies]
 tonic-build = "0.8.2"
