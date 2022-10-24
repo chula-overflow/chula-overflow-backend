@@ -4,20 +4,20 @@ use service_core::Result;
 
 use std::env::var;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Config {
     pub auth: Endpoint,
     pub database: DbConfig,
     pub deployment: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Endpoint {
     pub host: String,
     pub port: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct DbConfig {
     pub uri: String,
     pub db_name: String,
@@ -35,6 +35,8 @@ pub fn load_config() -> Result<Config> {
         },
         deployment: var("DEPLOYMENT")?,
     };
+
+    log::debug!("loaded config: {:?}", config);
 
     Ok(config)
 }
