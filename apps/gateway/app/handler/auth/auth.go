@@ -90,8 +90,10 @@ func (h *Handler) Revoke(ctx *context.Ctx) error {
 	}
 
 	ctx.Cookie(&fiber.Cookie{
-		Name:    "sid",
-		Expires: time.Now().Add(-time.Second),
+		Name:     "sid",
+		Expires:  time.Now().Add(-time.Second),
+		Secure:   true,
+		HTTPOnly: true,
 	})
 
 	return nil
