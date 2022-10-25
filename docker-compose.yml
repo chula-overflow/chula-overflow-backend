@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   gateway:
-    image: imsozrious/gateway
+    image: imsozrious/gateway:1.1
     env_file:
       - .env
     container_name: gateway
@@ -11,12 +11,20 @@ services:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
   auth:
-    image: imsozrious/auth:1.1
+    image: imsozrious/auth:1.2
     env_file:
       - .env
     environment:
       - RUST_LOG=info
     container_name: auth
+    networks:
+      - backend
+
+  course:
+    image: course:0
+    env_file:
+      - .env
+    container_name: course
     networks:
       - backend
   
