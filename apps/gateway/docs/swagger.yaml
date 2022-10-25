@@ -1,92 +1,143 @@
 basePath: /
 definitions:
-  dto.Course:
+  dto.Answer:
     properties:
-      course_name:
-        example: 2110101 Calculus I
+      body:
+        example: I dont know I think it's B
         type: string
-      exams:
-        items:
-          $ref: '#/definitions/dto.ExamSummary'
-        type: array
+      downvoted:
+        example: 17
+        type: integer
+      upvoted:
+        example: 13
+        type: integer
+    required:
+    - body
+    - downvoted
+    - upvoted
     type: object
-  dto.CourseSummary:
+  dto.CourseBody:
     properties:
+      _id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      course_codename:
+        example: "2112101"
+        type: string
       course_id:
         example: 507f1f77bcf86cd799439011
         type: string
       course_name:
-        example: 2011 - S1 - Final
+        example: Calculus
         type: string
-      thread_count:
-        example: 12
-        type: integer
-    type: object
-  dto.CreateReply:
-    properties:
-      body:
-        example: 1+1=3
-        type: string
-    required:
-    - body
-    type: object
-  dto.CreateThread:
-    properties:
-      course_name:
-        example: 2110101 Calculus I
-        type: string
-      exam_name:
-        example: 2011 - S1 - Final
-        type: string
-      problem_description:
-        example: What is 'Monad'?
-        type: string
-      problem_name:
-        example: 1+1=???
-        type: string
-      tags:
+      exam_ids:
         example:
-        - calculus
-        - "2110101"
-        - limit
-        - hard
+        - 507f1f77bcf86cd799439011
+        - 507f1f77bcf86cd799439011
         items:
           type: string
         type: array
     required:
+    - _id
+    - course_codename
+    - course_id
     - course_name
-    - exam_name
-    - problem_description
-    - problem_name
-    - tags
     type: object
-  dto.CreateThreadResponse:
+  dto.CourseCreateBody:
     properties:
-      thread_id:
+      course_codename:
+        example: "2112101"
+        type: string
+      course_id:
         example: 507f1f77bcf86cd799439011
         type: string
-    type: object
-  dto.Exam:
-    properties:
-      exam_name:
-        example: 2011 - S1 - Final
+      course_name:
+        example: Calculus
         type: string
-      threads:
+    required:
+    - course_codename
+    - course_id
+    - course_name
+    type: object
+  dto.CourseUpdateBody:
+    properties:
+      course_codename:
+        example: "2112101"
+        type: string
+      course_name:
+        example: Calculus
+        type: string
+      exam_ids:
+        example:
+        - 507f1f77bcf86cd799439011
+        - 507f1f77bcf86cd799439011
         items:
-          $ref: '#/definitions/dto.ThreadSummary'
+          type: string
         type: array
     type: object
-  dto.ExamSummary:
+  dto.ExamBody:
     properties:
-      exam_id:
+      _id:
         example: 507f1f77bcf86cd799439011
         type: string
-      exam_name:
-        example: 2011 - S1 - Final
+      course_id:
+        example: 507f1f77bcf86cd799439011
         type: string
-      thread_count:
-        example: 12
+      semester:
+        example: S1
+        type: string
+      term:
+        example: Final
+        type: string
+      thread_ids:
+        example:
+        - 507f1f77bcf86cd799439011
+        - 507f1f77bcf86cd799439011
+        items:
+          type: string
+        type: array
+      year:
+        example: 2011
         type: integer
+    required:
+    - _id
+    - course_id
+    - semester
+    - term
+    - thread_ids
+    - year
+    type: object
+  dto.ExamCreateBody:
+    properties:
+      course_id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      semester:
+        example: S1
+        type: string
+      term:
+        example: Final
+        type: string
+      year:
+        example: 2011
+        type: integer
+    required:
+    - semester
+    - term
+    - year
+    type: object
+  dto.ExamUpdateBody:
+    properties:
+      course_id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      thread_ids:
+        example:
+        - 507f1f77bcf86cd799439011
+        - 507f1f77bcf86cd799439011
+        items:
+          type: string
+        type: array
     type: object
   dto.Login:
     properties:
@@ -101,78 +152,86 @@ definitions:
       user:
         $ref: '#/definitions/dto.User'
     type: object
-  dto.Reply:
+  dto.Problem:
     properties:
       body:
-        example: 1+1=3
-        type: string
-      downvote:
-        example: 420
-        type: integer
-      thread_id:
-        example: 507f1f77bcf86cd799439011
-        type: string
-      upvote:
-        example: 42
-        type: integer
-    type: object
-  dto.Thread:
-    properties:
-      downvote:
-        example: 12
-        type: integer
-      problem_description:
         example: What is 'Monad'?
         type: string
-      problem_name:
-        example: 1+1=???
+      downvoted:
+        example: 17
+        type: integer
+      title:
+        example: Hard limit
         type: string
-      replies:
-        items:
-          $ref: '#/definitions/dto.Reply'
-        type: array
-      tags:
-        example:
-        - calculus
-        - "2110101"
-        - limit
-        - hard
-        items:
-          type: string
-        type: array
-      thread_id:
+      uploaded_user:
         example: 507f1f77bcf86cd799439011
         type: string
-      upvote:
-        example: 12
+      upvoted:
+        example: 13
         type: integer
+    required:
+    - body
+    - downvoted
+    - title
+    - uploaded_user
+    - upvoted
     type: object
-  dto.ThreadSummary:
+  dto.ThreadBody:
     properties:
-      downvote:
-        example: 12
-        type: integer
-      problem_description:
-        example: What is 'Monad'?
-        type: string
-      problem_name:
-        example: 1+1=???
-        type: string
-      tags:
-        example:
-        - calculus
-        - "2110101"
-        - limit
-        - hard
-        items:
-          type: string
-        type: array
-      thread_id:
+      _id:
         example: 507f1f77bcf86cd799439011
         type: string
-      upvote:
-        example: 12
+      answers:
+        items:
+          $ref: '#/definitions/dto.Answer'
+        type: array
+      course_id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      downvoted:
+        example: 13
         type: integer
+      exam_id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      problems:
+        items:
+          $ref: '#/definitions/dto.Problem'
+        type: array
+      upvoted:
+        example: 17
+        type: integer
+    required:
+    - _id
+    - course_id
+    - exam_id
+    type: object
+  dto.ThreadRequestCreateBody:
+    properties:
+      answer:
+        example: Final
+        type: string
+      course_id:
+        example: 507f1f77bcf86cd799439011
+        type: string
+      question:
+        example: Final
+        type: string
+      semester:
+        example: S1
+        type: string
+      term:
+        example: Final
+        type: string
+      year:
+        example: 2011
+        type: integer
+    required:
+    - course_id
+    - question
+    - semester
+    - term
+    - year
     type: object
   dto.User:
     properties:
@@ -247,7 +306,6 @@ paths:
       - Auth
   /course:
     get:
-      description: get detail summary for all course
       produces:
       - application/json
       responses:
@@ -255,92 +313,300 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.CourseSummary'
+              $ref: '#/definitions/dto.CourseBody'
             type: array
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: GetAllCourseSummary
+      summary: Get all course
+      tags:
+      - Course
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Course body
+        in: body
+        name: course_body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CourseCreateBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CourseBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      summary: Create Course
       tags:
       - Course
   /course/:course_id:
-    get:
-      description: Get specific course
+    delete:
       parameters:
-      - description: course ID
+      - description: Course id
+        in: path
+        name: Course_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/dto.CourseBody'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Delete course
+      tags:
+      - Course
+    get:
+      parameters:
+      - description: Course id
         in: path
         name: course_id
         required: true
         type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/dto.CourseBody'
+        "404":
+          description: Not Found
+      summary: Get course
+      tags:
+      - Course
+    put:
+      parameters:
+      - description: Update body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CourseUpdateBody'
+      - description: Course id
+        in: path
+        name: course_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/dto.CourseBody'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Update course
+      tags:
+      - Course
+  /exam:
+    delete:
+      parameters:
+      - description: year
+        in: query
+        name: year
+        required: true
+        type: integer
+      - description: semester
+        in: query
+        name: semester
+        required: true
+        type: string
+      - description: term
+        in: query
+        name: term
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/dto.ExamBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Delete exam
+      tags:
+      - Exam
+    get:
+      description: |-
+        Choose 1 type of these 3 types:
+
+        Get all (No query)
+
+        Query by course id (?course_id=...)
+
+        Find by property (?year=...&semester=...&term=...) three of them must exist at the same request
+
+        If many queries are provided, only the most specific will be returned.
+      parameters:
+      - description: year
+        in: query
+        name: year
+        type: integer
+      - description: semester
+        in: query
+        name: semester
+        type: string
+      - description: term
+        in: query
+        name: term
+        type: string
+      - description: Course id
+        in: query
+        name: course_id
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.Course'
+            items:
+              $ref: '#/definitions/dto.ExamBody'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Get all exam
+      tags:
+      - Exam
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Exam body
+        in: body
+        name: exam_body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExamCreateBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ExamBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      summary: Create exam
+      tags:
+      - Exam
+    put:
+      parameters:
+      - description: Update body
+        in: body
+        name: update_body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExamUpdateBody'
+      - description: year
+        in: query
+        name: year
+        required: true
+        type: integer
+      - description: semester
+        in: query
+        name: semester
+        required: true
+        type: string
+      - description: term
+        in: query
+        name: term
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/dto.ExamBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: GetCourse
+      summary: Update exam
       tags:
-      - Course
-  /exam/:exam_id:
+      - Exam
+  /thread:
     get:
-      description: Get specific exam
+      consumes:
+      - application/json
       parameters:
-      - description: exam ID
-        in: path
-        name: exam_id
+      - description: year
+        in: query
+        name: year
+        required: true
+        type: integer
+      - description: semester
+        in: query
+        name: semester
+        required: true
+        type: string
+      - description: term
+        in: query
+        name: term
         required: true
         type: string
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.Exam'
-        "404":
-          description: Not Found
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: GetExam
+            items:
+              $ref: '#/definitions/dto.ThreadBody'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Get thread by property
       tags:
-      - Exam
-  /thread:
+      - Thread
     post:
-      consumes:
-      - application/json
-      description: Create thread (require session)
       parameters:
-      - description: Thread information
+      - description: Thread body
         in: body
-        name: thread
+        name: thread_body
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateThread'
+          $ref: '#/definitions/dto.ThreadRequestCreateBody'
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.CreateThreadResponse'
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: CreateThread
+            $ref: '#/definitions/dto.ThreadBody'
+        "404":
+          description: Not Found
+      summary: Create thread
       tags:
       - Thread
   /thread/:thread_id:
     get:
-      consumes:
-      - application/json
-      description: get specific thread
       parameters:
       - description: Thread id
         in: path
@@ -353,41 +619,50 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.Thread'
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: GetThread
+            $ref: '#/definitions/dto.ThreadBody'
+        "404":
+          description: Not Found
+      summary: Get thread by id
       tags:
       - Thread
-  /thread/:thread_id/reply:
+  /thread/:thread_id/downvote:
     post:
-      consumes:
-      - application/json
-      description: Create reply in thread (require session)
       parameters:
-      - description: Reply information
-        in: body
-        name: reply
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateReply'
-      - description: Thread id
+      - description: thread id
         in: path
         name: thread_id
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: CreateReply
+          schema:
+            $ref: '#/definitions/dto.ThreadBody'
+        "400":
+          description: Bad Request
+      summary: Downvote thread
+      tags:
+      - Thread
+  /thread/:thread_id/upvote:
+    post:
+      parameters:
+      - description: thread id
+        in: path
+        name: thread_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ThreadBody'
+        "400":
+          description: Bad Request
+      summary: Upvote thread
       tags:
       - Thread
 swagger: "2.0"

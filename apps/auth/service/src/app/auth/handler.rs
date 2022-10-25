@@ -3,7 +3,7 @@ use tonic::{async_trait, Request, Response, Status};
 
 use crate::proto::auth::{
     auth_server::Auth, AuthRequest, AuthResponse, MeRequest, MeResponse, RevokeRequest,
-    RevokeResponse,
+    RevokeResponse, ValidateRequest, ValidateResponse,
 };
 
 use super::service::AuthService;
@@ -70,6 +70,29 @@ impl Auth for AuthHandler {
             }
             Err(e) => {
                 log::error!("[Me] {}", e);
+                Err(Status::internal(e.to_string()))
+            }
+        }
+    }
+
+    async fn validate(
+        &self,
+        request: Request<ValidateRequest>,
+    ) -> Result<Response<ValidateResponse>, Status> {
+        let token = &request.get_ref().token;
+
+        log::debug!("[Validate] token: {}", token);
+
+        let res = self.service.validate(token).await;
+
+        match res {
+            Ok(user_id) => Ok(Response::new(ValidateResponse { user_id: user_id })),
+            Err(SrvErr::NotFound(x)) => {
+                log::info!("[Validate] request not found has occured {}", token);
+                Err(Status::not_found(x))
+            }
+            Err(e) => {
+                log::error!("[Validate] {}", e);
                 Err(Status::internal(e.to_string()))
             }
         }

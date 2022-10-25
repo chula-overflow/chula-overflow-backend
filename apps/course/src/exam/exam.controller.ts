@@ -14,13 +14,13 @@ export class ExamController {
   constructor(
     private readonly ExamService: ExamService,
     private readonly CourseService: CourseService,
-  ) {}
+  ) { }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async createExam(data: ExamCreateBody, metadata: any) {
     const newExam = await this.ExamService.create(data);
     const examId = newExam._id;
-    const courseId = newExam.course_id;
+    const courseId = newExam.courseId;
 
     // add exam_id to course document
     await this.CourseService.addExamId(examId, courseId);
@@ -28,19 +28,23 @@ export class ExamController {
     return newExam;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async getAllExams(metadata: any) {
     const exams = await this.ExamService.find();
-    return exams;
+    return {
+      messages: exams,
+    };
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async getAllExamsByCourseId(data: ExamCourseIdRequestBody, metadata: any) {
-    const exams = await this.ExamService.findByCourseId(data.course_id);
-    return exams;
+    const exams = await this.ExamService.findByCourseId(data.courseId);
+    return {
+      messages: exams,
+    };
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async getExamByCourseProperty(data: ExamPropertyRequestBody, metadata: any) {
     const examId = await this.ExamService.findIdByCourseProperty(
       data.year,
@@ -53,7 +57,7 @@ export class ExamController {
     return exam;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async updateExamByCourseProperty(data: ExamRequestUpdateBody, metadata: any) {
     const examId = await this.ExamService.findIdByCourseProperty(
       data.year,
@@ -66,7 +70,7 @@ export class ExamController {
     return updatedExam;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async deleteExamByCourseProperty(
     data: ExamPropertyRequestBody,
     metadata: any,

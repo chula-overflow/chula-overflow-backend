@@ -9,7 +9,7 @@ export class ExamService {
   constructor(
     @InjectModel(Exam.name)
     private ExamModel: Model<ExamDocument>,
-  ) {}
+  ) { }
 
   // create new exam and update that course to has exam id
   async create(examData: ExamCreateBody): Promise<ExamBody> {
@@ -25,7 +25,7 @@ export class ExamService {
 
   async findByCourseId(courseId: string): Promise<ExamBody[]> {
     const exam = await this.ExamModel.find({
-      course_id: courseId,
+      courseId: courseId,
     }).exec();
     return exam;
   }
@@ -44,9 +44,9 @@ export class ExamService {
       '_id',
     ).exec();
 
-    const exam_id = exam._id;
+    const examId = exam._id;
 
-    return exam_id;
+    return examId;
   }
 
   async findOneById(examId: ObjectId): Promise<ExamBody> {
@@ -59,11 +59,11 @@ export class ExamService {
     const exam = await this.findOneById(examId);
 
     const examDocumentId = exam._id;
-    const threadIds = [...exam.thread_ids, String(threadId)];
+    const threadIds = [...exam.threadIds, String(threadId)];
 
     const updatedExam = await this.ExamModel.findByIdAndUpdate(
       examDocumentId,
-      { thread_ids: threadIds },
+      { threadIds: threadIds },
       { new: true },
     );
 

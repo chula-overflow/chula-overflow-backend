@@ -1,18 +1,21 @@
 package auth
 
 import (
-	"log"
+	"strconv"
 
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/gofiber/fiber/v2"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type IService interface {
-	GetExam(string) (*dto.Exam, error)
+	CreateExam(*dto.ExamCreateBody) (*dto.ExamBody, error)
+	GetAllExams() ([]*dto.ExamBody, error)
+	GetAllExamsByCourseId(courseId string) ([]*dto.ExamBody, error)
+	GetExamByCourseProperty(year int32, semester string, term string) (*dto.ExamBody, error)
+	UpdateExamByCourseProperty(year int32, semester string, term string, body *dto.ExamUpdateBody) (*dto.ExamBody, error)
+	DeleteExamByCourseProperty(year int32, semester string, term string) (*dto.ExamBody, error)
 }
 
 type Handler struct {
@@ -20,43 +23,170 @@ type Handler struct {
 	v       *validator.MyValidator
 }
 
-// @Summary GetExam
-// @Description Get specific exam
+// @Summary Get all exam
+// @Description Choose 1 type of these 3 types:
+// @Description
+// @Description Get all (No query)
+// @Description
+// @Description Query by course id (?course_id=...)
+// @Description
+// @Description Find by property (?year=...&semester=...&term=...) three of them must exist at the same request
+// @Description
+// @Description If many queries are provided, only the most specific will be returned.
+// @Param year query int false "year"
+// @Param semester query string false "semester"
+// @Param term query string false "term"
+// @Param course_id query string false "Course id"
 // @Tags Exam
-// @Param exam_id path string true "exam ID"
-// @Success 200 {object} dto.Exam
-// @Failure 404
-// @Failure 500
-// @Failure 503
-// @Router /exam/:exam_id [get]
+// @Produce json
+// @Success 200 {object} []dto.ExamBody
+// @Failure 400
+// @Router /exam [get]
 func (h *Handler) GetExam(ctx *context.Ctx) error {
-	examId := ctx.Params("exam_id")
+	year := ctx.Query("year")
+	semester := ctx.Query("semester")
+	term := ctx.Query("term")
+	courseId := ctx.Query("course_id")
 
-	exam, err := h.Service.GetExam(examId)
+	if year != "" && semester != "" && term != "" {
+		year, err := strconv.Atoi(year)
+
+		if err != nil {
+			return fiber.ErrBadRequest
+		}
+
+		res, err := h.Service.GetExamByCourseProperty(int32(year), semester, term)
+
+		if err != nil {
+			return err
+		}
+
+		return ctx.JSON(res)
+	} else if courseId != "" {
+		res, err := h.Service.GetAllExamsByCourseId(courseId)
+
+		if err != nil {
+			return err
+		}
+
+		return ctx.JSON(res)
+	}
+
+	res, err := h.Service.GetAllExams()
 
 	if err != nil {
-		if e, ok := status.FromError(err); ok {
-			switch e.Code() {
-			case codes.NotFound:
-				return fiber.ErrNotFound
-			default:
-				log.Println("Service down")
-				return fiber.ErrServiceUnavailable
-			}
-		} else {
-			log.Println("Parse error failed", err)
-			return fiber.ErrInternalServerError
-		}
+		return err
 	}
 
-	ctx.JSON(exam)
-
-	return nil
+	return ctx.JSON(res)
 }
 
-func NewHandler(service IService, v *validator.MyValidator) Handler {
-	return Handler{
-		Service: service,
-		v:       v,
+// @Summary Create exam
+// @Tags Exam
+// @Accept json
+// @Produce json
+// @Param exam_body body dto.ExamCreateBody true "Exam body"
+// @Success 201 {object} dto.ExamBody
+// @Failure 400
+// @Failure 401
+// @Failure 422
+// @Router /exam [post]
+func (h *Handler) CreateExam(ctx *context.Ctx) error {
+	body := new(dto.ExamCreateBody)
+
+	if err := ctx.BodyParser(body); err != nil {
+		return err
 	}
+	err := h.v.Struct(body)
+	if err != nil {
+		return err
+	}
+
+	res, err := h.Service.CreateExam(body)
+
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(res)
+}
+
+// @Summary Update exam
+// @Tags Exam
+// @Produce json
+// @Param update_body body dto.ExamUpdateBody true "Update body"
+// @Param year query int true "year"
+// @Param semester query string true "semester"
+// @Param term query string true "term"
+// @Success 204 {object} dto.ExamBody
+// @Failure 400
+// @Failure 401
+// @Failure 404
+// @Router /exam [put]
+func (h *Handler) UpdateExamByCourseProperty(ctx *context.Ctx) error {
+	year := ctx.Query("year")
+	semester := ctx.Query("semester")
+	term := ctx.Query("term")
+
+	if year == "" || semester == "" || term == "" {
+		return fiber.ErrBadRequest
+	}
+
+	yearInt, err := strconv.Atoi(year)
+
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
+	body := new(dto.ExamUpdateBody)
+	if err := ctx.BodyParser(body); err != nil {
+		return err
+	}
+
+	res, err := h.Service.UpdateExamByCourseProperty(int32(yearInt), semester, term, body)
+
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(res)
+}
+
+// @Summary Delete exam
+// @Tags Exam
+// @Param year query int true "year"
+// @Param semester query string true "semester"
+// @Param term query string true "term"
+// @Produce json
+// @Success 204 {object} dto.ExamBody
+// @Failure 400
+// @Failure 401
+// @Failure 404
+// @Router /exam [delete]
+func (h *Handler) DeleteCourse(ctx *context.Ctx) error {
+	year := ctx.Query("year")
+	semester := ctx.Query("semester")
+	term := ctx.Query("term")
+
+	if year == "" || semester == "" || term == "" {
+		return fiber.ErrBadRequest
+	}
+
+	yearInt, err := strconv.Atoi(year)
+
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
+	res, err := h.Service.DeleteExamByCourseProperty(int32(yearInt), semester, term)
+
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(res)
+}
+
+func NewHandler(service IService, validator *validator.MyValidator) Handler {
+	return Handler{service, validator}
 }

@@ -2,30 +2,30 @@ import { ObjectId } from 'mongoose';
 
 export interface CourseBody {
   _id: ObjectId;
-  course_id: string;
-  course_name: string;
-  course_codename: string;
-  exam_ids?: string[];
+  courseId: string;
+  courseName: string;
+  courseCodename: string;
+  examIds?: string[];
 }
 
 export interface CourseCreateBody {
-  course_id: string;
-  course_name: string;
-  course_codename: string;
+  courseId: string;
+  courseName: string;
+  courseCodename: string;
 }
 
 export interface CourseUpdateBody {
-  couse_id?: string;
-  course_name?: string;
-  course_codename?: string;
-  exam_ids?: string[];
+  couseId?: string;
+  courseName?: string;
+  courseCodename?: string;
+  examIds?: string[];
 }
 
 export interface CourseRequestBody {
-  course_id: string;
+  courseId: string;
 }
 
 export interface CourseRequestUpdateBody {
-  course_id: string;
+  courseId: string;
   body: CourseUpdateBody;
 }

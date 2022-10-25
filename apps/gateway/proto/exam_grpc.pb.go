@@ -22,7 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ExamClient interface {
-	GetExam(ctx context.Context, in *GetExamRequest, opts ...grpc.CallOption) (*GetExamResponse, error)
+	CreateExam(ctx context.Context, in *ExamCreateBody, opts ...grpc.CallOption) (*ExamBody, error)
+	GetAllExams(ctx context.Context, in *GetAllExamBody, opts ...grpc.CallOption) (*ExamBodyArr, error)
+	GetAllExamsByCourseId(ctx context.Context, in *ExamCourseIdRequestBody, opts ...grpc.CallOption) (*ExamBodyArr, error)
+	GetExamByCourseProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ExamBody, error)
+	UpdateExamByCourseProperty(ctx context.Context, in *ExamRequestUpdateBody, opts ...grpc.CallOption) (*ExamBody, error)
+	DeleteExamByCourseProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ExamBody, error)
 }
 
 type examClient struct {
@@ -33,9 +38,54 @@ func NewExamClient(cc grpc.ClientConnInterface) ExamClient {
 	return &examClient{cc}
 }
 
-func (c *examClient) GetExam(ctx context.Context, in *GetExamRequest, opts ...grpc.CallOption) (*GetExamResponse, error) {
-	out := new(GetExamResponse)
-	err := c.cc.Invoke(ctx, "/exam.Exam/GetExam", in, out, opts...)
+func (c *examClient) CreateExam(ctx context.Context, in *ExamCreateBody, opts ...grpc.CallOption) (*ExamBody, error) {
+	out := new(ExamBody)
+	err := c.cc.Invoke(ctx, "/exam.Exam/CreateExam", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *examClient) GetAllExams(ctx context.Context, in *GetAllExamBody, opts ...grpc.CallOption) (*ExamBodyArr, error) {
+	out := new(ExamBodyArr)
+	err := c.cc.Invoke(ctx, "/exam.Exam/GetAllExams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *examClient) GetAllExamsByCourseId(ctx context.Context, in *ExamCourseIdRequestBody, opts ...grpc.CallOption) (*ExamBodyArr, error) {
+	out := new(ExamBodyArr)
+	err := c.cc.Invoke(ctx, "/exam.Exam/GetAllExamsByCourseId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *examClient) GetExamByCourseProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ExamBody, error) {
+	out := new(ExamBody)
+	err := c.cc.Invoke(ctx, "/exam.Exam/GetExamByCourseProperty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *examClient) UpdateExamByCourseProperty(ctx context.Context, in *ExamRequestUpdateBody, opts ...grpc.CallOption) (*ExamBody, error) {
+	out := new(ExamBody)
+	err := c.cc.Invoke(ctx, "/exam.Exam/UpdateExamByCourseProperty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *examClient) DeleteExamByCourseProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ExamBody, error) {
+	out := new(ExamBody)
+	err := c.cc.Invoke(ctx, "/exam.Exam/DeleteExamByCourseProperty", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,15 +96,35 @@ func (c *examClient) GetExam(ctx context.Context, in *GetExamRequest, opts ...gr
 // All implementations should embed UnimplementedExamServer
 // for forward compatibility
 type ExamServer interface {
-	GetExam(context.Context, *GetExamRequest) (*GetExamResponse, error)
+	CreateExam(context.Context, *ExamCreateBody) (*ExamBody, error)
+	GetAllExams(context.Context, *GetAllExamBody) (*ExamBodyArr, error)
+	GetAllExamsByCourseId(context.Context, *ExamCourseIdRequestBody) (*ExamBodyArr, error)
+	GetExamByCourseProperty(context.Context, *ExamPropertyRequestBody) (*ExamBody, error)
+	UpdateExamByCourseProperty(context.Context, *ExamRequestUpdateBody) (*ExamBody, error)
+	DeleteExamByCourseProperty(context.Context, *ExamPropertyRequestBody) (*ExamBody, error)
 }
 
 // UnimplementedExamServer should be embedded to have forward compatible implementations.
 type UnimplementedExamServer struct {
 }
 
-func (UnimplementedExamServer) GetExam(context.Context, *GetExamRequest) (*GetExamResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetExam not implemented")
+func (UnimplementedExamServer) CreateExam(context.Context, *ExamCreateBody) (*ExamBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateExam not implemented")
+}
+func (UnimplementedExamServer) GetAllExams(context.Context, *GetAllExamBody) (*ExamBodyArr, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllExams not implemented")
+}
+func (UnimplementedExamServer) GetAllExamsByCourseId(context.Context, *ExamCourseIdRequestBody) (*ExamBodyArr, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllExamsByCourseId not implemented")
+}
+func (UnimplementedExamServer) GetExamByCourseProperty(context.Context, *ExamPropertyRequestBody) (*ExamBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExamByCourseProperty not implemented")
+}
+func (UnimplementedExamServer) UpdateExamByCourseProperty(context.Context, *ExamRequestUpdateBody) (*ExamBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateExamByCourseProperty not implemented")
+}
+func (UnimplementedExamServer) DeleteExamByCourseProperty(context.Context, *ExamPropertyRequestBody) (*ExamBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteExamByCourseProperty not implemented")
 }
 
 // UnsafeExamServer may be embedded to opt out of forward compatibility for this service.
@@ -68,20 +138,110 @@ func RegisterExamServer(s grpc.ServiceRegistrar, srv ExamServer) {
 	s.RegisterService(&Exam_ServiceDesc, srv)
 }
 
-func _Exam_GetExam_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetExamRequest)
+func _Exam_CreateExam_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamCreateBody)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExamServer).GetExam(ctx, in)
+		return srv.(ExamServer).CreateExam(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/exam.Exam/GetExam",
+		FullMethod: "/exam.Exam/CreateExam",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExamServer).GetExam(ctx, req.(*GetExamRequest))
+		return srv.(ExamServer).CreateExam(ctx, req.(*ExamCreateBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Exam_GetAllExams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllExamBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExamServer).GetAllExams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exam.Exam/GetAllExams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExamServer).GetAllExams(ctx, req.(*GetAllExamBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Exam_GetAllExamsByCourseId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamCourseIdRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExamServer).GetAllExamsByCourseId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exam.Exam/GetAllExamsByCourseId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExamServer).GetAllExamsByCourseId(ctx, req.(*ExamCourseIdRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Exam_GetExamByCourseProperty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamPropertyRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExamServer).GetExamByCourseProperty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exam.Exam/GetExamByCourseProperty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExamServer).GetExamByCourseProperty(ctx, req.(*ExamPropertyRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Exam_UpdateExamByCourseProperty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamRequestUpdateBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExamServer).UpdateExamByCourseProperty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exam.Exam/UpdateExamByCourseProperty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExamServer).UpdateExamByCourseProperty(ctx, req.(*ExamRequestUpdateBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Exam_DeleteExamByCourseProperty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamPropertyRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExamServer).DeleteExamByCourseProperty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exam.Exam/DeleteExamByCourseProperty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExamServer).DeleteExamByCourseProperty(ctx, req.(*ExamPropertyRequestBody))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,8 +254,28 @@ var Exam_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ExamServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetExam",
-			Handler:    _Exam_GetExam_Handler,
+			MethodName: "CreateExam",
+			Handler:    _Exam_CreateExam_Handler,
+		},
+		{
+			MethodName: "GetAllExams",
+			Handler:    _Exam_GetAllExams_Handler,
+		},
+		{
+			MethodName: "GetAllExamsByCourseId",
+			Handler:    _Exam_GetAllExamsByCourseId_Handler,
+		},
+		{
+			MethodName: "GetExamByCourseProperty",
+			Handler:    _Exam_GetExamByCourseProperty_Handler,
+		},
+		{
+			MethodName: "UpdateExamByCourseProperty",
+			Handler:    _Exam_UpdateExamByCourseProperty_Handler,
+		},
+		{
+			MethodName: "DeleteExamByCourseProperty",
+			Handler:    _Exam_DeleteExamByCourseProperty_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
