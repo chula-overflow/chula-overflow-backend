@@ -3,6 +3,7 @@ package auth
 import (
 	"log"
 
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/gofiber/fiber/v2"
@@ -17,6 +18,7 @@ type IService interface {
 
 type Handler struct {
 	Service IService
+	v       *validator.MyValidator
 }
 
 // @Summary GetAllCourseSummary
@@ -79,8 +81,9 @@ func (h *Handler) GetCourse(ctx *context.Ctx) error {
 	return nil
 }
 
-func NewHandler(service IService) Handler {
+func NewHandler(service IService, v *validator.MyValidator) Handler {
 	return Handler{
 		Service: service,
+		v:       v,
 	}
 }

@@ -19,7 +19,7 @@ const docTemplate = `{
     "paths": {
         "/auth/login": {
             "post": {
-                "description": "Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.\nCookies are automatically store in swag",
+                "description": "Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.\nCookies are automatically store in swag\nreturn 200 if client already has sid on.",
                 "consumes": [
                     "application/json"
                 ],
@@ -357,6 +357,9 @@ const docTemplate = `{
         },
         "dto.CreateReply": {
             "type": "object",
+            "required": [
+                "body"
+            ],
             "properties": {
                 "body": {
                     "type": "string",
@@ -366,6 +369,13 @@ const docTemplate = `{
         },
         "dto.CreateThread": {
             "type": "object",
+            "required": [
+                "course_name",
+                "exam_name",
+                "problem_description",
+                "problem_name",
+                "tags"
+            ],
             "properties": {
                 "course_name": {
                     "type": "string",
@@ -402,7 +412,7 @@ const docTemplate = `{
             "properties": {
                 "thread_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 }
             }
         },
@@ -440,6 +450,9 @@ const docTemplate = `{
         },
         "dto.Login": {
             "type": "object",
+            "required": [
+                "email"
+            ],
             "properties": {
                 "email": {
                     "type": "string",
@@ -468,7 +481,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 },
                 "upvote": {
                     "type": "integer",
@@ -511,7 +524,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 },
                 "upvote": {
                     "type": "integer",
@@ -548,7 +561,7 @@ const docTemplate = `{
                 },
                 "thread_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011!(OBJECTID)"
+                    "example": "507f1f77bcf86cd799439011"
                 },
                 "upvote": {
                     "type": "integer",
