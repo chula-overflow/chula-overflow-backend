@@ -5,7 +5,7 @@ use super::super::user::{
     model::{CreateUser, User},
     repository::UserRepository,
 };
-use super::model::{Revoke, Session};
+use super::model::Session;
 
 use service_macros::service;
 
@@ -36,24 +36,29 @@ impl AuthService {
         Ok(session.token)
     }
 
-    pub async fn revoke(&self, token: &String) -> Result<()> {
-        let result = self
-            .session_repository
-            .revoke(&Revoke {
-                token: token.clone(),
-            })
-            .await;
+    pub async fn revoke(&self, token: &str) -> Result<()> {
+        let res = self.session_repository.revoke(token).await;
 
-        match result {
+        match res {
             Ok(Some(_)) => Ok(()),
             Ok(None) => Err(Error::NotFound("token not found")),
             Err(e) => Err(e),
         }
     }
 
-    pub async fn me(&self, token: &String) -> Result<User> {
+    pub async fn me(&self, token: &str) -> Result<User> {
         let user = self.session_repository.me(token).await?;
 
         Ok(user)
+    }
+
+    pub async fn validate(&self, token: &str) -> Result<String> {
+        let res = self.session_repository.validate(token).await;
+
+        match res {
+            Ok(Some(x)) => Ok(x.token),
+            Ok(None) => Err(Error::NotFound("token not found")),
+            Err(e) => Err(e),
+        }
     }
 }

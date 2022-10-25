@@ -13,7 +13,7 @@ export class ThreadService {
   constructor(
     @InjectModel(Thread.name)
     private ThreadModel: Model<ThreadDocument>,
-  ) {}
+  ) { }
 
   async createThread(threadBody: ThreadCreateBody): Promise<ThreadBody> {
     const newThread = new this.ThreadModel(threadBody);
@@ -22,7 +22,7 @@ export class ThreadService {
 
   async findByExamId(examId: ObjectId) {
     const threads = await this.ThreadModel.find({
-      exam_id: examId,
+      examId: examId,
     }).exec();
     return threads;
   }

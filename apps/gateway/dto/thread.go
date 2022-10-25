@@ -1,43 +1,34 @@
 package dto
 
-type ThreadSummary struct {
-	ThreadId           string   `json:"thread_id" example:"507f1f77bcf86cd799439011"`
-	ProblemName        string   `json:"problem_name" example:"1+1=???"`
-	ProblemDescription string   `json:"problem_description" example:"What is 'Monad'?"`
-	Upvote             int32    `json:"upvote" example:"12"`
-	Downvote           int32    `json:"downvote" example:"12"`
-	Tags               []string `json:"tags" example:"calculus,2110101,limit,hard"`
+type ThreadRequestCreateBody struct {
+	CourseId string `json:"course_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	Year     int32  `json:"year" example:"2011" validate:"required"`
+	Semester string `json:"semester" example:"S1" validate:"required"`
+	Term     string `json:"term" example:"Final" validate:"required"`
+	Question string `json:"question" example:"Final" validate:"required"`
+	Answer   string `json:"answer" example:"Final"`
 }
 
-type Thread struct {
-	ThreadId           string   `json:"thread_id" example:"507f1f77bcf86cd799439011"`
-	ProblemName        string   `json:"problem_name" example:"1+1=???"`
-	ProblemDescription string   `json:"problem_description" example:"What is 'Monad'?"`
-	Upvote             int32    `json:"upvote" example:"12"`
-	Downvote           int32    `json:"downvote" example:"12"`
-	Tags               []string `json:"tags" example:"calculus,2110101,limit,hard"`
-	Replies            []Reply  `json:"replies"`
+type ThreadBody struct {
+	Id        string    `json:"_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	ExamId    string    `json:"exam_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	CourseId  string    `json:"course_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	Upvoted   int32     `json:"upvoted" example:"17"`
+	Downvoted int32     `json:"downvoted" example:"13"`
+	Problems  []Problem `json:"problems"`
+	Answers   []Answer  `json:"answers"`
 }
 
-type Reply struct {
-	ThreadId string `json:"thread_id" example:"507f1f77bcf86cd799439011"`
-	Body     string `json:"body" example:"1+1=3"`
-	Upvote   int32  `json:"upvote" example:"42"`
-	Downvote int32  `json:"downvote" example:"420"`
+type Answer struct {
+	Body      string `json:"body" example:"I dont know I think it's B" validate:"required"`
+	Upvoted   int32  `json:"upvoted" example:"13" validate:"required"`
+	Downvoted int32  `json:"downvoted" example:"17" validate:"required"`
 }
 
-type CreateThread struct {
-	CourseName         string   `json:"course_name" example:"2110101 Calculus I" validate:"required"`
-	ExamName           string   `json:"exam_name" example:"2011 - S1 - Final" validate:"required"`
-	ProblemName        string   `json:"problem_name" example:"1+1=???" validate:"required"`
-	ProblemDescription string   `json:"problem_description" example:"What is 'Monad'?" validate:"required"`
-	Tags               []string `json:"tags" example:"calculus,2110101,limit,hard" validate:"required"`
-}
-
-type CreateReply struct {
-	Body string `json:"body" example:"1+1=3" validate:"required"`
-}
-
-type CreateThreadResponse struct {
-	ThreadId string `json:"thread_id" example:"507f1f77bcf86cd799439011"`
+type Problem struct {
+	Title        string `json:"title" example:"Hard limit" validate:"required"`
+	Body         string `json:"body" example:"What is 'Monad'?" validate:"required"`
+	UploadedUser string `json:"uploaded_user" example:"507f1f77bcf86cd799439011" validate:"required"`
+	Upvoted      int32  `json:"upvoted" example:"13" validate:"required"`
+	Downvoted    int32  `json:"downvoted" example:"17" validate:"required"`
 }

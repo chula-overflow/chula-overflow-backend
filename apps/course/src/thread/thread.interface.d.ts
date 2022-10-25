@@ -2,14 +2,14 @@ import { ObjectId } from 'mongoose';
 
 export interface ThreadBody {
   _id: ObjectId;
-  exam_id: stringd;
-  course_id: string;
+  examId: stringd;
+  courseId: string;
   upvoted: number;
   downvoted: number;
   problems: {
     title: string; // generated from nlp
     body: string;
-    uploaded_user: string;
+    uploadedUser: string;
     upvoted: number;
     downvoted: number;
   }[];
@@ -21,26 +21,26 @@ export interface ThreadBody {
 }
 
 export interface ThreadRequestCreateBody {
-  course_id: string;
+  courseId: string;
   year: number;
   semester: string;
   term: string;
 
-  uploaded_user: string;
+  uploadedUser: string;
 
   question: string;
   answer?: string;
 }
 
 export interface ThreadCreateBody {
-  exam_id: string;
-  course_id: string;
+  examId: string;
+  courseId: string;
   upvoted: number;
   downvoted: number;
   problems: {
     title: string;
     body: string;
-    uploaded_user: string;
+    uploadedUser: string;
     upvoted: number;
     downvoted: number;
   }[];
@@ -52,14 +52,14 @@ export interface ThreadCreateBody {
 }
 
 export interface ThreadUpdateBody {
-  exam_id?: string;
-  course_id?: string;
+  examId?: string;
+  courseId?: string;
   upvoted?: number;
   downvoted?: number;
   problems?: {
     title?: string;
     body?: string;
-    uploaded_user?: string;
+    uploadedUser?: string;
     upvoted?: number;
     downvoted?: number;
   }[];
@@ -71,5 +71,5 @@ export interface ThreadUpdateBody {
 }
 
 export interface ThreadIdRequestBody {
-  thread_id: ObjectId;
+  threadId: ObjectId;
 }

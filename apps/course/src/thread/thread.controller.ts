@@ -14,10 +14,12 @@ export class ThreadController {
   constructor(
     private readonly ThreadService: ThreadService,
     private readonly ExamService: ExamService,
-  ) {}
+  ) { }
 
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async createThread(data: ThreadRequestCreateBody, metadata: any) {
+    console.log(data);
+
     const examId = await this.ExamService.findIdByCourseProperty(
       data.year,
       data.semester,
@@ -25,15 +27,15 @@ export class ThreadController {
     );
 
     const createThreadBody = {
-      exam_id: String(examId),
-      course_id: data.course_id,
+      examId: String(examId),
+      courseId: data.courseId,
       upvoted: 0,
       downvoted: 0,
       problems: [
         {
           title: 'generated from nlp',
           body: data.question,
-          uploaded_user: data.uploaded_user,
+          uploadedUser: data.uploadedUser,
           upvoted: 0,
           downvoted: 0,
         },
@@ -51,13 +53,13 @@ export class ThreadController {
 
     const threadId = newThread._id;
 
-    // add thread_id to exam document
+    // add threadId to exam document
     await this.ExamService.addThreadId(threadId, examId);
 
     return newThread;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async getAllThreadsByExamProperty(
     data: ExamPropertyRequestBody,
     metadata: any,
@@ -70,22 +72,24 @@ export class ThreadController {
 
     const threads = await this.ThreadService.findByExamId(examId);
 
-    return threads;
+    return {
+      messages: threads,
+    };
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async getThreadById(data: ThreadIdRequestBody, metadata: any) {
-    const thread = await this.ThreadService.findOneById(data.thread_id);
+    const thread = await this.ThreadService.findOneById(data.threadId);
 
     return thread;
   }
 
-  @GrpcMethod()
-  async getThreadByTitle(data, metadata: any) {}
+  @GrpcMethod('Thread')
+  async getThreadByTitle(data, metadata: any) { }
 
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async upvoteThread(data: ThreadIdRequestBody, metadata: any) {
-    const thread = await this.ThreadService.findOneById(data.thread_id);
+    const thread = await this.ThreadService.findOneById(data.threadId);
 
     const threadId = thread._id;
     const updatedUpvoted = thread.upvoted + 1;
@@ -97,9 +101,9 @@ export class ThreadController {
     return updatedThread;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async downvoteThread(data: ThreadIdRequestBody, metadata: any) {
-    const thread = await this.ThreadService.findOneById(data.thread_id);
+    const thread = await this.ThreadService.findOneById(data.threadId);
 
     const threadId = thread._id;
     const updatedDownvoted = thread.downvoted - 1;

@@ -13,7 +13,7 @@ export class CourseService {
   constructor(
     @InjectModel(Course.name)
     private CourseModel: Model<CourseDocument>,
-  ) {}
+  ) { }
 
   async create(courseData: CourseCreateBody): Promise<CourseBody> {
     const newCourse = new this.CourseModel(courseData);
@@ -27,7 +27,7 @@ export class CourseService {
 
   async findOneByCourseId(courseId: string): Promise<CourseBody> {
     const course = await this.CourseModel.findOne({
-      course_id: courseId,
+      courseId: courseId,
     }).exec();
     return course; // return each course with all properties
   }
@@ -36,11 +36,11 @@ export class CourseService {
     const course = await this.findOneByCourseId(courseId);
 
     const courseDocumentId = course._id;
-    const examIds = [...course.exam_ids, examId];
+    const examIds = [...course.examIds, examId];
 
     const updatedCourse = await this.CourseModel.findByIdAndUpdate(
       courseDocumentId,
-      { exam_ids: examIds },
+      { examIds: examIds },
       { new: true },
     );
 
@@ -52,7 +52,7 @@ export class CourseService {
     updateBody: CourseUpdateBody,
   ): Promise<CourseBody> {
     const updatedCourse = await this.CourseModel.findOneAndUpdate(
-      { course_id: courseId },
+      { courseId: courseId },
       { ...updateBody },
       { new: true },
     );
@@ -62,7 +62,7 @@ export class CourseService {
 
   async deleteByCourseId(courseId: string): Promise<CourseBody> {
     const deletedCourse = await this.CourseModel.findOneAndRemove({
-      course_id: courseId,
+      courseId: courseId,
     });
     return deletedCourse;
   }

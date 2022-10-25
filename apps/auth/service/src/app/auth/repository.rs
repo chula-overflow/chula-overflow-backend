@@ -3,14 +3,15 @@ use service_core::{Error, Repository, Result};
 use tonic::async_trait;
 
 use super::super::user::model::User;
-use super::model::{Revoke, Session};
+use super::model::Session;
 use mongodb::{bson::doc, results::InsertOneResult};
 
 #[async_trait]
 pub trait SessionRepository {
     async fn login(&self, login_data: &Session) -> Result<InsertOneResult>;
-    async fn revoke(&self, revoke_data: &Revoke) -> Result<Option<Session>>;
+    async fn revoke(&self, token: &str) -> Result<Option<Session>>;
     async fn me(&self, token: &str) -> Result<User>;
+    async fn validate(&self, token: &str) -> Result<Option<Session>>;
 }
 
 #[async_trait]
@@ -19,9 +20,7 @@ impl SessionRepository for Repository<Session> {
         Ok(self.collection.insert_one(login_data, None).await?)
     }
 
-    async fn revoke(&self, revoke_data: &Revoke) -> Result<Option<Session>> {
-        let token = &revoke_data.token;
-
+    async fn revoke(&self, token: &str) -> Result<Option<Session>> {
         Ok(self
             .collection
             .find_one_and_delete(
@@ -32,6 +31,7 @@ impl SessionRepository for Repository<Session> {
             )
             .await?)
     }
+
     async fn me(&self, token: &str) -> Result<User> {
         let query = vec![
             doc! {
@@ -105,5 +105,19 @@ impl SessionRepository for Repository<Session> {
         }
 
         Ok(user.unwrap())
+    }
+
+    async fn validate(&self, token: &str) -> Result<Option<Session>> {
+        let res = self
+            .collection
+            .find_one(
+                doc! {
+                    "token": token
+                },
+                None,
+            )
+            .await?;
+
+        Ok(res)
     }
 }

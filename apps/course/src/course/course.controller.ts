@@ -9,39 +9,41 @@ import { CourseService } from './course.service';
 
 @Controller('course')
 export class CourseController {
-  constructor(private readonly CourseService: CourseService) {}
+  constructor(private readonly CourseService: CourseService) { }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async createCourse(data: CourseCreateBody, metadata: any) {
     const newCourse = await this.CourseService.create(data);
     return newCourse;
   }
 
-  @GrpcMethod()
-  async getAllCourses(metadata: any) {
+  @GrpcMethod('Course')
+  async getAllCourses(data: {}, metadata: any) {
     const courses = await this.CourseService.find();
-    return courses;
+    return {
+      messages: courses,
+    };
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async getCourseByCourseId(data: CourseRequestBody, metadata: any) {
-    const course = await this.CourseService.findOneByCourseId(data.course_id);
+    const course = await this.CourseService.findOneByCourseId(data.courseId);
     return course;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async updateCourse(data: CourseRequestUpdateBody, metadata: any) {
     const updatedCourse = await this.CourseService.updateByCourseId(
-      data.course_id,
+      data.courseId,
       data.body,
     );
     return updatedCourse;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async deleteCourse(data: CourseRequestBody, metadata: any) {
     const deletedCourse = await this.CourseService.deleteByCourseId(
-      data.course_id,
+      data.courseId,
     );
     return deletedCourse;
   }

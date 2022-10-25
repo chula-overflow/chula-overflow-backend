@@ -6,7 +6,7 @@ export type ExamDocument = Exam & Document;
 @Schema()
 export class Exam {
   @Prop({ required: true })
-  course_id: string;
+  courseId: string;
 
   @Prop({ required: true })
   year: number;
@@ -18,7 +18,7 @@ export class Exam {
   term: string;
 
   @Prop()
-  thread_ids: string[];
+  threadIds: string[];
 }
 
 export const ExamSchema = SchemaFactory.createForClass(Exam);
