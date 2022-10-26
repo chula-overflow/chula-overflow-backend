@@ -43,8 +43,19 @@ export class ThreadController {
     });
 
     // compare...
-    const embededVectors = await this.ExamService.find();
-    const passVecors = embededVectors.map((vector) => vector); // compare logic here
+    const embededVectors = await this.EmbededService.find();
+    const comparedVectors = embededVectors.map((vector) => {
+      const similarity = 0.98; // compare logic here :: more than > 0.9
+      if (similarity > 0.9) {
+        return { _id: vector._id, similarity: similarity };
+      }
+    });
+
+    if (comparedVectors.length > 0) {
+      // add problem to existed thread
+    } else {
+      // create new thread
+    }
 
     const createThreadBody: ThreadCreateBody = {
       exam_id: String(examId),
