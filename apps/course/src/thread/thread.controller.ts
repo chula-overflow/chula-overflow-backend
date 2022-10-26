@@ -3,8 +3,10 @@ import { GrpcMethod } from '@nestjs/microservices';
 import { Types } from 'mongoose';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
+import { threadId } from 'worker_threads';
 import {
   ThreadCreateBody,
+  ThreadIdRequestBody,
   ThreadRequestAddAnswerBody,
   ThreadRequestBody,
   ThreadRequestCreateBody,
@@ -104,6 +106,52 @@ export class ThreadController {
     } else {
       return IS_MICROSERVICE ? [] : response.status(400).json([]);
     }
+  }
+
+  @Post('/upvote/:threadId')
+  @GrpcMethod()
+  async upvoteThread(
+    @Res() response,
+    @Param('threadId') threadId,
+    grpcBody: ThreadIdRequestBody,
+    metadata: any,
+  ) {
+    const data = IS_MICROSERVICE ? grpcBody : { thread_id: threadId };
+
+    const thread = await this.ThreadService.findOneById(data.thread_id);
+
+    const updatedUpvoted = thread.upvoted + 1;
+
+    const updatedThread = await this.ThreadService.updateThreadById(threadId, {
+      upvoted: updatedUpvoted,
+    });
+
+    return IS_MICROSERVICE
+      ? updatedThread
+      : response.status(200).json(updatedThread);
+  }
+
+  @Post('/downvote/:threadId')
+  @GrpcMethod()
+  async downvoteThread(
+    @Res() response,
+    @Param('threadId') threadId,
+    grpcBody: ThreadIdRequestBody,
+    metadata: any,
+  ) {
+    const data = IS_MICROSERVICE ? grpcBody : { thread_id: threadId };
+
+    const thread = await this.ThreadService.findOneById(data.thread_id);
+
+    const updatedDownvoted = thread.downvoted - 1;
+
+    const updatedThread = await this.ThreadService.updateThreadById(threadId, {
+      downvoted: updatedDownvoted,
+    });
+
+    return IS_MICROSERVICE
+      ? updatedThread
+      : response.status(200).json(updatedThread);
   }
 
   @Post('/problem/upvote/:problemId')
@@ -271,20 +319,6 @@ export class ThreadController {
 
   //   const updatedThread = await this.ThreadService.updateThreadById(threadId, {
   //     answers: [...thread.answers, answer],
-  //   });
-
-  //   return updatedThread;
-  // }
-
-  // @GrpcMethod()
-  // async upvoteThread(data: ThreadIdRequestBody, metadata: any) {
-  //   const thread = await this.ThreadService.findOneById(data.thread_id);
-
-  //   const threadId = thread._id;
-  //   const updatedUpvoted = thread.upvoted + 1;
-
-  //   const updatedThread = await this.ThreadService.updateThreadById(threadId, {
-  //     upvoted: updatedUpvoted,
   //   });
 
   //   return updatedThread;
