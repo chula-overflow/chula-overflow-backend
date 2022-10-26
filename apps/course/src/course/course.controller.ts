@@ -13,7 +13,7 @@ export class CourseController {
   constructor(private readonly CourseService: CourseService) {}
 
   @Post('/')
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async createCourse(
     @Res() response,
     @Body() reqBody: CourseCreateBody,
@@ -28,7 +28,7 @@ export class CourseController {
   }
 
   @Get('/')
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async getAllCourses(@Res() response, metadata: any) {
     const courses = await this.CourseService.find();
 
@@ -36,7 +36,7 @@ export class CourseController {
   }
 
   @Get('/:courseId')
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async getCourseByCourseId(
     @Res() response,
     @Param('courseId') courseId,
@@ -49,7 +49,7 @@ export class CourseController {
     return IS_MICROSERVICE ? course : response.status(200).json(course);
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async updateCourse(data: CourseRequestUpdateBody, metadata: any) {
     const updatedCourse = await this.CourseService.updateByCourseId(
       data.course_id,
@@ -58,7 +58,7 @@ export class CourseController {
     return updatedCourse;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Course')
   async deleteCourse(data: CourseRequestBody, metadata: any) {
     const deletedCourse = await this.CourseService.deleteByCourseId(
       data.course_id,

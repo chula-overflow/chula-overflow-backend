@@ -22,7 +22,7 @@ export class ThreadController {
   ) {}
 
   @Post('/')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async createThread(
     @Res() response,
     @Body() reqBody: ThreadRequestCreateBody,
@@ -94,7 +94,7 @@ export class ThreadController {
   }
 
   @Get('/')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async getThread(
     @Res() response,
     @Query() reqBody: ThreadRequestBody,
@@ -122,7 +122,7 @@ export class ThreadController {
   }
 
   @Get('/:threadId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async getThreadById(@Res() response, @Param('threadId') threadId) {
     const thread = await this.ThreadService.findOneById(threadId);
 
@@ -134,7 +134,7 @@ export class ThreadController {
   }
 
   @Post('/upvote/:threadId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async upvoteThread(
     @Res() response,
     @Param('threadId') threadId,
@@ -157,7 +157,7 @@ export class ThreadController {
   }
 
   @Post('/downvote/:threadId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async downvoteThread(
     @Res() response,
     @Param('threadId') threadId,
@@ -180,7 +180,7 @@ export class ThreadController {
   }
 
   @Post('/problem/upvote/:problemId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async upvoteProblem(
     @Res() response,
     @Param('problemId') problemId,
@@ -210,7 +210,7 @@ export class ThreadController {
   }
 
   @Post('/problem/downvote/:problemId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async downvoteProblem(
     @Res() response,
     @Param('problemId') problemId,
@@ -240,7 +240,7 @@ export class ThreadController {
   }
 
   @Post('/answer/upvote/:answerId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async upvoteAnswer(
     @Res() response,
     @Param('answerId') answerId,
@@ -269,7 +269,7 @@ export class ThreadController {
   }
 
   @Post('/answer/downvote/:answerId')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async downvoteAnswer(
     @Res() response,
     @Param('answerId') answerId,
@@ -297,7 +297,7 @@ export class ThreadController {
   }
 
   @Post('/answer')
-  @GrpcMethod()
+  @GrpcMethod('Thread')
   async addAnswer(
     @Res() response,
     @Body() reqBody: ThreadRequestAddAnswerBody,

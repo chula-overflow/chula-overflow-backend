@@ -17,7 +17,7 @@ export class ExamController {
   ) {}
 
   @Post('/')
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async createExam(
     @Res() response,
     @Body() reqBody: ExamCreateBody,
@@ -37,7 +37,7 @@ export class ExamController {
   }
 
   @Get('/')
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async getExam(
     @Res() response,
     @Query() query: ExamPropertyRequestBody,
@@ -65,7 +65,7 @@ export class ExamController {
     }
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async updateExamByCourseProperty(data: ExamRequestUpdateBody, metadata: any) {
     const examId = await this.ExamService.findIdByCourseProperty(data);
 
@@ -74,7 +74,7 @@ export class ExamController {
     return updatedExam;
   }
 
-  @GrpcMethod()
+  @GrpcMethod('Exam')
   async deleteExamByCourseProperty(
     data: ExamPropertyRequestBody,
     metadata: any,
