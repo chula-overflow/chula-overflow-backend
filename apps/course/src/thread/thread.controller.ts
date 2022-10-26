@@ -5,6 +5,7 @@ import { Types } from 'mongoose';
 import { ExamPropertyRequestBody } from 'src/exam/exam.interface';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
+import { threadId } from 'worker_threads';
 import {
   ThreadCreateBody,
   ThreadIdRequestBody,
@@ -224,6 +225,38 @@ export class ThreadController {
     return IS_MICROSERVICE
       ? updatedAnswer
       : response.status(200).json(updatedAnswer);
+  }
+
+  @Post('/answer')
+  @GrpcMethod()
+  async addAnswer(
+    @Res() response,
+    @Body() reqBody: ThreadRequestAddAnswerBody,
+    grpcBody: ThreadRequestAddAnswerBody,
+    metadata: any,
+  ) {
+    const data = IS_MICROSERVICE ? grpcBody : reqBody;
+
+    const thread = await this.ThreadService.findOneById(data.thread_id);
+
+    const updatedAnswer = [
+      ...thread.answers,
+      {
+        id: String(new Types.ObjectId()),
+        body: data.body,
+        upvoted: 0,
+        downvoted: 0,
+      },
+    ];
+
+    const updatedThread = await this.ThreadService.updateThreadById(
+      data.thread_id,
+      { answers: updatedAnswer },
+    );
+
+    return IS_MICROSERVICE
+      ? updatedThread
+      : response.status(201).json(updatedThread);
   }
 
   // @GrpcMethod()

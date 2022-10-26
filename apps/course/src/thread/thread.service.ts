@@ -92,11 +92,12 @@ export class ThreadService {
   }
 
   async updateThreadById(threadId: ObjectId, threadBody: ThreadUpdateBody) {
-    const updatedThread = this.ThreadModel.findByIdAndUpdate(
+    const updatedThread = await this.ThreadModel.findByIdAndUpdate(
       threadId,
       { ...threadBody },
       { new: true },
     );
+
     return updatedThread;
   }
 
