@@ -1,7 +1,7 @@
 package dto
 
 type ThreadRequestCreateBody struct {
-	CourseId string `json:"course_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	CourseId string `json:"course_id" example:"2301107" validate:"required"`
 	Year     int32  `json:"year" example:"2011" validate:"required"`
 	Semester string `json:"semester" example:"S1" validate:"required"`
 	Term     string `json:"term" example:"Final" validate:"required"`
@@ -12,7 +12,7 @@ type ThreadRequestCreateBody struct {
 type ThreadBody struct {
 	Id        string        `json:"_id" example:"507f1f77bcf86cd799439011" validate:"required"`
 	ExamId    string        `json:"exam_id" example:"507f1f77bcf86cd799439011" validate:"required"`
-	CourseId  string        `json:"course_id" example:"507f1f77bcf86cd799439011" validate:"required"`
+	CourseId  string        `json:"course_id" example:"2301107" validate:"required"`
 	Upvoted   int32         `json:"upvoted" example:"17"`
 	Downvoted int32         `json:"downvoted" example:"13"`
 	Problems  []ProblemBody `json:"problems"`

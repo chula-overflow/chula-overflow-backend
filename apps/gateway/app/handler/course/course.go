@@ -38,9 +38,9 @@ func (h *Handler) GetAllCourses(ctx *context.Ctx) error {
 // @Tags Course
 // @Produce json
 // @Param course_id path string true "Course id"
-// @Success 204 {object} dto.CourseBody
+// @Success 200 {object} dto.CourseBody
 // @Failure 404
-// @Router /course/:course_id [get]
+// @Router /course/{course_id} [get]
 func (h *Handler) GetCourseByCourseId(ctx *context.Ctx) error {
 	courseId := ctx.Params("course_id")
 
@@ -91,7 +91,7 @@ func (h *Handler) CreateCourse(ctx *context.Ctx) error {
 // @Success 204 {object} dto.CourseBody
 // @Failure 401
 // @Failure 404
-// @Router /course/:course_id [put]
+// @Router /course/{course_id} [put]
 func (h *Handler) UpdateCourse(ctx *context.Ctx) error {
 	courseId := ctx.Params("course_id")
 
@@ -121,7 +121,7 @@ func (h *Handler) UpdateCourse(ctx *context.Ctx) error {
 // @Success 204 {object} dto.CourseBody
 // @Failure 401
 // @Failure 404
-// @Router /course/:course_id [delete]
+// @Router /course/{course_id} [delete]
 func (h *Handler) DeleteCourse(ctx *context.Ctx) error {
 	courseId := ctx.Params("course_id")
 

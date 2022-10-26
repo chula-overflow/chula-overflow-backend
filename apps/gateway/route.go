@@ -53,7 +53,7 @@ func (app *App) RegisterRoute() {
 
 	metadata = MetaData{
 		url:          "/auth/revoke",
-		requiredAuth: true,
+		requiredAuth: false,
 		method:       GET,
 	}
 	router.AddRoute(auth.Revoke, metadata)

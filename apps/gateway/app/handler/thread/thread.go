@@ -26,7 +26,7 @@ type IService interface {
 	DownvoteProblem(problemId string) (*dto.ProblemBody, error)
 	UpvoteProblem(problemId string) (*dto.ProblemBody, error)
 
-	AddAnswer(user string, threadId string, body *dto.AnswerRequestCreateBody) (*dto.AnswerBody, error)
+	AddAnswer(userId string, threadId string, body *dto.AnswerRequestCreateBody) (*dto.ThreadBody, error)
 }
 
 type Handler struct {
@@ -40,7 +40,7 @@ type Handler struct {
 // @Param thread_id path string true "Thread id"
 // @Success 200 {object} dto.ThreadBody
 // @Success 404
-// @Router /thread/:thread_id [get]
+// @Router /thread/{thread_id} [get]
 func (h *Handler) GetThreadById(ctx *context.Ctx) error {
 	threadId := ctx.Params("thread_id")
 
@@ -137,7 +137,7 @@ func (h *Handler) CreateThread(ctx *context.Ctx) error {
 // @Success 200 {object} dto.ThreadBody
 // @Success 401
 // @Success 404
-// @Router /thread/:thread_id/upvote [post]
+// @Router /thread/{thread_id}/upvote [post]
 func (h *Handler) UpvoteThread(ctx *context.Ctx) error {
 	threadId := ctx.Params("thread_id")
 
@@ -160,7 +160,7 @@ func (h *Handler) UpvoteThread(ctx *context.Ctx) error {
 // @Failure 400
 // @Success 401
 // @Success 404
-// @Router /thread/:thread_id/downvote [post]
+// @Router /thread/{thread_id}/downvote [post]
 func (h *Handler) DownvoteThread(ctx *context.Ctx) error {
 	threadId := ctx.Params("thread_id")
 
@@ -182,7 +182,7 @@ func (h *Handler) DownvoteThread(ctx *context.Ctx) error {
 // @Success 200 {object} dto.AnswerBody
 // @Success 401
 // @Success 404
-// @Router /answer/:answer_id/upvote [post]
+// @Router /answer/{answer_id}/upvote [post]
 func (h *Handler) UpvoteAnswer(ctx *context.Ctx) error {
 	answerId := ctx.Params("answer_id")
 
@@ -205,7 +205,7 @@ func (h *Handler) UpvoteAnswer(ctx *context.Ctx) error {
 // @Failure 400
 // @Success 401
 // @Success 404
-// @Router /answer/:answer_id/downvote [post]
+// @Router /answer/{answer_id}/downvote [post]
 func (h *Handler) DownvoteAnswer(ctx *context.Ctx) error {
 	answerId := ctx.Params("answer_id")
 
@@ -228,7 +228,7 @@ func (h *Handler) DownvoteAnswer(ctx *context.Ctx) error {
 // @Success 400
 // @Success 401
 // @Success 404
-// @Router /problem/:problem_id/upvote [post]
+// @Router /problem/{problem_id}/upvote [post]
 func (h *Handler) UpvoteProblem(ctx *context.Ctx) error {
 	problemId := ctx.Params("problem_id")
 
@@ -251,7 +251,7 @@ func (h *Handler) UpvoteProblem(ctx *context.Ctx) error {
 // @Failure 400
 // @Success 401
 // @Success 404
-// @Router /problem/:problem_id/downvote [post]
+// @Router /problem/{problem_id}/downvote [post]
 func (h *Handler) DownvoteProblem(ctx *context.Ctx) error {
 	problemId := ctx.Params("problem_id")
 
@@ -275,7 +275,7 @@ func (h *Handler) DownvoteProblem(ctx *context.Ctx) error {
 // @Failure 400
 // @Success 401
 // @Success 404
-// @Router /thread/:thread_id/answer [post]
+// @Router /thread/{thread_id}/answer [post]
 func (h *Handler) AddAnswer(ctx *context.Ctx) error {
 	userId := ctx.UserId()
 	threadId := ctx.Params("thread_id")

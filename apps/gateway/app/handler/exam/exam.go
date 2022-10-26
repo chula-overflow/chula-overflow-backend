@@ -11,11 +11,9 @@ import (
 
 type IService interface {
 	CreateExam(*dto.ExamCreateBody) (*dto.ExamBody, error)
-	GetAllExams() ([]*dto.ExamBody, error)
-	GetAllExamsByCourseId(courseId string) ([]*dto.ExamBody, error)
-	GetExamByCourseProperty(year int32, semester string, term string) (*dto.ExamBody, error)
+	GetExam(year *int32, semester *string, term *string, courseId *string) ([]*dto.ExamBody, error)
 	UpdateExamByCourseProperty(year int32, semester string, term string, body *dto.ExamUpdateBody) (*dto.ExamBody, error)
-	DeleteExamByCourseProperty(year int32, semester string, term string) (*dto.ExamBody, error)
+	// DeleteExamByCourseProperty(year int32, semester string, term string) (*dto.ExamBody, error)
 }
 
 type Handler struct {
@@ -28,11 +26,6 @@ type Handler struct {
 // @Description
 // @Description Get all (No query)
 // @Description
-// @Description Query by course id (?course_id=...)
-// @Description
-// @Description Find by property (?year=...&semester=...&term=...) three of them must exist at the same request
-// @Description
-// @Description If many queries are provided, only the most specific will be returned.
 // @Param year query int false "year"
 // @Param semester query string false "semester"
 // @Param term query string false "term"
@@ -48,31 +41,16 @@ func (h *Handler) GetExam(ctx *context.Ctx) error {
 	term := ctx.Query("term")
 	courseId := ctx.Query("course_id")
 
-	if year != "" && semester != "" && term != "" {
-		year, err := strconv.Atoi(year)
-
-		if err != nil {
-			return fiber.ErrBadRequest
-		}
-
-		res, err := h.Service.GetExamByCourseProperty(int32(year), semester, term)
-
-		if err != nil {
-			return err
-		}
-
-		return ctx.JSON(res)
-	} else if courseId != "" {
-		res, err := h.Service.GetAllExamsByCourseId(courseId)
-
-		if err != nil {
-			return err
-		}
-
-		return ctx.JSON(res)
+	yearInt, err := strconv.Atoi(year)
+	var yearRef *int32
+	if err != nil {
+		yearRef = nil
+	} else {
+		year32 := int32(yearInt)
+		yearRef = &year32
 	}
 
-	res, err := h.Service.GetAllExams()
+	res, err := h.Service.GetExam(yearRef, &semester, &term, &courseId)
 
 	if err != nil {
 		return err
@@ -163,29 +141,29 @@ func (h *Handler) UpdateExamByCourseProperty(ctx *context.Ctx) error {
 // @Failure 401
 // @Failure 404
 // @Router /exam [delete]
-func (h *Handler) DeleteCourse(ctx *context.Ctx) error {
-	year := ctx.Query("year")
-	semester := ctx.Query("semester")
-	term := ctx.Query("term")
+// func (h *Handler) DeleteExam(ctx *context.Ctx) error {
+// 	year := ctx.Query("year")
+// 	semester := ctx.Query("semester")
+// 	term := ctx.Query("term")
 
-	if year == "" || semester == "" || term == "" {
-		return fiber.ErrBadRequest
-	}
+// 	if year == "" || semester == "" || term == "" {
+// 		return fiber.ErrBadRequest
+// 	}
 
-	yearInt, err := strconv.Atoi(year)
+// 	yearInt, err := strconv.Atoi(year)
 
-	if err != nil {
-		return fiber.ErrBadRequest
-	}
+// 	if err != nil {
+// 		return fiber.ErrBadRequest
+// 	}
 
-	res, err := h.Service.DeleteExamByCourseProperty(int32(yearInt), semester, term)
+// 	res, err := h.Service.DeleteExamByCourseProperty(int32(yearInt), semester, term)
 
-	if err != nil {
-		return err
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return ctx.JSON(res)
-}
+// 	return ctx.JSON(res)
+// }
 
 func NewHandler(service IService, validator *validator.MyValidator) Handler {
 	return Handler{service, validator}

@@ -17,7 +17,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/answer/:answer_id/downvote": {
+        "/answer/{answer_id}/downvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -54,7 +54,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/answer/:answer_id/upvote": {
+        "/answer/{answer_id}/upvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -233,7 +233,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/course/:course_id": {
+        "/course/{course_id}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -252,8 +252,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No Content",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.CourseBody"
                         }
@@ -339,7 +339,7 @@ const docTemplate = `{
         },
         "/exam": {
             "get": {
-                "description": "Choose 1 type of these 3 types:\n\nGet all (No query)\n\nQuery by course id (?course_id=...)\n\nFind by property (?year=...\u0026semester=...\u0026term=...) three of them must exist at the same request\n\nIf many queries are provided, only the most specific will be returned.",
+                "description": "Choose 1 type of these 3 types:\n\nGet all (No query)\n",
                 "produces": [
                     "application/json"
                 ],
@@ -485,58 +485,9 @@ const docTemplate = `{
                         "description": "Unprocessable Entity"
                     }
                 }
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Exam"
-                ],
-                "summary": "Delete exam",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "year",
-                        "name": "year",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "semester",
-                        "name": "semester",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "term",
-                        "name": "term",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ExamBody"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
             }
         },
-        "/problem/:problem_id/downvote": {
+        "/problem/{problem_id}/downvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -573,7 +524,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/problem/:problem_id/upvote": {
+        "/problem/{problem_id}/upvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -698,7 +649,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/thread/:thread_id": {
+        "/thread/{thread_id}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -729,7 +680,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/thread/:thread_id/answer": {
+        "/thread/{thread_id}/answer": {
             "post": {
                 "produces": [
                     "application/json"
@@ -775,7 +726,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/thread/:thread_id/downvote": {
+        "/thread/{thread_id}/downvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -812,7 +763,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/thread/:thread_id/upvote": {
+        "/thread/{thread_id}/upvote": {
             "post": {
                 "produces": [
                     "application/json"
@@ -902,15 +853,15 @@ const docTemplate = `{
                 },
                 "course_codename": {
                     "type": "string",
-                    "example": "2112101"
+                    "example": "CAL"
                 },
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2100111"
                 },
                 "course_name": {
                     "type": "string",
-                    "example": "Calculus"
+                    "example": "CALCULUS 1"
                 },
                 "exam_ids": {
                     "type": "array",
@@ -934,15 +885,15 @@ const docTemplate = `{
             "properties": {
                 "course_codename": {
                     "type": "string",
-                    "example": "2112101"
+                    "example": "CAL"
                 },
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2100111"
                 },
                 "course_name": {
                     "type": "string",
-                    "example": "Calculus"
+                    "example": "CALCULUS 1"
                 }
             }
         },
@@ -951,11 +902,11 @@ const docTemplate = `{
             "properties": {
                 "course_codename": {
                     "type": "string",
-                    "example": "2112101"
+                    "example": "CAL"
                 },
                 "course_name": {
                     "type": "string",
-                    "example": "Calculus"
+                    "example": "CALCULUS 1"
                 },
                 "exam_ids": {
                     "type": "array",
@@ -986,7 +937,7 @@ const docTemplate = `{
                 },
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2301107"
                 },
                 "semester": {
                     "type": "string",
@@ -1022,7 +973,7 @@ const docTemplate = `{
             "properties": {
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2301107"
                 },
                 "semester": {
                     "type": "string",
@@ -1043,7 +994,7 @@ const docTemplate = `{
             "properties": {
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2301107"
                 },
                 "thread_ids": {
                     "type": "array",
@@ -1134,7 +1085,7 @@ const docTemplate = `{
                 },
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2301107"
                 },
                 "downvoted": {
                     "type": "integer",
@@ -1172,7 +1123,7 @@ const docTemplate = `{
                 },
                 "course_id": {
                     "type": "string",
-                    "example": "507f1f77bcf86cd799439011"
+                    "example": "2301107"
                 },
                 "question": {
                     "type": "string",

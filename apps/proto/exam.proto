@@ -6,9 +6,7 @@ option go_package = "./proto";
 
 service Exam {
     rpc CreateExam (ExamCreateBody) returns (ExamBody) {}
-    rpc GetAllExams (GetAllExamBody) returns (ExamBodyArr) {}
-    rpc GetAllExamsByCourseId (ExamCourseIdRequestBody) returns (ExamBodyArr) {}
-    rpc GetExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBodyArr) {}
+    rpc GetExams (ExamPropertyRequestBody) returns (ExamBodyArr) {}
     rpc UpdateExamByCourseProperty (ExamRequestUpdateBody) returns (ExamBody) {}
     rpc DeleteExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBody) {}
 
@@ -48,9 +46,10 @@ message ExamCourseIdRequestBody {
 }
 
 message ExamPropertyRequestBody {
-    int32 year = 1; // 2022, 2021, 2020, ...
-    string semester = 2; // S1, S2
-    string term = 3; // Mid | Final
+    optional int32 year = 1; // 2022, 2021, 2020, ...
+    optional string semester = 2; // S1, S2
+    optional string term = 3; // Mid | Final
+    optional string course_id = 4; // 211011
 }
 
 message ExamRequestUpdateBody {

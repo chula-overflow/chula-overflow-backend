@@ -34,13 +34,13 @@ definitions:
         example: 507f1f77bcf86cd799439011
         type: string
       course_codename:
-        example: "2112101"
+        example: CAL
         type: string
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2100111"
         type: string
       course_name:
-        example: Calculus
+        example: CALCULUS 1
         type: string
       exam_ids:
         example:
@@ -58,13 +58,13 @@ definitions:
   dto.CourseCreateBody:
     properties:
       course_codename:
-        example: "2112101"
+        example: CAL
         type: string
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2100111"
         type: string
       course_name:
-        example: Calculus
+        example: CALCULUS 1
         type: string
     required:
     - course_codename
@@ -74,10 +74,10 @@ definitions:
   dto.CourseUpdateBody:
     properties:
       course_codename:
-        example: "2112101"
+        example: CAL
         type: string
       course_name:
-        example: Calculus
+        example: CALCULUS 1
         type: string
       exam_ids:
         example:
@@ -93,7 +93,7 @@ definitions:
         example: 507f1f77bcf86cd799439011
         type: string
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2301107"
         type: string
       semester:
         example: S1
@@ -122,7 +122,7 @@ definitions:
   dto.ExamCreateBody:
     properties:
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2301107"
         type: string
       semester:
         example: S1
@@ -141,7 +141,7 @@ definitions:
   dto.ExamUpdateBody:
     properties:
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2301107"
         type: string
       thread_ids:
         example:
@@ -202,7 +202,7 @@ definitions:
           $ref: '#/definitions/dto.AnswerBody'
         type: array
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2301107"
         type: string
       downvoted:
         example: 13
@@ -228,7 +228,7 @@ definitions:
         example: Final
         type: string
       course_id:
-        example: 507f1f77bcf86cd799439011
+        example: "2301107"
         type: string
       question:
         example: Final
@@ -263,7 +263,7 @@ info:
   title: Chula Overflow Backend Doc
   version: "1.0"
 paths:
-  /answer/:answer_id/downvote:
+  /answer/{answer_id}/downvote:
     post:
       parameters:
       - description: Answer id
@@ -287,7 +287,7 @@ paths:
       summary: Downvote answer
       tags:
       - Thread
-  /answer/:answer_id/upvote:
+  /answer/{answer_id}/upvote:
     post:
       parameters:
       - description: Answer id
@@ -406,7 +406,7 @@ paths:
       summary: Create Course
       tags:
       - Course
-  /course/:course_id:
+  /course/{course_id}:
     delete:
       parameters:
       - description: Course id
@@ -438,8 +438,8 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/dto.CourseBody'
         "404":
@@ -475,50 +475,11 @@ paths:
       tags:
       - Course
   /exam:
-    delete:
-      parameters:
-      - description: year
-        in: query
-        name: year
-        required: true
-        type: integer
-      - description: semester
-        in: query
-        name: semester
-        required: true
-        type: string
-      - description: term
-        in: query
-        name: term
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/dto.ExamBody'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "404":
-          description: Not Found
-      summary: Delete exam
-      tags:
-      - Exam
     get:
-      description: |-
+      description: |
         Choose 1 type of these 3 types:
 
         Get all (No query)
-
-        Query by course id (?course_id=...)
-
-        Find by property (?year=...&semester=...&term=...) three of them must exist at the same request
-
-        If many queries are provided, only the most specific will be returned.
       parameters:
       - description: year
         in: query
@@ -615,7 +576,7 @@ paths:
       summary: Update exam
       tags:
       - Exam
-  /problem/:problem_id/downvote:
+  /problem/{problem_id}/downvote:
     post:
       parameters:
       - description: Problem id
@@ -639,7 +600,7 @@ paths:
       summary: Downvote problem
       tags:
       - Thread
-  /problem/:problem_id/upvote:
+  /problem/{problem_id}/upvote:
     post:
       parameters:
       - description: Problem id
@@ -720,7 +681,7 @@ paths:
       summary: Create thread
       tags:
       - Thread
-  /thread/:thread_id:
+  /thread/{thread_id}:
     get:
       parameters:
       - description: Thread id
@@ -740,7 +701,7 @@ paths:
       summary: Get thread by id
       tags:
       - Thread
-  /thread/:thread_id/answer:
+  /thread/{thread_id}/answer:
     post:
       parameters:
       - description: Thread id
@@ -770,7 +731,7 @@ paths:
       summary: Add answer
       tags:
       - Thread
-  /thread/:thread_id/downvote:
+  /thread/{thread_id}/downvote:
     post:
       parameters:
       - description: thread id
@@ -794,7 +755,7 @@ paths:
       summary: Downvote thread
       tags:
       - Thread
-  /thread/:thread_id/upvote:
+  /thread/{thread_id}/upvote:
     post:
       parameters:
       - description: Thread id

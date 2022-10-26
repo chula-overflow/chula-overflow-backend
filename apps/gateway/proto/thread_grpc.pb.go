@@ -31,7 +31,7 @@ type ThreadClient interface {
 	DownvoteProblem(ctx context.Context, in *ThreadProblemIdRequestBody, opts ...grpc.CallOption) (*ProblemBody, error)
 	UpvoteAnswer(ctx context.Context, in *ThreadAnswerIdRequestBody, opts ...grpc.CallOption) (*AnswerBody, error)
 	DownvoteAnswer(ctx context.Context, in *ThreadAnswerIdRequestBody, opts ...grpc.CallOption) (*AnswerBody, error)
-	AddAnswer(ctx context.Context, in *AnswerRequestCreateBody, opts ...grpc.CallOption) (*AnswerBody, error)
+	AddAnswer(ctx context.Context, in *AnswerRequestCreateBody, opts ...grpc.CallOption) (*ThreadBody, error)
 }
 
 type threadClient struct {
@@ -123,8 +123,8 @@ func (c *threadClient) DownvoteAnswer(ctx context.Context, in *ThreadAnswerIdReq
 	return out, nil
 }
 
-func (c *threadClient) AddAnswer(ctx context.Context, in *AnswerRequestCreateBody, opts ...grpc.CallOption) (*AnswerBody, error) {
-	out := new(AnswerBody)
+func (c *threadClient) AddAnswer(ctx context.Context, in *AnswerRequestCreateBody, opts ...grpc.CallOption) (*ThreadBody, error) {
+	out := new(ThreadBody)
 	err := c.cc.Invoke(ctx, "/thread.Thread/AddAnswer", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ type ThreadServer interface {
 	DownvoteProblem(context.Context, *ThreadProblemIdRequestBody) (*ProblemBody, error)
 	UpvoteAnswer(context.Context, *ThreadAnswerIdRequestBody) (*AnswerBody, error)
 	DownvoteAnswer(context.Context, *ThreadAnswerIdRequestBody) (*AnswerBody, error)
-	AddAnswer(context.Context, *AnswerRequestCreateBody) (*AnswerBody, error)
+	AddAnswer(context.Context, *AnswerRequestCreateBody) (*ThreadBody, error)
 }
 
 // UnimplementedThreadServer should be embedded to have forward compatible implementations.
@@ -179,7 +179,7 @@ func (UnimplementedThreadServer) UpvoteAnswer(context.Context, *ThreadAnswerIdRe
 func (UnimplementedThreadServer) DownvoteAnswer(context.Context, *ThreadAnswerIdRequestBody) (*AnswerBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownvoteAnswer not implemented")
 }
-func (UnimplementedThreadServer) AddAnswer(context.Context, *AnswerRequestCreateBody) (*AnswerBody, error) {
+func (UnimplementedThreadServer) AddAnswer(context.Context, *AnswerRequestCreateBody) (*ThreadBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAnswer not implemented")
 }
 
