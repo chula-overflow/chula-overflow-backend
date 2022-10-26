@@ -17,6 +17,77 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/answer/:answer_id/downvote": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "Downvote answer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Answer id",
+                        "name": "answer_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AnswerBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/answer/:answer_id/upvote": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "Upvote answer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Answer id",
+                        "name": "answer_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AnswerBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Login with given email session are store in cookie as 'sid'. If no email were found in database, it will create one.\nCookies are automatically store in swag\nreturn 200 if client already has sid on.",
@@ -465,6 +536,80 @@ const docTemplate = `{
                 }
             }
         },
+        "/problem/:problem_id/downvote": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "Downvote problem",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Problem id",
+                        "name": "problem_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProblemBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/problem/:problem_id/upvote": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "Upvote problem",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Problem id",
+                        "name": "problem_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProblemBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/thread": {
             "get": {
                 "consumes": [
@@ -477,24 +622,27 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "year",
+                        "description": "Year",
                         "name": "year",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "semester",
+                        "description": "Semester",
                         "name": "semester",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "term",
+                        "description": "Term",
                         "name": "term",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course Id",
+                        "name": "course_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -506,9 +654,6 @@ const docTemplate = `{
                                 "$ref": "#/definitions/dto.ThreadBody"
                             }
                         }
-                    },
-                    "400": {
-                        "description": "Bad Request"
                     }
                 }
             },
@@ -538,8 +683,17 @@ const docTemplate = `{
                             "$ref": "#/definitions/dto.ThreadBody"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
                     }
                 }
             }
@@ -575,6 +729,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/thread/:thread_id/answer": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Thread"
+                ],
+                "summary": "Add answer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Thread id",
+                        "name": "thread_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "problem body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AnswerRequestCreateBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AnswerBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/thread/:thread_id/downvote": {
             "post": {
                 "produces": [
@@ -602,6 +802,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
@@ -618,7 +824,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "thread id",
+                        "description": "Thread id",
                         "name": "thread_id",
                         "in": "path",
                         "required": true
@@ -631,22 +837,30 @@ const docTemplate = `{
                             "$ref": "#/definitions/dto.ThreadBody"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
         }
     },
     "definitions": {
-        "dto.Answer": {
+        "dto.AnswerBody": {
             "type": "object",
             "required": [
+                "_id",
                 "body",
                 "downvoted",
                 "upvoted"
             ],
             "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                },
                 "body": {
                     "type": "string",
                     "example": "I dont know I think it's B"
@@ -658,6 +872,18 @@ const docTemplate = `{
                 "upvoted": {
                     "type": "integer",
                     "example": 13
+                }
+            }
+        },
+        "dto.AnswerRequestCreateBody": {
+            "type": "object",
+            "required": [
+                "body"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "example": "What is 'Monad'?"
                 }
             }
         },
@@ -851,9 +1077,10 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.Problem": {
+        "dto.ProblemBody": {
             "type": "object",
             "required": [
+                "_id",
                 "body",
                 "downvoted",
                 "title",
@@ -861,6 +1088,10 @@ const docTemplate = `{
                 "upvoted"
             ],
             "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                },
                 "body": {
                     "type": "string",
                     "example": "What is 'Monad'?"
@@ -898,7 +1129,7 @@ const docTemplate = `{
                 "answers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Answer"
+                        "$ref": "#/definitions/dto.AnswerBody"
                     }
                 },
                 "course_id": {
@@ -916,7 +1147,7 @@ const docTemplate = `{
                 "problems": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Problem"
+                        "$ref": "#/definitions/dto.ProblemBody"
                     }
                 },
                 "upvoted": {

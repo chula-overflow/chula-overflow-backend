@@ -13,11 +13,20 @@ import (
 )
 
 type IService interface {
+	CreateThread(userId string, body *dto.ThreadRequestCreateBody) (*dto.ThreadBody, error)
+	GetThread(year int32, semester string, term string, courseId string) ([]*dto.ThreadBody, error)
+	GetThreadById(threadId string) (*dto.ThreadBody, error)
+
 	DownvoteThread(threadId string) (*dto.ThreadBody, error)
 	UpvoteThread(threadId string) (*dto.ThreadBody, error)
-	GetThreadById(threadId string) (*dto.ThreadBody, error)
-	GetAllThreadsByExamProperty(year int32, semester string, term string) ([]*dto.ThreadBody, error)
-	CreateThread(userId string, body *dto.ThreadRequestCreateBody) (*dto.ThreadBody, error)
+
+	DownvoteAnswer(answerId string) (*dto.AnswerBody, error)
+	UpvoteAnswer(answerId string) (*dto.AnswerBody, error)
+
+	DownvoteProblem(problemId string) (*dto.ProblemBody, error)
+	UpvoteProblem(problemId string) (*dto.ProblemBody, error)
+
+	AddAnswer(user string, threadId string, body *dto.AnswerRequestCreateBody) (*dto.AnswerBody, error)
 }
 
 type Handler struct {
@@ -59,20 +68,17 @@ func (h *Handler) GetThreadById(ctx *context.Ctx) error {
 // @Summary Get thread by property
 // @Tags Thread
 // @Accept json
-// @Param year query int true "year"
-// @Param semester query string true "semester"
-// @Param term query string true "term"
+// @Param year query int false "Year"
+// @Param semester query string false "Semester"
+// @Param term query string false "Term"
+// @Param course_id query string false "Course Id"
 // @Success 200 {object} []dto.ThreadBody
-// @Failure 400
 // @Router /thread [get]
-func (h *Handler) GetAllThreadsByExamProperty(ctx *context.Ctx) error {
+func (h *Handler) GetThread(ctx *context.Ctx) error {
 	year := ctx.Query("year")
 	semester := ctx.Query("semester")
 	term := ctx.Query("term")
-
-	if year == "" || semester == "" || term == "" {
-		return fiber.ErrBadRequest
-	}
+	courseId := ctx.Query("course_id")
 
 	yearInt, err := strconv.Atoi(year)
 
@@ -80,7 +86,7 @@ func (h *Handler) GetAllThreadsByExamProperty(ctx *context.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
-	res, err := h.Service.GetAllThreadsByExamProperty(int32(yearInt), semester, term)
+	res, err := h.Service.GetThread(int32(yearInt), semester, term, courseId)
 
 	if err != nil {
 		return err
@@ -96,7 +102,10 @@ func (h *Handler) GetAllThreadsByExamProperty(ctx *context.Ctx) error {
 // @Produce json
 // @Param thread_body body dto.ThreadRequestCreateBody true "Thread body"
 // @Success 200 {object} dto.ThreadBody
+// @Success 400
+// @Success 401
 // @Success 404
+// @Success 422
 // @Router /thread [post]
 func (h *Handler) CreateThread(ctx *context.Ctx) error {
 	createThread := new(dto.ThreadRequestCreateBody)
@@ -124,9 +133,10 @@ func (h *Handler) CreateThread(ctx *context.Ctx) error {
 // @Summary Upvote thread
 // @Tags Thread
 // @Produce json
-// @Param thread_id path string true "thread id"
+// @Param thread_id path string true "Thread id"
 // @Success 200 {object} dto.ThreadBody
-// @Failure 400
+// @Success 401
+// @Success 404
 // @Router /thread/:thread_id/upvote [post]
 func (h *Handler) UpvoteThread(ctx *context.Ctx) error {
 	threadId := ctx.Params("thread_id")
@@ -148,6 +158,8 @@ func (h *Handler) UpvoteThread(ctx *context.Ctx) error {
 // @Param thread_id path string true "thread id"
 // @Success 200 {object} dto.ThreadBody
 // @Failure 400
+// @Success 401
+// @Success 404
 // @Router /thread/:thread_id/downvote [post]
 func (h *Handler) DownvoteThread(ctx *context.Ctx) error {
 	threadId := ctx.Params("thread_id")
@@ -162,6 +174,129 @@ func (h *Handler) DownvoteThread(ctx *context.Ctx) error {
 
 	return nil
 }
+
+// @Summary Upvote answer
+// @Tags Thread
+// @Produce json
+// @Param answer_id path string true "Answer id"
+// @Success 200 {object} dto.AnswerBody
+// @Success 401
+// @Success 404
+// @Router /answer/:answer_id/upvote [post]
+func (h *Handler) UpvoteAnswer(ctx *context.Ctx) error {
+	answerId := ctx.Params("answer_id")
+
+	res, err := h.Service.UpvoteAnswer(answerId)
+
+	if err != nil {
+		return err
+	}
+
+	ctx.JSON(res)
+
+	return nil
+}
+
+// @Summary Downvote answer
+// @Tags Thread
+// @Produce json
+// @Param answer_id path string true "Answer id"
+// @Success 200 {object} dto.AnswerBody
+// @Failure 400
+// @Success 401
+// @Success 404
+// @Router /answer/:answer_id/downvote [post]
+func (h *Handler) DownvoteAnswer(ctx *context.Ctx) error {
+	answerId := ctx.Params("answer_id")
+
+	res, err := h.Service.DownvoteAnswer(answerId)
+
+	if err != nil {
+		return err
+	}
+
+	ctx.JSON(res)
+
+	return nil
+}
+
+// @Summary Upvote problem
+// @Tags Thread
+// @Produce json
+// @Param problem_id path string true "Problem id"
+// @Success 200 {object} dto.ProblemBody
+// @Success 400
+// @Success 401
+// @Success 404
+// @Router /problem/:problem_id/upvote [post]
+func (h *Handler) UpvoteProblem(ctx *context.Ctx) error {
+	problemId := ctx.Params("problem_id")
+
+	res, err := h.Service.UpvoteProblem(problemId)
+
+	if err != nil {
+		return err
+	}
+
+	ctx.JSON(res)
+
+	return nil
+}
+
+// @Summary Downvote problem
+// @Tags Thread
+// @Produce json
+// @Param problem_id path string true "Problem id"
+// @Success 200 {object} dto.ProblemBody
+// @Failure 400
+// @Success 401
+// @Success 404
+// @Router /problem/:problem_id/downvote [post]
+func (h *Handler) DownvoteProblem(ctx *context.Ctx) error {
+	problemId := ctx.Params("problem_id")
+
+	res, err := h.Service.DownvoteProblem(problemId)
+
+	if err != nil {
+		return err
+	}
+
+	ctx.JSON(res)
+
+	return nil
+}
+
+// @Summary Add answer
+// @Tags Thread
+// @Produce json
+// @Param thread_id path string true "Thread id"
+// @Param body body dto.AnswerRequestCreateBody true "problem body"
+// @Success 200 {object} dto.AnswerBody
+// @Failure 400
+// @Success 401
+// @Success 404
+// @Router /thread/:thread_id/answer [post]
+func (h *Handler) AddAnswer(ctx *context.Ctx) error {
+	userId := ctx.UserId()
+	threadId := ctx.Params("thread_id")
+
+	problem := new(dto.AnswerRequestCreateBody)
+
+	if err := ctx.BodyParser(&problem); err != nil {
+		return err
+	}
+
+	res, err := h.Service.AddAnswer(userId, threadId, problem)
+
+	if err != nil {
+		return err
+	}
+
+	ctx.JSON(res)
+
+	return nil
+}
+
 func NewHandler(service IService, v *validator.MyValidator) Handler {
 	return Handler{
 		Service: service,

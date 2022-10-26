@@ -6,7 +6,7 @@ option go_package = "./proto";
 
 service Thread {
   rpc CreateThread(ThreadRequestCreateBody) returns (ThreadBody) {}
-  rpc GetThread(ThreadPropertyRequestBody) returns (ThreadBody) {}
+  rpc GetThread(ThreadPropertyRequestBody) returns (ThreadBodyArr) {}
   rpc GetThreadById(ThreadIdRequestBody) returns (ThreadBody) {}
 
   rpc UpvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
@@ -27,8 +27,12 @@ message ThreadBody {
   string course_id = 3;
   int32 upvoted = 4;
   int32 downvoted = 5;
-  repeated Problem problems = 6;
-  repeated Answer answers = 7;
+  repeated ProblemBody problems = 6;
+  repeated AnswerBody answers = 7;
+}
+
+message ThreadBodyArr {
+  repeated ThreadBody threads = 1;
 }
 
 message ThreadPropertyRequestBody {
@@ -59,20 +63,6 @@ message ProblemBody {
   int32 downvoted = 6;
 }
 
-message Problem {
-  string title = 1;
-  string body = 2;
-  string uploaded_user = 3;
-  int32 upvoted = 4;
-  int32 downvoted = 5;
-}
-
-message Answer {
-  string body = 1;
-  int32 upvoted = 2;
-  int32 downvoted = 3;
-}
-
 message AnswerBody {
   string id = 1;
   string body = 2;
@@ -83,6 +73,7 @@ message AnswerBody {
 message AnswerRequestCreateBody {
   string thread_id = 1;
   string body = 2;
+  string user_id = 3;
 }
 
 message ThreadIdRequestBody {
