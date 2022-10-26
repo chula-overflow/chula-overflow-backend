@@ -22,6 +22,7 @@ export class Thread {
 
   @Prop({ required: true })
   problems: {
+    id: string;
     title: string;
     body: string;
     uploaded_user: string;
@@ -31,6 +32,7 @@ export class Thread {
 
   @Prop({})
   answers: {
+    id: string;
     body: string;
     upvoted: number;
     downvoted: number;

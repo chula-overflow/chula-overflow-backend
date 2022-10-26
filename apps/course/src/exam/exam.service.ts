@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Exam, ExamDocument } from 'src/exam/exam.schema';
-import { ExamBody, ExamCreateBody, ExamUpdateBody } from './exam.interface';
+import {
+  ExamBody,
+  ExamCreateBody,
+  ExamPropertyRequestBody,
+  ExamUpdateBody,
+} from './exam.interface';
 
 @Injectable()
 export class ExamService {
@@ -47,6 +52,22 @@ export class ExamService {
     const exam_id = exam._id;
 
     return exam_id;
+  }
+
+  async findByCourseProperty(property: ExamPropertyRequestBody) {
+    const exams = await this.ExamModel.find({
+      ...property,
+    });
+
+    return exams;
+  }
+
+  async findOneByCourseProperty(property: ExamPropertyRequestBody) {
+    const exam = await this.ExamModel.findOne({
+      ...property,
+    });
+
+    return exam;
   }
 
   async findOneById(examId: ObjectId): Promise<ExamBody> {

@@ -1,6 +1,7 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, Get, Res, Body, Param, Query } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { CourseService } from 'src/course/course.service';
+import { IS_MICROSERVICE } from 'src/main';
 import {
   ExamCourseIdRequestBody,
   ExamCreateBody,
@@ -16,41 +17,53 @@ export class ExamController {
     private readonly CourseService: CourseService,
   ) {}
 
+  @Post('/')
   @GrpcMethod()
-  async createExam(data: ExamCreateBody, metadata: any) {
-    const newExam = await this.ExamService.create(data);
+  async createExam(
+    @Res() response,
+    @Body() reqBody: ExamCreateBody,
+    data: ExamCreateBody,
+    metadata: any,
+  ) {
+    const newExam = await this.ExamService.create(
+      IS_MICROSERVICE ? data : reqBody,
+    );
     const examId = newExam._id;
     const courseId = newExam.course_id;
 
     // add exam_id to course document
     await this.CourseService.addExamId(examId, courseId);
 
-    return newExam;
+    return IS_MICROSERVICE ? newExam : response.status(201).json(newExam);
   }
 
+  @Get('/')
   @GrpcMethod()
-  async getAllExams(metadata: any) {
-    const exams = await this.ExamService.find();
-    return exams;
-  }
+  async getExam(
+    @Res() response,
+    @Query() query: ExamPropertyRequestBody,
+    data: ExamPropertyRequestBody,
+    metadata: any,
+  ) {
+    if (Object.keys(query).length || data) {
+      if (query.course_id) {
+        const exam = await this.ExamService.findOneByCourseProperty(
+          IS_MICROSERVICE ? data : query,
+        );
 
-  @GrpcMethod()
-  async getAllExamsByCourseId(data: ExamCourseIdRequestBody, metadata: any) {
-    const exams = await this.ExamService.findByCourseId(data.course_id);
-    return exams;
-  }
+        return IS_MICROSERVICE ? exam : response.status(200).json(exam);
+      } else {
+        const exam = await this.ExamService.findByCourseProperty(
+          IS_MICROSERVICE ? data : query,
+        );
 
-  @GrpcMethod()
-  async getExamByCourseProperty(data: ExamPropertyRequestBody, metadata: any) {
-    const examId = await this.ExamService.findIdByCourseProperty(
-      data.year,
-      data.semester,
-      data.term,
-    );
+        return IS_MICROSERVICE ? exam : response.status(200).json(exam);
+      }
+    } else {
+      const exams = await this.ExamService.find();
 
-    const exam = await this.ExamService.findOneById(examId);
-
-    return exam;
+      return IS_MICROSERVICE ? exams : response.status(200).json(exams);
+    }
   }
 
   @GrpcMethod()

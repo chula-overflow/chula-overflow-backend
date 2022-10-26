@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import {
+  ThreadAnswerUpdateBody,
   ThreadBody,
   ThreadCreateBody,
   ThreadUpdateBody,
@@ -20,6 +21,8 @@ export class ThreadService {
     return newThread.save();
   }
 
+  async generateTitle() {}
+
   async findByExamId(examId: ObjectId) {
     const threads = await this.ThreadModel.find({
       exam_id: examId,
@@ -32,11 +35,58 @@ export class ThreadService {
     return thread;
   }
 
-  async updateById(threadId: ObjectId, threadBody: ThreadUpdateBody) {
+  async updateThreadById(threadId: ObjectId, threadBody: ThreadUpdateBody) {
     const updatedThread = this.ThreadModel.findByIdAndUpdate(
       threadId,
       { ...threadBody },
       { new: true },
+    );
+    return updatedThread;
+  }
+
+  async updateProblemByProblemId(problemId: string) {}
+
+  async updateAnswerBodyByAnswerId(
+    answerId: string,
+    answerBody: ThreadAnswerUpdateBody,
+  ) {
+    const updatedThread = this.ThreadModel.updateOne(
+      { 'answers.id': answerId },
+      {
+        $set: {
+          'answer.$.body': answerBody.body,
+        },
+      },
+    );
+    return updatedThread;
+  }
+
+  async updateAnswerUpvoteByAnswerId(
+    answerId: string,
+    answerBody: ThreadAnswerUpdateBody,
+  ) {
+    const updatedThread = this.ThreadModel.updateOne(
+      { 'answers.id': answerId },
+      {
+        $set: {
+          'answer.$.upvoted': answerBody.upvoted,
+        },
+      },
+    );
+    return updatedThread;
+  }
+
+  async updateAnswerDownvoteByAnswerId(
+    answerId: string,
+    answerBody: ThreadAnswerUpdateBody,
+  ) {
+    const updatedThread = this.ThreadModel.updateOne(
+      { 'answers.id': answerId },
+      {
+        $set: {
+          'answer.$.downvoted': answerBody.downvoted,
+        },
+      },
     );
     return updatedThread;
   }

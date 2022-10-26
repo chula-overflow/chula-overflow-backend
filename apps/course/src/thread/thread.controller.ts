@@ -1,10 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import { ExamPropertyRequestBody } from 'src/exam/exam.interface';
 import { ExamService } from 'src/exam/exam.service';
 import {
   ThreadIdRequestBody,
+  ThreadRequestAddAnswerBody,
   ThreadRequestCreateBody,
 } from './thread.interface';
 import { ThreadService } from './thread.service';
@@ -31,6 +32,7 @@ export class ThreadController {
       downvoted: 0,
       problems: [
         {
+          id: String(new Types.ObjectId()),
           title: 'generated from nlp',
           body: data.question,
           uploaded_user: data.uploaded_user,
@@ -40,6 +42,7 @@ export class ThreadController {
       ],
       answers: [
         data.answer && {
+          id: String(new Types.ObjectId()),
           body: data.answer,
           upvoted: 0,
           downvoted: 0,
@@ -84,13 +87,31 @@ export class ThreadController {
   async getThreadByTitle(data, metadata: any) {}
 
   @GrpcMethod()
+  async addAnswerById(data: ThreadRequestAddAnswerBody, metadata: any) {
+    const thread = await this.ThreadService.findOneById(data.thread_id);
+
+    const threadId = thread._id;
+    const answer = {
+      body: data.body,
+      upvoted: 0,
+      downvoted: 0,
+    };
+
+    const updatedThread = await this.ThreadService.updateThreadById(threadId, {
+      answers: [...thread.answers, answer],
+    });
+
+    return updatedThread;
+  }
+
+  @GrpcMethod()
   async upvoteThread(data: ThreadIdRequestBody, metadata: any) {
     const thread = await this.ThreadService.findOneById(data.thread_id);
 
     const threadId = thread._id;
     const updatedUpvoted = thread.upvoted + 1;
 
-    const updatedThread = await this.ThreadService.updateById(threadId, {
+    const updatedThread = await this.ThreadService.updateThreadById(threadId, {
       upvoted: updatedUpvoted,
     });
 
@@ -104,7 +125,7 @@ export class ThreadController {
     const threadId = thread._id;
     const updatedDownvoted = thread.downvoted - 1;
 
-    const updatedThread = await this.ThreadService.updateById(threadId, {
+    const updatedThread = await this.ThreadService.updateThreadById(threadId, {
       upvoted: updatedDownvoted,
     });
 

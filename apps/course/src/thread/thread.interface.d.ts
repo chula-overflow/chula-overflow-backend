@@ -7,6 +7,7 @@ export interface ThreadBody {
   upvoted: number;
   downvoted: number;
   problems: {
+    id: string;
     title: string; // generated from nlp
     body: string;
     uploaded_user: string;
@@ -14,6 +15,7 @@ export interface ThreadBody {
     downvoted: number;
   }[];
   answers?: {
+    id: string;
     body: string;
     upvoted: number;
     downvoted: number;
@@ -38,6 +40,7 @@ export interface ThreadCreateBody {
   upvoted: number;
   downvoted: number;
   problems: {
+    id: string;
     title: string;
     body: string;
     uploaded_user: string;
@@ -45,6 +48,7 @@ export interface ThreadCreateBody {
     downvoted: number;
   }[];
   answers?: {
+    id: string;
     body: string;
     upvoted: number;
     downvoted: number;
@@ -72,4 +76,15 @@ export interface ThreadUpdateBody {
 
 export interface ThreadIdRequestBody {
   thread_id: ObjectId;
+}
+
+export interface ThreadAnswerUpdateBody {
+  body?: string;
+  upvoted?: number;
+  downvoted?: number;
+}
+
+export interface ThreadRequestAddAnswerBody {
+  thread_id: ObjectId;
+  body: string;
 }
