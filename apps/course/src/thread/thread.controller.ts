@@ -125,7 +125,9 @@ export class ThreadController {
     } else if (data.exam_id) {
       const thread = await this.ThreadService.findByExamId(data.exam_id);
 
-      return IS_MICROSERVICE ? thread : response.status(200).json(thread);
+      return IS_MICROSERVICE
+        ? { messages: thread }
+        : response.status(200).json(thread);
     } else {
       const threads = await this.ThreadService.findAll();
       return IS_MICROSERVICE
