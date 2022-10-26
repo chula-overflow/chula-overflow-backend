@@ -73,6 +73,21 @@ export class ExamController {
     }
   }
 
+  @Get('/id')
+  @GrpcMethod('Exam')
+  async getExamIdByProperty(
+    @Res() response,
+    @Query() reqBody: ExamPropertyRequestBody,
+    grpcBody: ExamPropertyRequestBody,
+    metadata: any,
+  ) {
+    const data = IS_MICROSERVICE ? grpcBody : reqBody;
+
+    const examId = await this.ExamService.findIdByCourseProperty(data);
+
+    return IS_MICROSERVICE ? examId : response.status(200).json(examId);
+  }
+
   @GrpcMethod('Exam')
   async updateExamByCourseProperty(data: ExamRequestUpdateBody, metadata: any) {
     const examId = await this.ExamService.findIdByCourseProperty(data);
