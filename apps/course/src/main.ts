@@ -19,6 +19,9 @@ async function bootstrap() {
             __dirname + '/../../proto/thread.proto',
           ],
           url: '0.0.0.0:' + process.env.COURSE_PORT,
+          loader: {
+            keepCase: true,
+          },
         },
       },
     );

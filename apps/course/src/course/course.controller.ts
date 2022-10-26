@@ -10,7 +10,7 @@ import { CourseService } from './course.service';
 
 @Controller('course')
 export class CourseController {
-  constructor(private readonly CourseService: CourseService) {}
+  constructor(private readonly CourseService: CourseService) { }
 
   @Post('/')
   @GrpcMethod('Course')
@@ -24,9 +24,7 @@ export class CourseController {
       IS_MICROSERVICE ? data : reqBody,
     );
 
-    return IS_MICROSERVICE
-      ? { messages: newCourse }
-      : response.status(201).json(newCourse);
+    return IS_MICROSERVICE ? newCourse : response.status(201).json(newCourse);
   }
 
   @Get('/')
@@ -50,9 +48,7 @@ export class CourseController {
     const course = await this.CourseService.findOneByCourseId(
       IS_MICROSERVICE ? data.course_id : courseId,
     );
-    return IS_MICROSERVICE
-      ? { messages: course }
-      : response.status(200).json(course);
+    return IS_MICROSERVICE ? course : response.status(200).json(course);
   }
 
   @GrpcMethod('Course')
@@ -61,7 +57,7 @@ export class CourseController {
       data.course_id,
       data.body,
     );
-    return { messages: updatedCourse };
+    return updatedCourse;
   }
 
   @GrpcMethod('Course')
@@ -69,6 +65,6 @@ export class CourseController {
     const deletedCourse = await this.CourseService.deleteByCourseId(
       data.course_id,
     );
-    return { messages: deletedCourse };
+    return deletedCourse;
   }
 }

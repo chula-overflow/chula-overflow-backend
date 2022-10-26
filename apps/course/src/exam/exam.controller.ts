@@ -6,6 +6,7 @@ import {
   ExamCreateBody,
   ExamPropertyRequestBody,
   ExamRequestUpdateBody,
+  ExamCourseIdRequestBody,
 } from './exam.interface';
 import { ExamService } from './exam.service';
 
@@ -14,7 +15,7 @@ export class ExamController {
   constructor(
     private readonly ExamService: ExamService,
     private readonly CourseService: CourseService,
-  ) {}
+  ) { }
 
   @Post('/')
   @GrpcMethod('Exam')
@@ -33,59 +34,49 @@ export class ExamController {
     // add exam_id to course document
     await this.CourseService.addExamId(examId, courseId);
 
-    return IS_MICROSERVICE
-      ? { messages: newExam }
-      : response.status(201).json(newExam);
+    return IS_MICROSERVICE ? newExam : response.status(201).json(newExam);
   }
 
   @Get('/')
-  @GrpcMethod('Exam')
-  async getExam(
-    @Res() response,
-    @Query() query: ExamPropertyRequestBody,
-    data: ExamPropertyRequestBody,
-    metadata: any,
-  ) {
-    if (Object.keys(query).length || data) {
+  async getExam(@Res() response, @Query() query: ExamPropertyRequestBody) {
+    if (Object.keys(query).length) {
       if (query.year && query.semester && query.term) {
-        const exam = await this.ExamService.findOneByCourseProperty(
-          IS_MICROSERVICE ? data : query,
-        );
+        const exam = await this.ExamService.findOneByCourseProperty(query);
 
         return IS_MICROSERVICE
           ? { messages: exam }
           : response.status(200).json(exam);
       } else {
-        const exam = await this.ExamService.findByCourseProperty(
-          IS_MICROSERVICE ? data : query,
-        );
+        const exam = await this.ExamService.findByCourseProperty(query);
 
-        return IS_MICROSERVICE
-          ? { messages: exam }
-          : response.status(200).json(exam);
+        return response.status(200).json(exam);
       }
     } else {
       const exams = await this.ExamService.find();
 
-      return IS_MICROSERVICE
-        ? { messages: exams }
-        : response.status(200).json(exams);
+      return response.status(200).json(exams);
     }
   }
 
-  @Get('/id')
   @GrpcMethod('Exam')
-  async getExamIdByProperty(
-    @Res() response,
-    @Query() reqBody: ExamPropertyRequestBody,
-    grpcBody: ExamPropertyRequestBody,
-    metadata: any,
-  ) {
-    const data = IS_MICROSERVICE ? grpcBody : reqBody;
+  async getAllExams(data: ExamPropertyRequestBody, metadata: any) {
+    const exams = await this.ExamService.find();
 
-    const examId = await this.ExamService.findIdByCourseProperty(data);
+    return { messages: exams };
+  }
 
-    return IS_MICROSERVICE ? examId : response.status(200).json(examId);
+  @GrpcMethod('Exam')
+  async getAllExamsByCourseId(data: ExamCourseIdRequestBody, metadata: any) {
+    const exams = await this.ExamService.findByCourseId(data.course_id);
+
+    return { messages: exams };
+  }
+
+  @GrpcMethod('Exam')
+  async getExamByCourseProperty(data: ExamPropertyRequestBody, metadata: any) {
+    const exams = await this.ExamService.findByCourseProperty(data);
+
+    return { messages: exams };
   }
 
   @GrpcMethod('Exam')
@@ -94,7 +85,7 @@ export class ExamController {
 
     const updatedExam = await this.ExamService.updateById(examId, data.body);
 
-    return { messages: updatedExam };
+    return updatedExam;
   }
 
   @GrpcMethod('Exam')
@@ -106,6 +97,6 @@ export class ExamController {
 
     const deletedExam = await this.ExamService.deleteById(examId);
 
-    return { messages: deletedExam };
+    return deletedExam;
   }
 }
