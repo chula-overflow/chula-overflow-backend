@@ -3,9 +3,9 @@ syntax = "proto3";
 package thread;
 
 service Nlp {
-  rpc Tokenize(TokenizeParagraph) returns () {}
-  rpc Embed(EmbedSentence) returns () {}
-  rpc Measure(MeasureVectors) returns () {}
+  rpc Tokenize(TokenizeParagraph) returns (TokenizeSentences) {}
+  rpc Embed(EmbedSentence) returns (EncodedSentence) {}
+  rpc Measure(MeasureVectors) returns (MeasureSimilarity) {}
 }
 
 message TokenizeParagraph {
