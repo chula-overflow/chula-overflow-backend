@@ -50,9 +50,12 @@ export class CourseController {
     const course = await this.CourseService.findOneByCourseId(
       IS_MICROSERVICE ? data.course_id : courseId,
     );
-    return IS_MICROSERVICE
-      ? { messages: course }
-      : response.status(200).json(course);
+
+    if (course) {
+      return IS_MICROSERVICE ? course : response.status(200).json(course);
+    } else {
+      return IS_MICROSERVICE ? {} : response.status(404).json({});
+    }
   }
 
   @GrpcMethod('Course')
