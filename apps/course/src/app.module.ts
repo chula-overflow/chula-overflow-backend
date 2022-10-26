@@ -13,7 +13,6 @@ import { ThreadController } from './thread/thread.controller';
 import { ThreadService } from './thread/thread.service';
 import { Exam, ExamSchema } from './exam/exam.schema';
 import { Thread, ThreadSchema } from './thread/thread.schema';
-import { EmbededController } from './embeded/embeded.controller';
 import { Embeded, EmbededSchema } from './embeded/embeded.schema';
 import { EmbededService } from './embeded/embeded.service';
 
@@ -34,8 +33,13 @@ import { EmbededService } from './embeded/embeded.service';
     CourseController,
     ExamController,
     ThreadController,
-    EmbededController,
   ],
-  providers: [AppService, CourseService, ExamService, ThreadService, EmbededService],
+  providers: [
+    AppService,
+    CourseService,
+    ExamService,
+    ThreadService,
+    EmbededService,
+  ],
 })
 export class AppModule {}

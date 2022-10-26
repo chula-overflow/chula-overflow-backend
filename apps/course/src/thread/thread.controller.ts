@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Types } from 'mongoose';
+import { EmbededService } from 'src/embeded/embeded.service';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
 import {
@@ -17,6 +18,7 @@ export class ThreadController {
   constructor(
     private readonly ThreadService: ThreadService,
     private readonly ExamService: ExamService,
+    private readonly EmbededService: EmbededService,
   ) {}
 
   @Post('/')
@@ -31,6 +33,17 @@ export class ThreadController {
 
     const examId = await this.ExamService.findIdByCourseProperty(data);
 
+    const problemId = String(new Types.ObjectId());
+    const problemVector = [0, 1, 2]; // will be generated from nlp
+
+    // add problem's vector to embeded collection
+    await this.EmbededService.create({
+      problem_id: problemId,
+      vector: problemVector,
+    });
+
+    // compare...
+
     const createThreadBody: ThreadCreateBody = {
       exam_id: String(examId),
       course_id: data.course_id,
@@ -39,7 +52,7 @@ export class ThreadController {
       downvoted: 0,
       problems: [
         {
-          id: String(new Types.ObjectId()),
+          id: problemId,
           title: 'generated from nlp',
           body: data.question,
           uploaded_user: data.uploaded_user,
