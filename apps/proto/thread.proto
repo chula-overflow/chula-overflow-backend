@@ -40,6 +40,7 @@ message ThreadPropertyRequestBody {
   optional string semester = 2; // S1, S2
   optional string term = 3; // Mid | Final
   optional string course_id = 4;
+  optional string exam_id = 5;
 }
 
 message ThreadRequestCreateBody {

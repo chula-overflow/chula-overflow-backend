@@ -57,6 +57,7 @@ export interface ThreadCreateBody {
 
 export interface ThreadRequestBody {
   course_id: string;
+  exam_id?: string;
   year: number;
   semester: string;
   term: string;

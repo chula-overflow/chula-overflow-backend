@@ -30,6 +30,18 @@ export class ThreadService {
     return threads;
   }
 
+  async findAll() {
+    const threads = this.ThreadModel.find({}).exec();
+    return threads;
+  }
+
+  async findByExamId(examId: string) {
+    const thread = await this.ThreadModel.findOne({
+      exam_id: examId,
+    }).exec();
+    return thread;
+  }
+
   async findOneById(threadId: ObjectId) {
     const thread = await this.ThreadModel.findById(threadId);
     return thread;
