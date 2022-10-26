@@ -32,7 +32,7 @@ message ThreadBody {
 }
 
 message ThreadBodyArr {
-  repeated ThreadBody threads = 1;
+  repeated ThreadBody messages = 1;
 }
 
 message ThreadPropertyRequestBody {
