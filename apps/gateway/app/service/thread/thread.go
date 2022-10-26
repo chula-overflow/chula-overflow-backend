@@ -44,7 +44,7 @@ func (s *Service) GetThread(year int32, semester string, term string, courseId s
 
 	var ret = make([]*dto.ThreadBody, 0)
 
-	for _, v := range res.Threads {
+	for _, v := range res.Messages {
 		ret = append(ret, threadProto2Dto(v))
 	}
 

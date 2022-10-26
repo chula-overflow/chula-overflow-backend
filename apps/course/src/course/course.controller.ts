@@ -24,9 +24,7 @@ export class CourseController {
       IS_MICROSERVICE ? data : reqBody,
     );
 
-    return IS_MICROSERVICE
-      ? { messages: newCourse }
-      : response.status(201).json(newCourse);
+    return IS_MICROSERVICE ? newCourse : response.status(201).json(newCourse);
   }
 
   @Get('/')
@@ -64,7 +62,7 @@ export class CourseController {
       data.course_id,
       data.body,
     );
-    return { messages: updatedCourse };
+    return updatedCourse;
   }
 
   @GrpcMethod('Course')
@@ -72,6 +70,6 @@ export class CourseController {
     const deletedCourse = await this.CourseService.deleteByCourseId(
       data.course_id,
     );
-    return { messages: deletedCourse };
+    return deletedCourse;
   }
 }

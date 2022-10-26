@@ -18,7 +18,7 @@ service Thread {
   rpc UpvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
   rpc DownvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
 
-  rpc AddAnswer(AnswerRequestCreateBody) returns (AnswerBody) {}
+  rpc AddAnswer(AnswerRequestCreateBody) returns (ThreadBody) {}
 }
 
 message ThreadBody {
@@ -32,7 +32,7 @@ message ThreadBody {
 }
 
 message ThreadBodyArr {
-  repeated ThreadBody threads = 1;
+  repeated ThreadBody messages = 1;
 }
 
 message ThreadPropertyRequestBody {

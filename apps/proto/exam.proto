@@ -8,7 +8,7 @@ service Exam {
     rpc CreateExam (ExamCreateBody) returns (ExamBody) {}
     rpc GetAllExams (GetAllExamBody) returns (ExamBodyArr) {}
     rpc GetAllExamsByCourseId (ExamCourseIdRequestBody) returns (ExamBodyArr) {}
-    rpc GetExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBody) {}
+    rpc GetExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBodyArr) {}
     rpc UpdateExamByCourseProperty (ExamRequestUpdateBody) returns (ExamBody) {}
     rpc DeleteExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBody) {}
 
