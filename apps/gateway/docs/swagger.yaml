@@ -1,7 +1,10 @@
 basePath: /
 definitions:
-  dto.Answer:
+  dto.AnswerBody:
     properties:
+      _id:
+        example: 507f1f77bcf86cd799439011
+        type: string
       body:
         example: I dont know I think it's B
         type: string
@@ -12,9 +15,18 @@ definitions:
         example: 13
         type: integer
     required:
+    - _id
     - body
     - downvoted
     - upvoted
+    type: object
+  dto.AnswerRequestCreateBody:
+    properties:
+      body:
+        example: What is 'Monad'?
+        type: string
+    required:
+    - body
     type: object
   dto.CourseBody:
     properties:
@@ -152,8 +164,11 @@ definitions:
       user:
         $ref: '#/definitions/dto.User'
     type: object
-  dto.Problem:
+  dto.ProblemBody:
     properties:
+      _id:
+        example: 507f1f77bcf86cd799439011
+        type: string
       body:
         example: What is 'Monad'?
         type: string
@@ -170,6 +185,7 @@ definitions:
         example: 13
         type: integer
     required:
+    - _id
     - body
     - downvoted
     - title
@@ -183,7 +199,7 @@ definitions:
         type: string
       answers:
         items:
-          $ref: '#/definitions/dto.Answer'
+          $ref: '#/definitions/dto.AnswerBody'
         type: array
       course_id:
         example: 507f1f77bcf86cd799439011
@@ -196,7 +212,7 @@ definitions:
         type: string
       problems:
         items:
-          $ref: '#/definitions/dto.Problem'
+          $ref: '#/definitions/dto.ProblemBody'
         type: array
       upvoted:
         example: 17
@@ -247,6 +263,52 @@ info:
   title: Chula Overflow Backend Doc
   version: "1.0"
 paths:
+  /answer/:answer_id/downvote:
+    post:
+      parameters:
+      - description: Answer id
+        in: path
+        name: answer_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AnswerBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Downvote answer
+      tags:
+      - Thread
+  /answer/:answer_id/upvote:
+    post:
+      parameters:
+      - description: Answer id
+        in: path
+        name: answer_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AnswerBody'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Upvote answer
+      tags:
+      - Thread
   /auth/login:
     post:
       consumes:
@@ -553,25 +615,74 @@ paths:
       summary: Update exam
       tags:
       - Exam
+  /problem/:problem_id/downvote:
+    post:
+      parameters:
+      - description: Problem id
+        in: path
+        name: problem_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProblemBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Downvote problem
+      tags:
+      - Thread
+  /problem/:problem_id/upvote:
+    post:
+      parameters:
+      - description: Problem id
+        in: path
+        name: problem_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProblemBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Upvote problem
+      tags:
+      - Thread
   /thread:
     get:
       consumes:
       - application/json
       parameters:
-      - description: year
+      - description: Year
         in: query
         name: year
-        required: true
         type: integer
-      - description: semester
+      - description: Semester
         in: query
         name: semester
-        required: true
         type: string
-      - description: term
+      - description: Term
         in: query
         name: term
-        required: true
+        type: string
+      - description: Course Id
+        in: query
+        name: course_id
         type: string
       responses:
         "200":
@@ -580,8 +691,6 @@ paths:
             items:
               $ref: '#/definitions/dto.ThreadBody'
             type: array
-        "400":
-          description: Bad Request
       summary: Get thread by property
       tags:
       - Thread
@@ -600,8 +709,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/dto.ThreadBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
         "404":
           description: Not Found
+        "422":
+          description: Unprocessable Entity
       summary: Create thread
       tags:
       - Thread
@@ -625,6 +740,36 @@ paths:
       summary: Get thread by id
       tags:
       - Thread
+  /thread/:thread_id/answer:
+    post:
+      parameters:
+      - description: Thread id
+        in: path
+        name: thread_id
+        required: true
+        type: string
+      - description: problem body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AnswerRequestCreateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AnswerBody'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Add answer
+      tags:
+      - Thread
   /thread/:thread_id/downvote:
     post:
       parameters:
@@ -642,13 +787,17 @@ paths:
             $ref: '#/definitions/dto.ThreadBody'
         "400":
           description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
       summary: Downvote thread
       tags:
       - Thread
   /thread/:thread_id/upvote:
     post:
       parameters:
-      - description: thread id
+      - description: Thread id
         in: path
         name: thread_id
         required: true
@@ -660,8 +809,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/dto.ThreadBody'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
       summary: Upvote thread
       tags:
       - Thread

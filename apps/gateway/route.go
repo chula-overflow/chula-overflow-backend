@@ -126,10 +126,10 @@ func (app *App) RegisterRoute() {
 	// thread
 	metadata = MetaData{
 		url:          "/thread",
-		requiredAuth: true,
+		requiredAuth: false,
 		method:       GET,
 	}
-	router.AddRoute(thread.GetAllThreadsByExamProperty, metadata)
+	router.AddRoute(thread.GetThread, metadata)
 
 	metadata = MetaData{
 		url:          "/thread/:thread_id",
@@ -158,6 +158,41 @@ func (app *App) RegisterRoute() {
 		method:       POST,
 	}
 	router.AddRoute(thread.DownvoteThread, metadata)
+
+	metadata = MetaData{
+		url:          "/thread/:thread_id/answer",
+		requiredAuth: true,
+		method:       POST,
+	}
+	router.AddRoute(thread.AddAnswer, metadata)
+
+	metadata = MetaData{
+		url:          "/answer/:answer_id/upvote",
+		requiredAuth: true,
+		method:       POST,
+	}
+	router.AddRoute(thread.UpvoteAnswer, metadata)
+
+	metadata = MetaData{
+		url:          "/answer/:answer_id/downvote",
+		requiredAuth: true,
+		method:       POST,
+	}
+	router.AddRoute(thread.DownvoteAnswer, metadata)
+
+	metadata = MetaData{
+		url:          "/problem/:problem_id/upvote",
+		requiredAuth: true,
+		method:       POST,
+	}
+	router.AddRoute(thread.UpvoteProblem, metadata)
+
+	metadata = MetaData{
+		url:          "/problem/:problem_id/downvote",
+		requiredAuth: true,
+		method:       POST,
+	}
+	router.AddRoute(thread.DownvoteProblem, metadata)
 }
 
 func GetService(conf *config.Config) (authSrv.Service, courseSrv.Service, examSrv.Service, threadSrv.Service) {
