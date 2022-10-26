@@ -2,13 +2,11 @@ syntax = "proto3";
 
 package thread;
 
-import "exam.proto";
-
 option go_package = "./proto";
 
 service Thread {
   rpc CreateThread(ThreadRequestCreateBody) returns (ThreadBody) {}
-  rpc GetThread() returns {}
+  rpc GetThread(ThreadPropertyRequestBody) returns (ThreadBody) {}
   rpc GetThreadById(ThreadIdRequestBody) returns (ThreadBody) {}
 
   rpc UpvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
@@ -20,10 +18,7 @@ service Thread {
   rpc UpvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
   rpc DownvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
 
-  rpc AddAnswer() returns () {}
-
-  // rpc GetAllThreadsByExamProperty(exam.ExamPropertyRequestBody) returns (ThreadBodyArr) {}
-
+  rpc AddAnswer(AnswerRequestCreateBody) returns (AnswerBody) {}
 }
 
 message ThreadBody {
@@ -36,20 +31,11 @@ message ThreadBody {
   repeated Answer answers = 7;
 }
 
-message ProblemBody {
-  string id = 1;
-  string title = 2;
-  string body = 3;
-  string uploaded_user = 4;
-  int32 upvoted = 5;
-  int32 downvoted = 6;
-}
-
-message AnswerBody {
-  string id = 1;
-  stirng body = 2;
-  int32 upvoted = 3;
-  int32 downvoted = 4;
+message ThreadPropertyRequestBody {
+  optional int32 year = 1; // 2022, 2021, 2020, ...
+  optional string semester = 2; // S1, S2
+  optional string term = 3; // Mid | Final
+  optional string course_id = 4;
 }
 
 message ThreadRequestCreateBody {
@@ -64,22 +50,39 @@ message ThreadRequestCreateBody {
   optional string answer = 7;
 }
 
-message ThreadCreateBody {
-  string exam_id = 1;
-  string course_id = 2;
-  int32 upvoted = 3;
-  int32 downvoted = 4;
-  repeated Problem problems = 5; 
-  repeated Answer answers = 6;
+message ProblemBody {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+  string uploaded_user = 4;
+  int32 upvoted = 5;
+  int32 downvoted = 6;
 }
 
-message ThreadUpdateBody {
-  string exam_id = 1;
-  string course_id = 2;
+message Problem {
+  string title = 1;
+  string body = 2;
+  string uploaded_user = 3;
+  int32 upvoted = 4;
+  int32 downvoted = 5;
+}
+
+message Answer {
+  string body = 1;
+  int32 upvoted = 2;
+  int32 downvoted = 3;
+}
+
+message AnswerBody {
+  string id = 1;
+  string body = 2;
   int32 upvoted = 3;
   int32 downvoted = 4;
-  repeated Problem problems = 5;
-  repeated Answer answers = 6;
+}
+
+message AnswerRequestCreateBody {
+  string thread_id = 1;
+  string body = 2;
 }
 
 message ThreadIdRequestBody {
@@ -92,22 +95,4 @@ message ThreadProblemIdRequestBody {
 
 message ThreadAnswerIdRequestBody {
   string answer_id = 1;
-}
-
-message Problem {
-  optional string title = 1;
-  optional string body = 2;
-  optional string uploaded_user = 3;
-  optional int32 upvoted = 4;
-  optional int32 downvoted = 5;
-}
-
-message Answer {
-  optional string body = 1;
-  optional int32 upvoted = 2;
-  optional int32 downvoted = 3;
-}
-
-message ThreadBodyArr {
-  repeated ThreadBody messages = 1;
 }
