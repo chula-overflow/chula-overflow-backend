@@ -27,7 +27,8 @@ func NewServer(conf *config.Config) *App {
 	}
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
 	}))
 
 	app.Use(recover.New())
