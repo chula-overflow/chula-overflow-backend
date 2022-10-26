@@ -38,54 +38,30 @@ export class ExamController {
   }
 
   @Get('/')
-  async getExam(@Res() response, @Query() query: ExamPropertyRequestBody) {
-    if (Object.keys(query).length) {
-      if (query.year && query.semester && query.term) {
-        const exam = await this.ExamService.findOneByCourseProperty(query);
+  @GrpcMethod('Exam')
+  async getExams(
+    @Res() response,
+    @Query() query: ExamPropertyRequestBody,
+    data: ExamPropertyRequestBody,
+    metadata: any,
+  ) {
+    console.log(data)
 
-        return IS_MICROSERVICE
-          ? { messages: exam }
-          : response.status(200).json(exam);
-      } else {
-        const exam = await this.ExamService.findByCourseProperty(query);
-
-        return response.status(200).json(exam);
-      }
+    if ((query && Object.keys(query).length != 0) || data) {
+      const exam = await this.ExamService.findByCourseProperty(
+        IS_MICROSERVICE ? data : query,
+      );
+      console.log(exam);
+      return IS_MICROSERVICE
+        ? { messages: exam }
+        : response.status(200).json(exam);
     } else {
       const exams = await this.ExamService.find();
-
-      return response.status(200).json(exams);
+      console.log(exams);
+      return IS_MICROSERVICE
+        ? { messages: exams }
+        : response.status(200).json(exams);
     }
-  }
-
-  @GrpcMethod('Exam')
-  async getAllExams(data: ExamPropertyRequestBody, metadata: any) {
-    const exams = await this.ExamService.find();
-
-    return { messages: exams };
-  }
-
-  @GrpcMethod('Exam')
-  async getAllExamsByCourseId(data: ExamCourseIdRequestBody, metadata: any) {
-    const exams = await this.ExamService.findByCourseId(data.course_id);
-
-    return { messages: exams };
-  }
-
-  @GrpcMethod('Exam')
-  async getExamByCourseProperty(data: ExamPropertyRequestBody, metadata: any) {
-    const exams = await this.ExamService.findByCourseProperty(data);
-
-    return { messages: exams };
-  }
-
-  @GrpcMethod('Exam')
-  async updateExamByCourseProperty(data: ExamRequestUpdateBody, metadata: any) {
-    const examId = await this.ExamService.findIdByCourseProperty(data);
-
-    const updatedExam = await this.ExamService.updateById(examId, data.body);
-
-    return updatedExam;
   }
 
   @GrpcMethod('Exam')
