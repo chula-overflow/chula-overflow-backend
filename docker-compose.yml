@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   gateway:
-    image: imsozrious/gateway
+    image: imsozrious/gateway:latest
     env_file:
       - .env
     container_name: gateway
@@ -11,7 +11,7 @@ services:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
   auth:
-    image: imsozrious/auth
+    image: imsozrious/auth:latest
     env_file:
       - .env
     environment:
@@ -21,7 +21,7 @@ services:
       - backend
 
   course:
-    image: imsozrious/course
+    image: imsozrious/course:0
     env_file:
       - .env
     container_name: course
