@@ -45,7 +45,7 @@ export class ExamController {
     metadata: any,
   ) {
     if (Object.keys(query).length || data) {
-      if (query.course_id) {
+      if (query.year && query.semester && query.term) {
         const exam = await this.ExamService.findOneByCourseProperty(
           IS_MICROSERVICE ? data : query,
         );
