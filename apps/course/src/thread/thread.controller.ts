@@ -90,7 +90,9 @@ export class ThreadController {
     // add thread_id to exam document
     await this.ExamService.addThreadId(threadId, examId);
 
-    return IS_MICROSERVICE ? newThread : response.status(201).json(newThread);
+    return IS_MICROSERVICE
+      ? { messages: newThread }
+      : response.status(201).json(newThread);
   }
 
   @Get('/')
@@ -112,12 +114,16 @@ export class ThreadController {
           course_id: data.course_id,
         });
 
-        return IS_MICROSERVICE ? threads : response.status(200).json(threads);
+        return IS_MICROSERVICE
+          ? { messages: threads }
+          : response.status(200).json(threads);
       } else {
-        return IS_MICROSERVICE ? [] : response.status(404).json([]);
+        return IS_MICROSERVICE
+          ? { messages: [] }
+          : response.status(404).json([]);
       }
     } else {
-      return IS_MICROSERVICE ? [] : response.status(400).json([]);
+      return IS_MICROSERVICE ? { messages: [] } : response.status(400).json([]);
     }
   }
 
@@ -127,9 +133,11 @@ export class ThreadController {
     const thread = await this.ThreadService.findOneById(threadId);
 
     if (thread) {
-      return IS_MICROSERVICE ? thread : response.status(200).json(thread);
+      return IS_MICROSERVICE
+        ? { messages: thread }
+        : response.status(200).json(thread);
     } else {
-      return IS_MICROSERVICE ? [] : response.status(400).json([]);
+      return IS_MICROSERVICE ? { messages: [] } : response.status(400).json([]);
     }
   }
 
@@ -152,7 +160,7 @@ export class ThreadController {
     });
 
     return IS_MICROSERVICE
-      ? updatedThread
+      ? { messages: updatedThread }
       : response.status(200).json(updatedThread);
   }
 
@@ -175,7 +183,7 @@ export class ThreadController {
     });
 
     return IS_MICROSERVICE
-      ? updatedThread
+      ? { messages: updatedThread }
       : response.status(200).json(updatedThread);
   }
 
@@ -205,7 +213,7 @@ export class ThreadController {
     );
 
     return IS_MICROSERVICE
-      ? updatedProblem
+      ? { messages: updatedProblem }
       : response.status(200).json(updatedProblem);
   }
 
@@ -235,7 +243,7 @@ export class ThreadController {
     );
 
     return IS_MICROSERVICE
-      ? updatedProblem
+      ? { messages: updatedProblem }
       : response.status(200).json(updatedProblem);
   }
 
@@ -264,7 +272,7 @@ export class ThreadController {
     const updatedAnswer = await this.ThreadService.findAnswer(data.answer_id);
 
     return IS_MICROSERVICE
-      ? updatedAnswer
+      ? { messages: updatedAnswer }
       : response.status(200).json(updatedAnswer);
   }
 
@@ -292,7 +300,7 @@ export class ThreadController {
     const updatedAnswer = await this.ThreadService.findAnswer(data.answer_id);
 
     return IS_MICROSERVICE
-      ? updatedAnswer
+      ? { messages: updatedAnswer }
       : response.status(200).json(updatedAnswer);
   }
 
@@ -324,7 +332,7 @@ export class ThreadController {
     );
 
     return IS_MICROSERVICE
-      ? updatedThread
+      ? { messages: updatedThread }
       : response.status(201).json(updatedThread);
   }
 

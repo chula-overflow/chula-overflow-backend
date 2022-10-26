@@ -33,7 +33,9 @@ export class ExamController {
     // add exam_id to course document
     await this.CourseService.addExamId(examId, courseId);
 
-    return IS_MICROSERVICE ? newExam : response.status(201).json(newExam);
+    return IS_MICROSERVICE
+      ? { messages: newExam }
+      : response.status(201).json(newExam);
   }
 
   @Get('/')
@@ -50,18 +52,24 @@ export class ExamController {
           IS_MICROSERVICE ? data : query,
         );
 
-        return IS_MICROSERVICE ? exam : response.status(200).json(exam);
+        return IS_MICROSERVICE
+          ? { messages: exam }
+          : response.status(200).json(exam);
       } else {
         const exam = await this.ExamService.findByCourseProperty(
           IS_MICROSERVICE ? data : query,
         );
 
-        return IS_MICROSERVICE ? exam : response.status(200).json(exam);
+        return IS_MICROSERVICE
+          ? { messages: exam }
+          : response.status(200).json(exam);
       }
     } else {
       const exams = await this.ExamService.find();
 
-      return IS_MICROSERVICE ? exams : response.status(200).json(exams);
+      return IS_MICROSERVICE
+        ? { messages: exams }
+        : response.status(200).json(exams);
     }
   }
 
@@ -71,7 +79,7 @@ export class ExamController {
 
     const updatedExam = await this.ExamService.updateById(examId, data.body);
 
-    return updatedExam;
+    return { messages: updatedExam };
   }
 
   @GrpcMethod('Exam')
@@ -83,6 +91,6 @@ export class ExamController {
 
     const deletedExam = await this.ExamService.deleteById(examId);
 
-    return deletedExam;
+    return { messages: deletedExam };
   }
 }
