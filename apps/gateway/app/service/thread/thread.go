@@ -12,11 +12,11 @@ type Service struct {
 	client proto.ThreadClient
 }
 
-func (s *Service) GetThread(threadId string) (*dto.Thread, error) {
+func (s *Service) DownvoteThread(threadId string) (*dto.ThreadBody, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	res, err := s.client.GetThread(ctx, &proto.GetThreadRequest{
+	res, err := s.client.DownvoteThread(ctx, &proto.ThreadIdRequestBody{
 		ThreadId: threadId,
 	})
 
@@ -24,63 +24,123 @@ func (s *Service) GetThread(threadId string) (*dto.Thread, error) {
 		return nil, err
 	}
 
-	replies := make([]dto.Reply, len(res.Replies))
-
-	for i, v := range res.Replies {
-		replies[i] = dto.Reply{
-			ThreadId: v.ThreadId,
-			Body:     v.Body,
-			Upvote:   v.Upvote,
-			Downvote: v.Downvote,
-		}
-	}
-
-	return &dto.Thread{
-		ThreadId:           threadId,
-		ProblemName:        res.ProblemName,
-		ProblemDescription: res.ProblemDescription,
-		Upvote:             res.Upvote,
-		Downvote:           res.Downvote,
-		Tags:               res.Tags,
-		Replies:            replies,
-	}, nil
+	return proto2dto(res), nil
 }
 
-func (s *Service) CreateThread(createThread *dto.CreateThread) (*dto.CreateThreadResponse, error) {
+func (s *Service) UpvoteThread(threadId string) (*dto.ThreadBody, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	res, err := s.client.CreateThread(ctx, &proto.CreateThreadRequest{
-		CourseName:         createThread.CourseName,
-		ExamName:           createThread.ExamName,
-		ProblemDescription: createThread.ProblemDescription,
-		ProblemName:        createThread.ProblemName,
-		Tags:               createThread.Tags,
+	res, err := s.client.UpvoteThread(ctx, &proto.ThreadIdRequestBody{
+		ThreadId: threadId,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.CreateThreadResponse{
-		ThreadId: res.ThreadId,
-	}, nil
+	return proto2dto(res), nil
 }
 
-func (s *Service) CreateReply(createReply *dto.CreateReply, threadId string) error {
+func (s *Service) GetThreadById(threadId string) (*dto.ThreadBody, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := s.client.CreateReply(ctx, &proto.CreateReplyRequest{
-		Body:     createReply.Body,
+	res, err := s.client.GetThreadById(ctx, &proto.ThreadIdRequestBody{
 		ThreadId: threadId,
 	})
 
-	return err
+	if err != nil {
+		return nil, err
+	}
+
+	return proto2dto(res), nil
+}
+
+func (s *Service) GetAllThreadsByExamProperty(year int32, semester string, term string) ([]*dto.ThreadBody, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res, err := s.client.GetAllThreadsByExamProperty(ctx, &proto.ExamPropertyRequestBody{
+		Year:     year,
+		Semester: semester,
+		Term:     term,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var ret = make([]*dto.ThreadBody, 0)
+
+	for _, v := range res.Messages {
+		ret = append(ret, proto2dto(v))
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (s *Service) CreateThread(userId string, body *dto.ThreadRequestCreateBody) (*dto.ThreadBody, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res, err := s.client.CreateThread(ctx, &proto.ThreadRequestCreateBody{
+		CourseId:     body.CourseId,
+		Year:         body.Year,
+		Semester:     body.Semester,
+		Term:         body.Term,
+		UploadedUser: userId,
+		Question:     body.Question,
+		Answer:       &body.Answer,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return proto2dto(res), nil
 }
 
 func NewService(client proto.ThreadClient) Service {
 	return Service{
 		client: client,
+	}
+}
+
+func proto2dto(p *proto.ThreadBody) *dto.ThreadBody {
+	problems := make([]dto.Problem, 0)
+
+	for _, v := range p.Problems {
+		problems = append(problems, dto.Problem{
+			Title:        *v.Title,
+			Body:         *v.Body,
+			UploadedUser: *v.UploadedUser,
+			Upvoted:      *v.Upvoted,
+			Downvoted:    *v.Downvoted,
+		})
+	}
+
+	answers := make([]dto.Answer, 0)
+
+	for _, v := range p.Answers {
+		answers = append(answers, dto.Answer{
+			Body:      *v.Body,
+			Upvoted:   *v.Upvoted,
+			Downvoted: *v.Downvoted,
+		})
+	}
+
+	return &dto.ThreadBody{
+		Id:        p.XId,
+		ExamId:    p.ExamId,
+		CourseId:  p.CourseId,
+		Upvoted:   p.Upvoted,
+		Downvoted: p.Downvoted,
+		Problems:  problems,
+		Answers:   answers,
 	}
 }

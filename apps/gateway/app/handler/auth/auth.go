@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/context"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/dto"
 	"github.com/gofiber/fiber/v2"
@@ -19,6 +20,7 @@ type IService interface {
 
 type Handler struct {
 	Service IService
+	v       *validator.MyValidator
 }
 
 // @Summary Login
@@ -34,7 +36,6 @@ type Handler struct {
 // @Router /auth/login [post]
 func (h *Handler) Login(ctx *context.Ctx) error {
 	if ctx.IsLogon() {
-		ctx.SendStatus(fiber.StatusAccepted)
 		return nil
 	}
 
@@ -42,6 +43,11 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 	if err := ctx.BodyParser(login); err != nil {
 		// unprocessable entity
 		return err
+	}
+
+	err := h.v.Struct(login)
+	if err != nil {
+		return fiber.ErrBadRequest
 	}
 
 	res, err := h.Service.Login(login)
@@ -56,9 +62,11 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 	}
 
 	ctx.Cookie(&fiber.Cookie{
-		Name:    "sid",
-		Value:   *res,
-		Expires: time.Now().Add(24 * time.Hour),
+		Name:     "sid",
+		Value:    *res,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Secure:   true,
+		HTTPOnly: true,
 	})
 
 	return nil
@@ -73,7 +81,15 @@ func (h *Handler) Login(ctx *context.Ctx) error {
 // @Failure 500
 // @Router /auth/revoke [get]
 func (h *Handler) Revoke(ctx *context.Ctx) error {
-	err := h.Service.Revoke(ctx.SessionId())
+	sid := ctx.SessionId()
+
+	err := h.v.Var(sid, "required,uuid4")
+
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
+	err = h.Service.Revoke(sid)
 
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
@@ -107,7 +123,16 @@ func (h *Handler) Revoke(ctx *context.Ctx) error {
 // @Failure 500
 // @Router /auth/me [get]
 func (h *Handler) Me(ctx *context.Ctx) error {
-	ret, err := h.Service.Me(ctx.SessionId())
+	sid := ctx.SessionId()
+
+	err := h.v.Var(sid, "required,uuid4")
+
+	if err != nil {
+		return fiber.ErrBadRequest
+	}
+
+	ret, err := h.Service.Me(sid)
+
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
@@ -131,8 +156,9 @@ func (h *Handler) Me(ctx *context.Ctx) error {
 	return nil
 }
 
-func NewHandler(service IService) Handler {
+func NewHandler(service IService, v *validator.MyValidator) Handler {
 	return Handler{
 		Service: service,
+		v:       v,
 	}
 }

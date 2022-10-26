@@ -16,6 +16,10 @@ func (ctx *Ctx) SessionId() string {
 	return ctx.Locals("SessionId").(string)
 }
 
+func (ctx *Ctx) UserId() string {
+	return ctx.Locals("UserId").(string)
+}
+
 func (ctx *Ctx) IsLogon() bool {
 	return ctx.Cookies("sid") != ""
 }

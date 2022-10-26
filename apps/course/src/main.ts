@@ -12,14 +12,18 @@ async function bootstrap() {
       {
         transport: Transport.GRPC,
         options: {
-          package: 'thread',
-          protoPath: __dirname + '/../../proto/thread.proto',
+          package: ['course', 'exam', 'thread'],
+          protoPath: [
+            __dirname + '/../../proto/course.proto',
+            __dirname + '/../../proto/exam.proto',
+            __dirname + '/../../proto/thread.proto',
+          ],
+          url: '0.0.0.0:' + process.env.COURSE_PORT,
         },
       },
     );
 
-    // @ts-ignore
-    app.listen(() => console.log('Microservice is listening'));
+    app.listen();
   } else {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 

@@ -62,3 +62,18 @@ func NewService(client proto.AuthClient) Service {
 		client: client,
 	}
 }
+
+func (s *Service) Validate(sessionId string) (*string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res, err := s.client.Validate(ctx, &proto.ValidateRequest{
+		Token: sessionId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res.UserId, nil
+}

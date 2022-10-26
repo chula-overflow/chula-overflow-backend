@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthClient interface {
 	Login(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Revoke(ctx context.Context, in *RevokeRequest, opts ...grpc.CallOption) (*RevokeResponse, error)
+	Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error)
 	Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOption) (*MeResponse, error)
 }
 
@@ -53,6 +54,15 @@ func (c *authClient) Revoke(ctx context.Context, in *RevokeRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *authClient) Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error) {
+	out := new(ValidateResponse)
+	err := c.cc.Invoke(ctx, "/auth.Auth/Validate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authClient) Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOption) (*MeResponse, error) {
 	out := new(MeResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/Me", in, out, opts...)
@@ -68,6 +78,7 @@ func (c *authClient) Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOpt
 type AuthServer interface {
 	Login(context.Context, *AuthRequest) (*AuthResponse, error)
 	Revoke(context.Context, *RevokeRequest) (*RevokeResponse, error)
+	Validate(context.Context, *ValidateRequest) (*ValidateResponse, error)
 	Me(context.Context, *MeRequest) (*MeResponse, error)
 }
 
@@ -80,6 +91,9 @@ func (UnimplementedAuthServer) Login(context.Context, *AuthRequest) (*AuthRespon
 }
 func (UnimplementedAuthServer) Revoke(context.Context, *RevokeRequest) (*RevokeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Revoke not implemented")
+}
+func (UnimplementedAuthServer) Validate(context.Context, *ValidateRequest) (*ValidateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (UnimplementedAuthServer) Me(context.Context, *MeRequest) (*MeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Me not implemented")
@@ -132,6 +146,24 @@ func _Auth_Revoke_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).Validate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.Auth/Validate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).Validate(ctx, req.(*ValidateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Auth_Me_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MeRequest)
 	if err := dec(in); err != nil {
@@ -164,6 +196,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Revoke",
 			Handler:    _Auth_Revoke_Handler,
+		},
+		{
+			MethodName: "Validate",
+			Handler:    _Auth_Validate_Handler,
 		},
 		{
 			MethodName: "Me",

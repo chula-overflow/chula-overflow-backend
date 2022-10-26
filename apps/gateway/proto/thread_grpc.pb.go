@@ -22,9 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ThreadClient interface {
-	GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error)
-	CreateThread(ctx context.Context, in *CreateThreadRequest, opts ...grpc.CallOption) (*CreateThreadResponse, error)
-	CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*CreateReplyResponse, error)
+	DownvoteThread(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error)
+	UpvoteThread(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error)
+	GetThreadById(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error)
+	GetAllThreadsByExamProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ThreadBodyArr, error)
+	CreateThread(ctx context.Context, in *ThreadRequestCreateBody, opts ...grpc.CallOption) (*ThreadBody, error)
 }
 
 type threadClient struct {
@@ -35,27 +37,45 @@ func NewThreadClient(cc grpc.ClientConnInterface) ThreadClient {
 	return &threadClient{cc}
 }
 
-func (c *threadClient) GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error) {
-	out := new(GetThreadResponse)
-	err := c.cc.Invoke(ctx, "/thread.Thread/GetThread", in, out, opts...)
+func (c *threadClient) DownvoteThread(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error) {
+	out := new(ThreadBody)
+	err := c.cc.Invoke(ctx, "/thread.Thread/DownvoteThread", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *threadClient) CreateThread(ctx context.Context, in *CreateThreadRequest, opts ...grpc.CallOption) (*CreateThreadResponse, error) {
-	out := new(CreateThreadResponse)
+func (c *threadClient) UpvoteThread(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error) {
+	out := new(ThreadBody)
+	err := c.cc.Invoke(ctx, "/thread.Thread/UpvoteThread", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *threadClient) GetThreadById(ctx context.Context, in *ThreadIdRequestBody, opts ...grpc.CallOption) (*ThreadBody, error) {
+	out := new(ThreadBody)
+	err := c.cc.Invoke(ctx, "/thread.Thread/GetThreadById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *threadClient) GetAllThreadsByExamProperty(ctx context.Context, in *ExamPropertyRequestBody, opts ...grpc.CallOption) (*ThreadBodyArr, error) {
+	out := new(ThreadBodyArr)
+	err := c.cc.Invoke(ctx, "/thread.Thread/GetAllThreadsByExamProperty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *threadClient) CreateThread(ctx context.Context, in *ThreadRequestCreateBody, opts ...grpc.CallOption) (*ThreadBody, error) {
+	out := new(ThreadBody)
 	err := c.cc.Invoke(ctx, "/thread.Thread/CreateThread", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *threadClient) CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*CreateReplyResponse, error) {
-	out := new(CreateReplyResponse)
-	err := c.cc.Invoke(ctx, "/thread.Thread/CreateReply", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,23 +86,31 @@ func (c *threadClient) CreateReply(ctx context.Context, in *CreateReplyRequest, 
 // All implementations should embed UnimplementedThreadServer
 // for forward compatibility
 type ThreadServer interface {
-	GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error)
-	CreateThread(context.Context, *CreateThreadRequest) (*CreateThreadResponse, error)
-	CreateReply(context.Context, *CreateReplyRequest) (*CreateReplyResponse, error)
+	DownvoteThread(context.Context, *ThreadIdRequestBody) (*ThreadBody, error)
+	UpvoteThread(context.Context, *ThreadIdRequestBody) (*ThreadBody, error)
+	GetThreadById(context.Context, *ThreadIdRequestBody) (*ThreadBody, error)
+	GetAllThreadsByExamProperty(context.Context, *ExamPropertyRequestBody) (*ThreadBodyArr, error)
+	CreateThread(context.Context, *ThreadRequestCreateBody) (*ThreadBody, error)
 }
 
 // UnimplementedThreadServer should be embedded to have forward compatible implementations.
 type UnimplementedThreadServer struct {
 }
 
-func (UnimplementedThreadServer) GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetThread not implemented")
+func (UnimplementedThreadServer) DownvoteThread(context.Context, *ThreadIdRequestBody) (*ThreadBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownvoteThread not implemented")
 }
-func (UnimplementedThreadServer) CreateThread(context.Context, *CreateThreadRequest) (*CreateThreadResponse, error) {
+func (UnimplementedThreadServer) UpvoteThread(context.Context, *ThreadIdRequestBody) (*ThreadBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpvoteThread not implemented")
+}
+func (UnimplementedThreadServer) GetThreadById(context.Context, *ThreadIdRequestBody) (*ThreadBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetThreadById not implemented")
+}
+func (UnimplementedThreadServer) GetAllThreadsByExamProperty(context.Context, *ExamPropertyRequestBody) (*ThreadBodyArr, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllThreadsByExamProperty not implemented")
+}
+func (UnimplementedThreadServer) CreateThread(context.Context, *ThreadRequestCreateBody) (*ThreadBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateThread not implemented")
-}
-func (UnimplementedThreadServer) CreateReply(context.Context, *CreateReplyRequest) (*CreateReplyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateReply not implemented")
 }
 
 // UnsafeThreadServer may be embedded to opt out of forward compatibility for this service.
@@ -96,26 +124,80 @@ func RegisterThreadServer(s grpc.ServiceRegistrar, srv ThreadServer) {
 	s.RegisterService(&Thread_ServiceDesc, srv)
 }
 
-func _Thread_GetThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetThreadRequest)
+func _Thread_DownvoteThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ThreadIdRequestBody)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ThreadServer).GetThread(ctx, in)
+		return srv.(ThreadServer).DownvoteThread(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/thread.Thread/GetThread",
+		FullMethod: "/thread.Thread/DownvoteThread",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThreadServer).GetThread(ctx, req.(*GetThreadRequest))
+		return srv.(ThreadServer).DownvoteThread(ctx, req.(*ThreadIdRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Thread_UpvoteThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ThreadIdRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).UpvoteThread(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/UpvoteThread",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).UpvoteThread(ctx, req.(*ThreadIdRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Thread_GetThreadById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ThreadIdRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).GetThreadById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/GetThreadById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).GetThreadById(ctx, req.(*ThreadIdRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Thread_GetAllThreadsByExamProperty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExamPropertyRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ThreadServer).GetAllThreadsByExamProperty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/thread.Thread/GetAllThreadsByExamProperty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ThreadServer).GetAllThreadsByExamProperty(ctx, req.(*ExamPropertyRequestBody))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Thread_CreateThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateThreadRequest)
+	in := new(ThreadRequestCreateBody)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -127,25 +209,7 @@ func _Thread_CreateThread_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/thread.Thread/CreateThread",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThreadServer).CreateThread(ctx, req.(*CreateThreadRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Thread_CreateReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateReplyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ThreadServer).CreateReply(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/thread.Thread/CreateReply",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThreadServer).CreateReply(ctx, req.(*CreateReplyRequest))
+		return srv.(ThreadServer).CreateThread(ctx, req.(*ThreadRequestCreateBody))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -158,16 +222,24 @@ var Thread_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ThreadServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetThread",
-			Handler:    _Thread_GetThread_Handler,
+			MethodName: "DownvoteThread",
+			Handler:    _Thread_DownvoteThread_Handler,
+		},
+		{
+			MethodName: "UpvoteThread",
+			Handler:    _Thread_UpvoteThread_Handler,
+		},
+		{
+			MethodName: "GetThreadById",
+			Handler:    _Thread_GetThreadById_Handler,
+		},
+		{
+			MethodName: "GetAllThreadsByExamProperty",
+			Handler:    _Thread_GetAllThreadsByExamProperty_Handler,
 		},
 		{
 			MethodName: "CreateThread",
 			Handler:    _Thread_CreateThread_Handler,
-		},
-		{
-			MethodName: "CreateReply",
-			Handler:    _Thread_CreateReply_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

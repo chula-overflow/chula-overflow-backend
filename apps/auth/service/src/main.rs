@@ -11,21 +11,21 @@ mod app;
 mod config;
 mod database;
 
-use std::net::SocketAddr;
-
+use app::auth::handler::AuthHandler;
 use app::auth::{model::Session, service::AuthService};
 use app::user::model::User;
 use proto::auth::auth_server::AuthServer;
 use service_core::{Repository, Result};
 use tonic::transport::Server;
 
-use app::auth::handler::AuthHandler;
-
 #[tokio::main]
 async fn main() -> Result<()> {
+    env_logger::init();
+    log::info!("Starting server");
+
     let conf = config::load_config()?;
 
-    let addr: SocketAddr = conf.auth.addr.parse()?;
+    let addr = format!("0.0.0.0:{}", conf.auth.port).parse().unwrap();
 
     // setup db
     let db = database::get_db_conn(&conf).await?;
@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
 
     let auth_srv_hdr = AuthHandler::new(auth_service);
 
-    println!("Listening on {}", addr);
+    log::info!("Listening on {}", addr);
 
     Server::builder()
         .add_service(AuthServer::new(auth_srv_hdr))

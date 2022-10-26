@@ -2,25 +2,64 @@ syntax = "proto3";
 
 package exam;
 
-import "thread.proto";
-
 option go_package = "./proto";
 
 service Exam {
-    rpc GetExam (GetExamRequest) returns (GetExamResponse) {}
+    rpc CreateExam (ExamCreateBody) returns (ExamBody) {}
+    rpc GetAllExams (GetAllExamBody) returns (ExamBodyArr) {}
+    rpc GetAllExamsByCourseId (ExamCourseIdRequestBody) returns (ExamBodyArr) {}
+    rpc GetExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBody) {}
+    rpc UpdateExamByCourseProperty (ExamRequestUpdateBody) returns (ExamBody) {}
+    rpc DeleteExamByCourseProperty (ExamPropertyRequestBody) returns (ExamBody) {}
+
 }
 
-message ExamSummary {
-    string exam_id = 1;
-    string exam_name = 2;
-    int32 thread_count = 3;
+
+message ExamBody {
+    string _id = 1;
+    string course_id = 2;
+    int32 year = 3; // 2022, 2021, 2020, ...
+    string semester = 4; // S1, S2
+    string term = 5; // Mid | Final
+    repeated string thread_ids = 6;
 }
 
-message GetExamRequest {
-    string exam_id = 1;
+message GetAllExamBody {
+
+}
+  
+message ExamCreateBody {
+    string course_id = 1;
+    int32 year = 2; // 2022, 2021, 2020, ...
+    string semester = 3; // S1, S2
+    string term = 4; // Mid | Final
 }
 
-message GetExamResponse {
-    string exam_name = 1;
-    repeated thread.ThreadSummary threads = 2;
+message ExamUpdateBody {
+    string course_id = 1;
+    int32 year = 2; // 2022, 2021, 2020, ...
+    string semester = 3; // S1, S2
+    string term = 4; // Mid | Final
+    repeated string thread_ids = 5;
+}
+
+message ExamCourseIdRequestBody {
+    string course_id = 1;
+}
+
+message ExamPropertyRequestBody {
+    int32 year = 1; // 2022, 2021, 2020, ...
+    string semester = 2; // S1, S2
+    string term = 3; // Mid | Final
+}
+
+message ExamRequestUpdateBody {
+    int32 year = 1; // 2022, 2021, 2020, ...
+    string semester = 2; // S1, S2
+    string term = 3; // Mid | Final
+    ExamUpdateBody body = 4;
+}
+
+message ExamBodyArr {
+    repeated ExamBody messages = 1;
 }

@@ -9,6 +9,14 @@ Please check [Prerequisite](#prerequisite) before runing
 nx run-many --target=serve
 ```
 
+## Docker lazy script
+```sh
+git clone --sparse https://github.com/chula-overflow/chula-overflow-backend
+cd chula-overflow-backend
+cp .env.example .env
+docker-compose --env-file .env up -d
+```
+
 ## TODO
 - code linter / format
   - prettier / editorconfig
@@ -31,6 +39,17 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 ### Nx cli
 ```sh
 npm i -g nx
+```
+
+## Docker
+### Docker compose
+```sh
+docker compose --env-file .env up
+```
+### Building image
+Since each service depends on `apps/proto` directory, images need to be build from project root
+```sh
+docker build <service>:<tag> -f apps/<service>/Dockerfile .
 ```
 
 ## Note

@@ -47,3 +47,6 @@ target
 *.exe
 
 .env
+.env.local
+
+volumes
