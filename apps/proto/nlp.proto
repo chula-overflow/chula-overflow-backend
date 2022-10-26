@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package thread;
+
+service Nlp {
+  rpc Tokenize(TokenizeParagraph) returns () {}
+  rpc Embed(EmbedSentence) returns () {}
+  rpc Measure(MeasureVectors) returns () {}
+}
+
+message TokenizeParagraph {
+  string paragrpah = 1;
+}
+
+message EmbedSentence {
+  string sentence = 1;
+}
+
+message MeasureVectors {
+  repeated number vector1 = 1;
+  repeated number vector2 = 2;
+}
+
+message TokenizeSentences {
+  repeated string sentences = 1;
+}
+
+message EncodedSentence {
+  repeated number vector = 1;
+}
+
+message MeasureSimilarity {
+  float similarity = 1;
+}
