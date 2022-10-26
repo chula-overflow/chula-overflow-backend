@@ -7,11 +7,22 @@ import "exam.proto";
 option go_package = "./proto";
 
 service Thread {
-  rpc DownvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
-  rpc UpvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
-  rpc GetThreadById(ThreadIdRequestBody) returns (ThreadBody) {}
-  rpc GetAllThreadsByExamProperty(exam.ExamPropertyRequestBody) returns (ThreadBodyArr) {}
   rpc CreateThread(ThreadRequestCreateBody) returns (ThreadBody) {}
+  rpc GetThread() returns {}
+  rpc GetThreadById(ThreadIdRequestBody) returns (ThreadBody) {}
+
+  rpc UpvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
+  rpc DownvoteThread(ThreadIdRequestBody) returns (ThreadBody) {}
+
+  rpc UpvoteProblem(ThreadProblemIdRequestBody) returns (ProblemBody) {}
+  rpc DownvoteProblem(ThreadProblemIdRequestBody) returns (ProblemBody) {}
+
+  rpc UpvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
+  rpc DownvoteAnswer(ThreadAnswerIdRequestBody) returns (AnswerBody) {}
+
+  rpc AddAnswer() returns () {}
+
+  // rpc GetAllThreadsByExamProperty(exam.ExamPropertyRequestBody) returns (ThreadBodyArr) {}
 
 }
 
@@ -23,6 +34,22 @@ message ThreadBody {
   int32 downvoted = 5;
   repeated Problem problems = 6;
   repeated Answer answers = 7;
+}
+
+message ProblemBody {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+  string uploaded_user = 4;
+  int32 upvoted = 5;
+  int32 downvoted = 6;
+}
+
+message AnswerBody {
+  string id = 1;
+  stirng body = 2;
+  int32 upvoted = 3;
+  int32 downvoted = 4;
 }
 
 message ThreadRequestCreateBody {
@@ -57,6 +84,14 @@ message ThreadUpdateBody {
 
 message ThreadIdRequestBody {
   string thread_id = 1;
+}
+
+message ThreadProblemIdRequestBody {
+  string problem_id = 1;
+}
+
+message ThreadAnswerIdRequestBody {
+  string answer_id = 1;
 }
 
 message Problem {

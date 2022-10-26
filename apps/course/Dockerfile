@@ -1,14 +1,40 @@
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
+
+FROM node:18-alpine As development
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+RUN npm ci
+
+COPY --chown=node:node . .
+
+USER node
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
 FROM node:18-alpine As build
 
-WORKDIR /app
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN npm run build
 
 ENV NODE_ENV production
 
-COPY --chown=node:node apps/course .
+RUN npm ci --only=production && npm cache clean --force
 
-COPY apps/proto /proto
-
-RUN npm i -g @nestjs/cli && npm install && npm cache clean --force && npx @nestjs/cli build
+USER node
 
 ###################
 # PRODUCTION
@@ -16,12 +42,7 @@ RUN npm i -g @nestjs/cli && npm install && npm cache clean --force && npx @nestj
 
 FROM node:18-alpine As production
 
-USER node
-
-WORKDIR /app
-
-COPY --chown=node:node apps/proto /proto
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
-COPY --chown=node:node --from=build /app/dist ./dist
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
 CMD [ "node", "dist/main.js" ]
