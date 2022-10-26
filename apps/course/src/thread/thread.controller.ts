@@ -3,7 +3,6 @@ import { GrpcMethod } from '@nestjs/microservices';
 import { Types } from 'mongoose';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
-import { threadId } from 'worker_threads';
 import {
   ThreadCreateBody,
   ThreadIdRequestBody,

@@ -13,6 +13,9 @@ import { ThreadController } from './thread/thread.controller';
 import { ThreadService } from './thread/thread.service';
 import { Exam, ExamSchema } from './exam/exam.schema';
 import { Thread, ThreadSchema } from './thread/thread.schema';
+import { EmbededController } from './embeded/embeded.controller';
+import { Embeded, EmbededSchema } from './embeded/embeded.schema';
+import { EmbededService } from './embeded/embeded.service';
 
 @Module({
   imports: [
@@ -22,6 +25,7 @@ import { Thread, ThreadSchema } from './thread/thread.schema';
       { name: Course.name, schema: CourseSchema },
       { name: Exam.name, schema: ExamSchema },
       { name: Thread.name, schema: ThreadSchema },
+      { name: Embeded.name, schema: EmbededSchema },
     ]),
   ],
   controllers: [
@@ -30,7 +34,8 @@ import { Thread, ThreadSchema } from './thread/thread.schema';
     CourseController,
     ExamController,
     ThreadController,
+    EmbededController,
   ],
-  providers: [AppService, CourseService, ExamService, ThreadService],
+  providers: [AppService, CourseService, ExamService, ThreadService, EmbededService],
 })
 export class AppModule {}
