@@ -68,11 +68,7 @@ export class ExamController {
 
   @GrpcMethod()
   async updateExamByCourseProperty(data: ExamRequestUpdateBody, metadata: any) {
-    const examId = await this.ExamService.findIdByCourseProperty(
-      data.year,
-      data.semester,
-      data.term,
-    );
+    const examId = await this.ExamService.findIdByCourseProperty(data);
 
     const updatedExam = await this.ExamService.updateById(examId, data.body);
 
@@ -84,11 +80,7 @@ export class ExamController {
     data: ExamPropertyRequestBody,
     metadata: any,
   ) {
-    const examId = await this.ExamService.findIdByCourseProperty(
-      data.year,
-      data.semester,
-      data.term,
-    );
+    const examId = await this.ExamService.findIdByCourseProperty(data);
 
     const deletedExam = await this.ExamService.deleteById(examId);
 

@@ -2,7 +2,7 @@ import { ObjectId } from 'mongoose';
 
 export interface ThreadBody {
   _id: ObjectId;
-  exam_id: stringd;
+  exam_id: string;
   course_id: string;
   upvoted: number;
   downvoted: number;
@@ -53,6 +53,13 @@ export interface ThreadCreateBody {
     upvoted: number;
     downvoted: number;
   }[];
+}
+
+export interface ThreadRequestBody {
+  course_id: string;
+  year: number;
+  semester: string;
+  term: string;
 }
 
 export interface ThreadUpdateBody {

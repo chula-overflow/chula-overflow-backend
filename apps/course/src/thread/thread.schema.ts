@@ -12,9 +12,6 @@ export class Thread {
   course_id: string;
 
   @Prop({ required: true })
-  title: string;
-
-  @Prop({ required: true })
   upvoted: number;
 
   @Prop({ required: true })

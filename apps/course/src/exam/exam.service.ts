@@ -36,22 +36,21 @@ export class ExamService {
   }
 
   async findIdByCourseProperty(
-    year: number,
-    semester: string,
-    term: string,
+    examProperty: ExamPropertyRequestBody,
   ): Promise<ObjectId> {
     const exam = await this.ExamModel.findOne(
       {
-        year: year,
-        semester: semester,
-        term: term,
+        ...examProperty,
       },
       '_id',
     ).exec();
 
-    const exam_id = exam._id;
-
-    return exam_id;
+    if (exam) {
+      const exam_id = exam._id;
+      return exam_id;
+    } else {
+      return null;
+    }
   }
 
   async findByCourseProperty(property: ExamPropertyRequestBody) {
