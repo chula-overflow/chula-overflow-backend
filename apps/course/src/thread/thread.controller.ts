@@ -43,6 +43,8 @@ export class ThreadController {
     });
 
     // compare...
+    const embededVectors = await this.ExamService.find();
+    const passVecors = embededVectors.map((vector) => vector); // compare logic here
 
     const createThreadBody: ThreadCreateBody = {
       exam_id: String(examId),

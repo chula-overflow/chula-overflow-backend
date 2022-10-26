@@ -16,7 +16,12 @@ export class EmbededService {
     return newEmbeded.save();
   }
 
-  async findByProblemId(problemId: string) {
+  async find(): Promise<EmbededBody[]> {
+    const embededs = await this.EmbededModel.find().exec();
+    return embededs;
+  }
+
+  async findByProblemId(problemId: string): Promise<EmbededBody> {
     const embeded = await this.EmbededModel.findOne({
       problem_id: problemId,
     }).exec();
