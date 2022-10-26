@@ -1,14 +1,10 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { response } from 'express';
 import { Types } from 'mongoose';
-import { ExamPropertyRequestBody } from 'src/exam/exam.interface';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
-import { threadId } from 'worker_threads';
 import {
   ThreadCreateBody,
-  ThreadIdRequestBody,
   ThreadRequestAddAnswerBody,
   ThreadRequestBody,
   ThreadRequestCreateBody,

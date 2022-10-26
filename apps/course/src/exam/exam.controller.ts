@@ -1,9 +1,8 @@
-import { Controller, Post, Get, Res, Body, Param, Query } from '@nestjs/common';
+import { Controller, Post, Get, Res, Body, Query } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { CourseService } from 'src/course/course.service';
 import { IS_MICROSERVICE } from 'src/main';
 import {
-  ExamCourseIdRequestBody,
   ExamCreateBody,
   ExamPropertyRequestBody,
   ExamRequestUpdateBody,
