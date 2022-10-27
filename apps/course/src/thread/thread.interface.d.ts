@@ -31,6 +31,7 @@ export interface ThreadRequestCreateBody {
   uploaded_user: string;
 
   question: string;
+  question_title: string;
   answer?: string;
 }
 

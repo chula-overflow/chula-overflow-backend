@@ -30,6 +30,10 @@ async function bootstrap() {
   } else {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+    app.enableCors({
+      allowedHeaders: ['http://localhost:4000'],
+    });
+
     await app.listen(3002);
   }
 }

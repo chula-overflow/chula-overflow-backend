@@ -88,7 +88,7 @@ export class ThreadController {
       problems: [
         {
           id: problemId,
-          title: 'generated from nlp',
+          title: data.question_title,
           body: data.question,
           uploaded_user: data.uploaded_user,
           upvoted: 0,
