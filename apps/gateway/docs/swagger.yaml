@@ -249,6 +249,22 @@ definitions:
     - term
     - year
     type: object
+  dto.TokenizeParagraph:
+    properties:
+      para:
+        example: x + y + z = 3, find x and y
+        type: string
+    type: object
+  dto.TokenizeSentences:
+    properties:
+      sentences:
+        example:
+        - find the x
+        - ' find the y'
+        items:
+          type: string
+        type: array
+    type: object
   dto.User:
     properties:
       email:
@@ -777,4 +793,25 @@ paths:
       summary: Upvote thread
       tags:
       - Thread
+  /tokenize:
+    post:
+      parameters:
+      - description: Paragraph
+        in: body
+        name: paragraph
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TokenizeParagraph'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenizeSentences'
+        "400":
+          description: Bad Request
+      summary: Tokenize
+      tags:
+      - NLP
 swagger: "2.0"

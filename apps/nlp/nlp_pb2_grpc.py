@@ -15,17 +15,17 @@ class NlpStub(object):
             channel: A grpc.Channel.
         """
         self.Tokenize = channel.unary_unary(
-                '/thread.Nlp/Tokenize',
+                '/nlp.Nlp/Tokenize',
                 request_serializer=nlp__pb2.TokenizeParagraph.SerializeToString,
                 response_deserializer=nlp__pb2.TokenizeSentences.FromString,
                 )
         self.Embed = channel.unary_unary(
-                '/thread.Nlp/Embed',
+                '/nlp.Nlp/Embed',
                 request_serializer=nlp__pb2.EmbedSentence.SerializeToString,
                 response_deserializer=nlp__pb2.EncodedSentence.FromString,
                 )
         self.Measure = channel.unary_unary(
-                '/thread.Nlp/Measure',
+                '/nlp.Nlp/Measure',
                 request_serializer=nlp__pb2.MeasureVectors.SerializeToString,
                 response_deserializer=nlp__pb2.MeasureSimilarity.FromString,
                 )
@@ -72,7 +72,7 @@ def add_NlpServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'thread.Nlp', rpc_method_handlers)
+            'nlp.Nlp', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -91,7 +91,7 @@ class Nlp(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/thread.Nlp/Tokenize',
+        return grpc.experimental.unary_unary(request, target, '/nlp.Nlp/Tokenize',
             nlp__pb2.TokenizeParagraph.SerializeToString,
             nlp__pb2.TokenizeSentences.FromString,
             options, channel_credentials,
@@ -108,7 +108,7 @@ class Nlp(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/thread.Nlp/Embed',
+        return grpc.experimental.unary_unary(request, target, '/nlp.Nlp/Embed',
             nlp__pb2.EmbedSentence.SerializeToString,
             nlp__pb2.EncodedSentence.FromString,
             options, channel_credentials,
@@ -125,7 +125,7 @@ class Nlp(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/thread.Nlp/Measure',
+        return grpc.experimental.unary_unary(request, target, '/nlp.Nlp/Measure',
             nlp__pb2.MeasureVectors.SerializeToString,
             nlp__pb2.MeasureSimilarity.FromString,
             options, channel_credentials,

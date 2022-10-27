@@ -200,7 +200,7 @@ func (app *App) RegisterRoute() {
 	metadata = MetaData{
 		url:          "/tokenize",
 		requiredAuth: false,
-		method:       GET,
+		method:       POST,
 	}
 	router.AddRoute(nlp.Tokenize, metadata)
 

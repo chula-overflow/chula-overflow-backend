@@ -796,6 +796,39 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/tokenize": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NLP"
+                ],
+                "summary": "Tokenize",
+                "parameters": [
+                    {
+                        "description": "Paragraph",
+                        "name": "paragraph",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TokenizeParagraph"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TokenizeSentences"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1140,6 +1173,30 @@ const docTemplate = `{
                 "year": {
                     "type": "integer",
                     "example": 2011
+                }
+            }
+        },
+        "dto.TokenizeParagraph": {
+            "type": "object",
+            "properties": {
+                "para": {
+                    "type": "string",
+                    "example": "x + y + z = 3, find x and y"
+                }
+            }
+        },
+        "dto.TokenizeSentences": {
+            "type": "object",
+            "properties": {
+                "sentences": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "find the x",
+                        " find the y"
+                    ]
                 }
             }
         },

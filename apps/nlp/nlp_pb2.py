@@ -13,25 +13,26 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tnlp.proto\x12\x06thread\"!\n\x11TokenizeParagraph\x12\x0c\n\x04para\x18\x01 \x01(\t\"!\n\rEmbedSentence\x12\x10\n\x08sentence\x18\x01 \x01(\t\"2\n\x0eMeasureVectors\x12\x0f\n\x07vector1\x18\x01 \x03(\x05\x12\x0f\n\x07vector2\x18\x02 \x03(\x05\"&\n\x11TokenizeSentences\x12\x11\n\tsentences\x18\x01 \x03(\t\"!\n\x0f\x45ncodedSentence\x12\x0e\n\x06vector\x18\x01 \x03(\x05\"\'\n\x11MeasureSimilarity\x12\x12\n\nsimilarity\x18\x01 \x01(\x02\x32\xc4\x01\n\x03Nlp\x12\x42\n\x08Tokenize\x12\x19.thread.TokenizeParagraph\x1a\x19.thread.TokenizeSentences\"\x00\x12\x39\n\x05\x45mbed\x12\x15.thread.EmbedSentence\x1a\x17.thread.EncodedSentence\"\x00\x12>\n\x07Measure\x12\x16.thread.MeasureVectors\x1a\x19.thread.MeasureSimilarity\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tnlp.proto\x12\x03nlp\"!\n\x11TokenizeParagraph\x12\x0c\n\x04para\x18\x01 \x01(\t\"!\n\rEmbedSentence\x12\x10\n\x08sentence\x18\x01 \x01(\t\"2\n\x0eMeasureVectors\x12\x0f\n\x07vector1\x18\x01 \x03(\x05\x12\x0f\n\x07vector2\x18\x02 \x03(\x05\"&\n\x11TokenizeSentences\x12\x11\n\tsentences\x18\x01 \x03(\t\"!\n\x0f\x45ncodedSentence\x12\x0e\n\x06vector\x18\x01 \x03(\x05\"\'\n\x11MeasureSimilarity\x12\x12\n\nsimilarity\x18\x01 \x01(\x02\x32\xb2\x01\n\x03Nlp\x12<\n\x08Tokenize\x12\x16.nlp.TokenizeParagraph\x1a\x16.nlp.TokenizeSentences\"\x00\x12\x33\n\x05\x45mbed\x12\x12.nlp.EmbedSentence\x1a\x14.nlp.EncodedSentence\"\x00\x12\x38\n\x07Measure\x12\x13.nlp.MeasureVectors\x1a\x16.nlp.MeasureSimilarity\"\x00\x42\tZ\x07./protob\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'nlp_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _TOKENIZEPARAGRAPH._serialized_start=21
-  _TOKENIZEPARAGRAPH._serialized_end=54
-  _EMBEDSENTENCE._serialized_start=56
-  _EMBEDSENTENCE._serialized_end=89
-  _MEASUREVECTORS._serialized_start=91
-  _MEASUREVECTORS._serialized_end=141
-  _TOKENIZESENTENCES._serialized_start=143
-  _TOKENIZESENTENCES._serialized_end=181
-  _ENCODEDSENTENCE._serialized_start=183
-  _ENCODEDSENTENCE._serialized_end=216
-  _MEASURESIMILARITY._serialized_start=218
-  _MEASURESIMILARITY._serialized_end=257
-  _NLP._serialized_start=260
-  _NLP._serialized_end=456
+  DESCRIPTOR._serialized_options = b'Z\007./proto'
+  _TOKENIZEPARAGRAPH._serialized_start=18
+  _TOKENIZEPARAGRAPH._serialized_end=51
+  _EMBEDSENTENCE._serialized_start=53
+  _EMBEDSENTENCE._serialized_end=86
+  _MEASUREVECTORS._serialized_start=88
+  _MEASUREVECTORS._serialized_end=138
+  _TOKENIZESENTENCES._serialized_start=140
+  _TOKENIZESENTENCES._serialized_end=178
+  _ENCODEDSENTENCE._serialized_start=180
+  _ENCODEDSENTENCE._serialized_end=213
+  _MEASURESIMILARITY._serialized_start=215
+  _MEASURESIMILARITY._serialized_end=254
+  _NLP._serialized_start=257
+  _NLP._serialized_end=435
 # @@protoc_insertion_point(module_scope)

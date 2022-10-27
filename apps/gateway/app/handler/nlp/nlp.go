@@ -21,7 +21,7 @@ type Handler struct {
 // @Produce json
 // @Success 200 {object} dto.TokenizeSentences
 // @Failure 400
-// @Router /exam [get]
+// @Router /tokenize [post]
 func (h *Handler) Tokenize(ctx *context.Ctx) error {
 	para := new(dto.TokenizeParagraph)
 
