@@ -10,6 +10,7 @@ type Config struct {
 	GatewayURL string
 	AuthURL    string
 	CourseURL  string
+	NlpURL     string
 	Deployment string
 }
 
@@ -42,6 +43,14 @@ func LoadConfig() (*Config, error) {
 	if CoursePort == "" {
 		return nil, errors.New("enrionment variable not set")
 	}
+	NlpHost := os.Getenv("NLP_HOST")
+	if NlpHost == "" {
+		return nil, errors.New("enrionment variable not set")
+	}
+	NlpPort := os.Getenv("NLP_PORT")
+	if NlpPort == "" {
+		return nil, errors.New("enrionment variable not set")
+	}
 	Deployment := os.Getenv("DEPLOYMENT")
 	if Deployment == "" {
 		return nil, errors.New("enrionment variable not set")
@@ -50,8 +59,9 @@ func LoadConfig() (*Config, error) {
 	GatewayURL := GatewayHost + ":" + GatewayPort
 	AuthURL := AuthHost + ":" + AuthPort
 	CourseURL := CourseHost + ":" + CoursePort
+	NlpURL := NlpHost + ":" + NlpPort
 
 	return &Config{
-		APIBaseURL, GatewayURL, AuthURL, CourseURL, Deployment,
+		APIBaseURL, GatewayURL, AuthURL, CourseURL, NlpURL, Deployment,
 	}, nil
 }
