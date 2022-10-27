@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { EmbededService } from 'src/embeded/embeded.service';
 import { ExamService } from 'src/exam/exam.service';
 import { IS_MICROSERVICE } from 'src/main';
@@ -19,7 +19,7 @@ export class ThreadController {
     private readonly ThreadService: ThreadService,
     private readonly ExamService: ExamService,
     private readonly EmbededService: EmbededService,
-  ) { }
+  ) {}
 
   @Post('/')
   @GrpcMethod('Thread')
@@ -31,7 +31,29 @@ export class ThreadController {
   ) {
     const data = IS_MICROSERVICE ? grpcBody : reqBody;
 
-    const examId = await this.ExamService.findIdByCourseProperty(data);
+    // check if exam exist, if not then create new exam
+    const exams = await this.ExamService.findByCourseProperty({
+      year: data.year,
+      semester: data.semester,
+      term: data.term,
+    });
+
+    let examId: ObjectId;
+
+    if (exams.length) {
+      // exam is existed
+      examId = await this.ExamService.findIdByCourseProperty(data);
+    } else {
+      // exam isn't existed, then create exam before create thread
+      const newExam = await this.ExamService.create({
+        course_id: data.course_id,
+        year: data.year,
+        semester: data.semester,
+        term: data.term,
+      });
+
+      examId = newExam._id;
+    }
 
     const problemId = String(new Types.ObjectId());
     const problemVector = [0, 1, 2]; // will be generated from nlp
