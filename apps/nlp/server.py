@@ -1,3 +1,10 @@
+import os
+env = os.environ
+if 'NLP_PORT' not in env:
+  print("'NLP_PORT' not set")
+  os.abort()
+port = env['NLP_PORT']
+
 import nlp_pb2_grpc
 import nlp_pb2
 import embed
@@ -25,7 +32,6 @@ class Nlp(nlp_pb2_grpc.NlpServicer):
     return nlp_pb2.MeasureSimilarity(similarity = ret)
 
 def serve():
-    port = '3003'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     nlp_pb2_grpc.add_NlpServicer_to_server(Nlp(), server)
     server.add_insecure_port('[::]:' + port)
