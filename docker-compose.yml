@@ -29,7 +29,9 @@ services:
       - backend
       
   nlp:
-    image: imsozrious/nlp:latest
+    build:
+      dockerfile: apps/nlp/Dockerfile
+      context: .
     env_file:
       - .env
     container_name: nlp
