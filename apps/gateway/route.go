@@ -7,11 +7,13 @@ import (
 	authHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/auth"
 	courseHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/course"
 	examHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/exam"
+	nlpHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/nlp"
 	threadHdr "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/handler/thread"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/middleware"
 	authSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/auth"
 	courseSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/course"
 	examSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/exam"
+	nlpSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/nlp"
 	threadSrv "github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/service/thread"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/app/validator"
 	"github.com/chula-overflow/chula-overflow-backend/apps/gateway/config"
@@ -40,8 +42,8 @@ const (
 
 func (app *App) RegisterRoute() {
 	validator := validator.GetValidator()
-	authS, courseS, examS, threadS := GetService(app.config)
-	auth, course, exam, thread := GetHandler(&authS, &courseS, &examS, &threadS, validator)
+	authS, courseS, examS, threadS, nlpS := GetService(app.config)
+	auth, course, exam, thread, nlp := GetHandler(&authS, &courseS, &examS, &threadS, &nlpS, validator)
 	router := NewRouteManager(app, &authS, validator)
 
 	metadata := MetaData{
@@ -193,9 +195,18 @@ func (app *App) RegisterRoute() {
 		method:       POST,
 	}
 	router.AddRoute(thread.DownvoteProblem, metadata)
+
+	// Nlp
+	metadata = MetaData{
+		url:          "/tokenize",
+		requiredAuth: false,
+		method:       GET,
+	}
+	router.AddRoute(nlp.Tokenize, metadata)
+
 }
 
-func GetService(conf *config.Config) (authSrv.Service, courseSrv.Service, examSrv.Service, threadSrv.Service) {
+func GetService(conf *config.Config) (authSrv.Service, courseSrv.Service, examSrv.Service, threadSrv.Service, nlpSrv.Service) {
 	conn, err := grpc.Dial(conf.AuthURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -220,17 +231,27 @@ func GetService(conf *config.Config) (authSrv.Service, courseSrv.Service, examSr
 	threadClient := proto.NewThreadClient(conn)
 	threadService := threadSrv.NewService(threadClient)
 
-	return authService, courseService, examService, threadService
+	conn, err = grpc.Dial(conf.NlpURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+		os.Exit(2)
+	}
+
+	nlpClient := proto.NewNlpClient(conn)
+	nlpService := nlpSrv.NewService(nlpClient)
+
+	return authService, courseService, examService, threadService, nlpService
 }
 
-func GetHandler(authService *authSrv.Service, courseService *courseSrv.Service, examService *examSrv.Service, threadService *threadSrv.Service, validator *validator.MyValidator) (authHdr.Handler, courseHdr.Handler, examHdr.Handler, threadHdr.Handler) {
+func GetHandler(authService *authSrv.Service, courseService *courseSrv.Service, examService *examSrv.Service, threadService *threadSrv.Service, nlpService *nlpSrv.Service, validator *validator.MyValidator) (authHdr.Handler, courseHdr.Handler, examHdr.Handler, threadHdr.Handler, nlpHdr.Handler) {
 	auth := authHdr.NewHandler(authService, validator)
 
 	course := courseHdr.NewHandler(courseService, validator)
 	exam := examHdr.NewHandler(examService, validator)
 	thread := threadHdr.NewHandler(threadService, validator)
+	nlp := nlpHdr.NewHandler(nlpService, validator)
 
-	return auth, course, exam, thread
+	return auth, course, exam, thread, nlp
 }
 
 func NewRouteManager(app *App, authService *authSrv.Service, validator *validator.MyValidator) RouteManager {
