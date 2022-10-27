@@ -52,7 +52,8 @@ message ThreadRequestCreateBody {
   string uploaded_user = 5;
 
   string question = 6;
-  optional string answer = 7;
+  string question_title = 7;
+  optional string answer = 8;
 }
 
 message ProblemBody {
