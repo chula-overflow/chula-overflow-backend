@@ -50,3 +50,5 @@ target
 .env.local
 
 volumes
+
+__pycache__

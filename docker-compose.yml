@@ -27,6 +27,14 @@ services:
     container_name: course
     networks:
       - backend
+      
+  nlp:
+    image: imsozrious/nlp:latest
+    env_file:
+      - .env
+    container_name: nlp
+    networks:
+      - backend
   
   db:
     image: mongo

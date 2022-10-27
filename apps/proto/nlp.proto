@@ -9,7 +9,7 @@ service Nlp {
 }
 
 message TokenizeParagraph {
-  string paragrpah = 1;
+  string para = 1;
 }
 
 message EmbedSentence {
@@ -17,8 +17,8 @@ message EmbedSentence {
 }
 
 message MeasureVectors {
-  repeated number vector1 = 1;
-  repeated number vector2 = 2;
+  repeated int32 vector1 = 1;
+  repeated int32 vector2 = 2;
 }
 
 message TokenizeSentences {
@@ -26,7 +26,7 @@ message TokenizeSentences {
 }
 
 message EncodedSentence {
-  repeated number vector = 1;
+  repeated int32 vector = 1;
 }
 
 message MeasureSimilarity {
