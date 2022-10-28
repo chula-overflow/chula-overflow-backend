@@ -45,7 +45,7 @@ export class ExamService {
       '_id',
     ).exec();
 
-    if (exam) {
+    if (Object.keys(exam).length) {
       const exam_id = exam._id;
       return exam_id;
     } else {
